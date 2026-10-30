@@ -1,0 +1,298 @@
+# ==========================================================
+# 页面 4：通知列表（不进底部三键导航）
+# ----------------------------------------------------------
+# 入口：任意页面右上角铃铛图标（bell_icon，定义在主配置 top_layer）
+# 返回：底部「返回」键 → 概览页
+# 数据：MQTT home/ha-monitor-display/notify → 8 条环形缓冲
+#       （订阅与写入见主配置 on_message，globals 在 ui_common.yaml）
+# 布局：顶栏(标题+条数, y5 h30)
+#       4 条通知槽(高 59，y = 39/100/161/222)
+#       底栏返回键(y286 h29)
+# 字体：标题/正文用 ui_font_notify（GB2312 常用字全量 12px，
+#       通知文本任意字都能显示）；顶栏「通知」/「返回」用白名单字体
+# 渲染：1s 巡检（本文件底部 interval），最新一条在最上
+# ==========================================================
+
+lvgl:
+  pages:
+    - id: notify_page
+      width: 480
+      height: 320
+      bg_color: 0x121212
+      scrollable: false
+      scrollbar_mode: "OFF"
+      on_load:
+        - lambda: |-
+            id(ui_current_page) = 4;      // 通知页 = 第 4 屏（0 概览/2 网络/3 系统，1 弃用）
+            id(g_notify_unread) = 0;      // 进入即清除未读，铃铛回落灰色
+      widgets:
+        # ============ 顶栏：通知 | 共 N 条 (y5 h30) ============
+        - obj:
+            x: 5
+            y: 5
+            width: 470
+            height: 30
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: notify_title_label
+                  align: left_mid
+                  x: 10
+                  text: "通知"
+                  text_font: ui_font_medium
+                  text_color: 0xE0E0E0
+              - label:
+                  id: notify_count_label
+                  align: right_mid
+                  x: -10
+                  text: "共 0 条"
+                  text_font: ui_font_small
+                  text_color: 0x9E9E9E
+
+        # ============ 通知槽 1（最新）y39 h59 ============
+        - obj:
+            x: 5
+            y: 39
+            width: 470
+            height: 59
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: notify_t1
+                  align: TOP_LEFT
+                  x: 10
+                  y: 3
+                  width: 330
+                  long_mode: DOT
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0xE0E0E0
+              - label:
+                  id: notify_time1
+                  align: TOP_RIGHT
+                  x: -10
+                  y: 3
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0x757575
+              - label:
+                  id: notify_m1
+                  align: TOP_LEFT
+                  x: 10
+                  y: 22
+                  width: 450
+                  height: 36
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0xBDBDBD
+
+        # ============ 通知槽 2 y100 h59 ============
+        - obj:
+            x: 5
+            y: 100
+            width: 470
+            height: 59
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: notify_t2
+                  align: TOP_LEFT
+                  x: 10
+                  y: 3
+                  width: 330
+                  long_mode: DOT
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0xE0E0E0
+              - label:
+                  id: notify_time2
+                  align: TOP_RIGHT
+                  x: -10
+                  y: 3
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0x757575
+              - label:
+                  id: notify_m2
+                  align: TOP_LEFT
+                  x: 10
+                  y: 22
+                  width: 450
+                  height: 36
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0xBDBDBD
+
+        # ============ 通知槽 3 y161 h59 ============
+        - obj:
+            x: 5
+            y: 161
+            width: 470
+            height: 59
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: notify_t3
+                  align: TOP_LEFT
+                  x: 10
+                  y: 3
+                  width: 330
+                  long_mode: DOT
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0xE0E0E0
+              - label:
+                  id: notify_time3
+                  align: TOP_RIGHT
+                  x: -10
+                  y: 3
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0x757575
+              - label:
+                  id: notify_m3
+                  align: TOP_LEFT
+                  x: 10
+                  y: 22
+                  width: 450
+                  height: 36
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0xBDBDBD
+
+        # ============ 通知槽 4 y222 h59 ============
+        - obj:
+            x: 5
+            y: 222
+            width: 470
+            height: 59
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: notify_t4
+                  align: TOP_LEFT
+                  x: 10
+                  y: 3
+                  width: 330
+                  long_mode: DOT
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0xE0E0E0
+              - label:
+                  id: notify_time4
+                  align: TOP_RIGHT
+                  x: -10
+                  y: 3
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0x757575
+              - label:
+                  id: notify_m4
+                  align: TOP_LEFT
+                  x: 10
+                  y: 22
+                  width: 450
+                  height: 36
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0xBDBDBD
+
+        # 空态提示（无通知时显示，居中偏上）
+        - label:
+            id: notify_empty_label
+            align: center
+            x: 0
+            y: -40
+            text: "暂无通知"
+            text_font: ui_font_medium
+            text_color: 0x616161
+
+        # ============ 底栏：返回键 (y286 h29) ============
+        - obj:
+            x: 5
+            y: 286
+            width: 470
+            height: 29
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 1
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: nav_notify_back
+                  align: center
+                  x: 0
+                  width: 470
+                  text: "返回"
+                  text_align: CENTER
+                  text_font: ui_font_medium
+                  text_color: 0x4FD8FA
+                  on_click:
+                    - lvgl.page.show: dashboard_page
+
+# --- 本页数据刷新（1s） ---
+interval:
+  - interval: 1s
+    then:
+      - lambda: |-
+          if (!id(lvgl_ready)) return;
+          if (id(ui_screen_off)) return;
+          if (id(ui_current_page) != 4) return;
+
+          const int n    = id(g_notify_count);
+          const int head = id(g_notify_head);
+
+          // 顶栏条数 + 空态提示（只在数量变化时刷新）
+          static int last_n = -1;
+          if (n != last_n) {
+            last_n = n;
+            char cb[24];
+            snprintf(cb, sizeof(cb), "共 %d 条", n);
+            lv_label_set_text(id(notify_count_label), cb);
+            if (n == 0) lv_obj_clear_flag(id(notify_empty_label), LV_OBJ_FLAG_HIDDEN);
+            else        lv_obj_add_flag(id(notify_empty_label), LV_OBJ_FLAG_HIDDEN);
+          }
+
+          lv_obj_t *titles[4] = {id(notify_t1), id(notify_t2), id(notify_t3), id(notify_t4)};
+          lv_obj_t *times[4]  = {id(notify_time1), id(notify_time2), id(notify_time3), id(notify_time4)};
+          lv_obj_t *msgs[4]   = {id(notify_m1), id(notify_m2), id(notify_m3), id(notify_m4)};
+
+          for (int i = 0; i < 4; i++) {
+            if (i < n) {
+              const int idx = ((head - 1 - i) % 8 + 8) % 8;   // newest-first，保证非负
+              lv_label_set_text(titles[i], id(g_notify_title)[idx].c_str());
+              // 时间戳：Unix 秒 → "MM-DD HH:MM"（本地时区，SNTP 已配 Asia/Shanghai）
+              char tbuf[24] = {0};
+              if (id(g_notify_ts)[idx] > 0) {
+                esphome::ESPTime tv = esphome::ESPTime::from_epoch_local(id(g_notify_ts)[idx]);
+                tv.strftime(tbuf, sizeof(tbuf), "%m-%d %H:%M");
+              }
+              lv_label_set_text(times[i], tbuf);
+              lv_label_set_text(msgs[i], id(g_notify_msg)[idx].c_str());
+            } else {
+              lv_label_set_text(titles[i], "");
+              lv_label_set_text(times[i], "");
+              lv_label_set_text(msgs[i], "");
+            }
+          }

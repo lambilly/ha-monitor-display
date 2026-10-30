@@ -1,0 +1,762 @@
+# ==========================================================
+# 页面 1：概览（默认首页）
+#   6 个标准行，高度均分：320 - 上边距5 - 下边距5 - 5个间距×3 = 295
+#   295 / 6 = 49 余 1 → 余数给首行：行1 高 50，其余 49
+#   行1：中文时间 | 天气与温度 | 上证指数      （字号：small）
+#   行2：服务器 / 网关 / AP / 设备 四格在线数   （字号：small）
+#   行3：居家模式 | 车位状态                   （字号：medium）
+#   行4：左列「电灯/窗帘」跨两行(101) | 中列「空调/电器」跨两行(101)
+#        | 右列上下两个标准行：Nova13 / Nova12
+#   行5：（左中列已跨行占用）右列下半，行4~行5 合成一个 101 高的视觉块
+#   行6：TAB 导航（概览 | 网络 | 系统）         （字号：medium）
+# 依赖 ui_common.yaml 里的字体与全局变量
+# ==========================================================
+
+lvgl:
+  pages:
+    - id: dashboard_page
+      width: 480
+      height: 320
+      bg_color: 0x121212
+      scrollable: false
+      scrollbar_mode: "OFF"
+      on_load:
+        - lambda: id(ui_current_page) = 0;   # 概览页 = 默认首页
+      widgets:
+        # ============ 行1：时间 / 天气 / 上证指数 (y5 h50) ============
+        - obj:
+            x: 5
+            y: 5
+            width: 470
+            height: 50
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: home_time_label
+                  align: left_mid
+                  x: 3
+                  text: "加载中..."
+                  text_font: ui_font_medium
+                  text_color: 0xE0E0E0
+              - label:
+                  align: left_mid
+                  x: 200
+                  text: "\U000F0595"
+                  text_font: mdi_icons_20
+                  height: 18
+                  text_color: 0x5AA9FF
+              - label:
+                  id: home_weather_label
+                  align: left_mid
+                  x: 222
+                  text: "--"
+                  text_font: ui_font_medium
+                  text_color: 0x5AA9FF
+              - label:
+                  align: left_mid
+                  x: 315
+                  text: "\U000F012A"
+                  text_font: mdi_icons_20
+                  height: 18
+                  text_color: 0xFFFFFF
+              # “上证:”值白色
+              - label:
+                  align: left_mid
+                  x: 337
+                  text: "上证:"
+                  text_font: ui_font_medium
+                  text_color: 0xFFFFFF
+              - label:
+                  id: home_stock_label
+                  align: left_mid
+                  x: 377
+                  text: "--"
+                  text_font: ui_font_medium
+                  text_color: 0xFFFFFF
+
+        # ============ 行2：四格设备在线数 (y58 h49) ============
+        - obj:
+            x: 5
+            y: 61
+            width: 105
+            height: 41
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: home_server_icon
+                  align: left_mid
+                  x: -2
+                  text: "\U000F0826"
+                  text_font: mdi_icons_20
+                  height: 18
+                  text_color: 0xFFB74D
+              - label:
+                  id: home_server_label
+                  align: left_mid
+                  x: 18
+                  text: "在家: --"
+                  text_font: ui_font_medium
+                  text_color: 0xFFB74D
+        - obj:
+            x: 126
+            y: 61
+            width: 105
+            height: 41
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: home_gateway_icon
+                  align: left_mid
+                  x: -2
+                  text: "\U000F0010"
+                  text_font: mdi_icons_20
+                  height: 18
+                  text_color: 0xB39DFF
+              - label:
+                  id: home_gateway_label
+                  align: left_mid
+                  x: 18
+                  text: "客人: --"
+                  text_font: ui_font_medium
+                  text_color: 0xB39DFF
+        - obj:
+            x: 249
+            y: 61
+            width: 105
+            height: 41
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: home_ap_icon
+                  align: left_mid
+                  x: -3
+                  text: "\U000F011C"
+                  text_font: mdi_icons_20
+                  height: 18
+                  text_color: 0x59D98B
+              - label:
+                  id: home_ap_label
+                  align: left_mid
+                  x: 16
+                  text: "手机: --"
+                  text_font: ui_font_medium
+                  text_color: 0x59D98B
+        - obj:
+            x: 370
+            y: 61
+            width: 105
+            height: 41
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: home_monitor_icon
+                  align: left_mid
+                  x: -2
+                  text: "\U000F057E"
+                  text_font: mdi_icons_20
+                  height: 18
+                  text_color: 0x5AA9FF
+              - label:
+                  id: home_monitor_label
+                  align: left_mid
+                  x: 18
+                  text: "语音: --"
+                  text_font: ui_font_medium
+                  text_color: 0x5AA9FF
+
+        # ============ 行3：居家模式 | 车位状态 (y110 h49) ============
+        - obj:
+            x: 5
+            y: 110
+            width: 233
+            height: 49
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: home_mode_icon
+                  align: left_mid
+                  x: 8
+                  text: "\U000F02DC"
+                  text_font: mdi_icons_20
+                  height: 18
+                  text_color: 0xFFFFFF
+              # 居家模式（在家绿/离家红/其他白）+ 空格 + 活动轨迹（黄色）
+              # 用 recolor 单 label 实现双色：开启 recolor 后，文本里的
+              # "#59D98B 在家# #FFD54F 客厅#" 会分段着色。这样无需测量文字
+              # 宽度、也不涉及任何版本敏感的 LVGL API。
+              - label:
+                  id: home_mode_label
+                  align: left_mid
+                  x: 34
+                  text: "居家模式"
+                  text_font: ui_font_medium
+                  text_color: 0xFFFFFF
+                  recolor: true
+        - obj:
+            x: 241
+            y: 110
+            width: 234
+            height: 49
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: home_parking_icon
+                  align: left_mid
+                  x: 8
+                  text: "\U000F010B"
+                  text_font: mdi_icons_20
+                  height: 18
+                  y: -1          # 车位图标字形重心偏高，单独上提 1px 与文字对齐
+                  text_color: 0xFFB74D
+              - label:
+                  id: home_parking_label
+                  align: left_mid
+                  x: 34
+                  text: "车位状态: --"
+                  text_font: ui_font_medium
+                  text_color: 0xFFB74D
+
+        # ============ 行4~行5 左列：电器动态（跨两行 h101：标题 + 四行） ============
+        # 154x101 内：标题占顶部 17px，四行在下方 84px 内等分 21px/行
+        # align:left_mid 的 y 相对框中线(50.5)：标题 -42，横线 y=9，四行 -22 / -2 / +18 / +38
+        - obj:
+            x: 5
+            y: 162
+            width: 154
+            height: 101
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              # 标题：电器动态（白色）
+              - label:
+                  align: left_mid
+                  x: 8
+                  y: -42
+                  text: "电器动态"
+                  text_font: ui_font_small
+                  text_color: 0xFFFFFF
+              # 标题下划横线：贴在标题正下方（框内 y=9，标题底边约 y11）
+              # 宽度取"电器动态"4 字宽约 48px + 两端各 6px ≈ 60px，只做标题下短线
+              - obj:
+                  x: 5
+                  y: 0
+                  width: 100
+                  height: 1
+                  bg_color: 0xFFFFFF
+                  bg_opa: 40%
+                  border_width: 1
+                  outline_width: 1
+                  radius: 0
+                  scrollable: false
+                  clickable: false
+              # 第1行：电灯
+              - label:
+                  align: left_mid
+                  x: 6
+                  y: -22
+                  text: "\U000F06E8"
+                  text_font: mdi_icons
+                  text_color: 0xFFB74D
+              - label:
+                  id: home_light_label
+                  align: left_mid
+                  x: 25
+                  y: -22
+                  text: "电灯: --"
+                  text_font: ui_font_small
+                  text_color: 0xFFB74D
+              # 第2行：窗帘
+              - label:
+                  align: left_mid
+                  x: 6
+                  y: -2
+                  text: "\U000F1846"
+                  text_font: mdi_icons
+                  text_color: 0xB39DFF
+              - label:
+                  id: home_curtain_label
+                  align: left_mid
+                  x: 25
+                  y: -2
+                  text: "窗帘: --"
+                  text_font: ui_font_small
+                  text_color: 0xB39DFF
+              # 第3行：空调
+              - label:
+                  align: left_mid
+                  x: 6
+                  y: 18
+                  text: "\U000F001B"
+                  text_font: mdi_icons
+                  text_color: 0x5AA9FF
+              - label:
+                  id: home_climate_label
+                  align: left_mid
+                  x: 25
+                  y: 18
+                  text: "空调: --"
+                  text_font: ui_font_small
+                  text_color: 0x5AA9FF
+              # 第4行：电器
+              - label:
+                  align: left_mid
+                  x: 6
+                  y: 38
+                  text: "\U000F06A5"
+                  text_font: mdi_icons
+                  text_color: 0x59D98B
+              - label:
+                  id: home_equipment_label
+                  align: left_mid
+                  x: 25
+                  y: 38
+                  text: "电器: --"
+                  text_font: ui_font_small
+                  text_color: 0x59D98B
+
+        # ============ 行4~行5 中列：今日能耗（跨两行 h101：标题 + 四行） ============
+        # 用电 / 用气 / 电压 / 水压；四行等分 21px/行，y：-27 / -6 / +15 / +36
+        - obj:
+            x: 162
+            y: 162
+            width: 154
+            height: 101
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              # 标题：今日能耗（橙色）—— 下移 2px（-44 → -42）
+              - label:
+                  align: left_mid
+                  x: 8
+                  y: -42
+                  text: "今日能耗"
+                  text_font: ui_font_small
+                  text_color: 0xFFFFFF
+              # 标题下划横线：贴在标题正下方（框内 y=9，标题底边约 y11）
+              - obj:
+                  x: 5
+                  y: 0
+                  width: 100
+                  height: 1
+                  bg_color: 0xFFFFFF
+                  bg_opa: 40%
+                  border_width: 1
+                  outline_width: 1
+                  radius: 0
+                  scrollable: false
+                  clickable: false
+              # 第1行：用电
+              - label:
+                  align: left_mid
+                  x: 6
+                  y: -22
+                  text: "\U000F0241"
+                  text_font: mdi_icons
+                  text_color: 0xFFB74D
+              - label:
+                  id: home_energy_today_label
+                  align: left_mid
+                  x: 25
+                  y: -22
+                  text: "用电: --"
+                  text_font: ui_font_small
+                  text_color: 0xFFB74D
+              # 第2行：用气
+              - label:
+                  align: left_mid
+                  x: 6
+                  y: -2
+                  text: "\U000F0238"
+                  text_font: mdi_icons
+                  text_color: 0xB39DFF
+              - label:
+                  id: home_gas_label
+                  align: left_mid
+                  x: 25
+                  y: -2
+                  text: "用气: --"
+                  text_font: ui_font_small
+                  text_color: 0xB39DFF
+              # 第3行：电压
+              - label:
+                  align: left_mid
+                  x: 6
+                  y: 18
+                  text: "\U000F0D3E"
+                  text_font: mdi_icons
+                  text_color: 0x5AA9FF
+              - label:
+                  id: home_voltage_label
+                  align: left_mid
+                  x: 25
+                  y: 18
+                  text: "电压: --"
+                  text_font: ui_font_small
+                  text_color: 0x5AA9FF
+              # 第4行：水压
+              - label:
+                  align: left_mid
+                  x: 6
+                  y: 38
+                  text: "\U000F0875"
+                  text_font: mdi_icons
+                  text_color: 0x59D98B
+              - label:
+                  id: home_water_pressure_label
+                  align: left_mid
+                  x: 25
+                  y: 38
+                  text: "水压: --"
+                  text_font: ui_font_small
+                  text_color: 0x59D98B
+
+        # ============ 行4~行5 右侧上格：Nova13 (y162 h49) ============
+        # 图标固定天蓝；名字白色固定；状态字单独 label，在线绿/离线灰
+        - obj:
+            x: 319
+            y: 162
+            width: 156
+            height: 49
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: home_nova13_icon
+                  align: left_mid
+                  x: 4
+                  text: "\U000F0815"
+                  text_font: mdi_icons_20
+                  height: 18
+                  text_color: 0x7BC8FF
+              - label:
+                  align: left_mid
+                  x: 26
+                  text: "Nova13"
+                  text_font: ui_font_medium
+                  text_color: 0xE0E0E0
+              - label:
+                  id: home_nova13_label
+                  align: left_mid
+                  x: 88
+                  text: "--"
+                  text_font: ui_font_medium
+                  text_color: 0x757575
+
+        # ============ 行4~行5 右侧下格：Nova12 (y214 h49) ============
+        # 图标固定紫色；名字白色固定；状态字单独 label，在线绿/离线灰
+        - obj:
+            x: 319
+            y: 214
+            width: 156
+            height: 49
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: home_nova12_icon
+                  align: left_mid
+                  x: 4
+                  text: "\U000F0815"
+                  text_font: mdi_icons_20
+                  height: 18
+                  text_color: 0xB39DFF
+              - label:
+                  align: left_mid
+                  x: 26
+                  text: "Nova12"
+                  text_font: ui_font_medium
+                  text_color: 0xE0E0E0
+              - label:
+                  id: home_nova12_label
+                  align: left_mid
+                  x: 88
+                  text: "--"
+                  text_font: ui_font_medium
+                  text_color: 0x757575
+
+        # ============ 行6：TAB 导航 (y266 h49) ============
+        - obj:
+            x: 5
+            y: 266
+            width: 470
+            height: 49
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 1
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  id: nav_dash_3
+                  align: left_mid
+                  x: 0
+                  width: 156
+                  text: "概览"
+                  text_align: CENTER
+                  text_font: ui_font_large
+                  text_color: 0x4FD8FA
+              - label:
+                  id: nav_net_3
+                  align: center
+                  x: 0
+                  width: 156
+                  text: "网络"
+                  text_align: CENTER
+                  text_font: ui_font_large
+                  text_color: 0x757575
+                  on_click:
+                    - lvgl.page.show: network_page
+              - label:
+                  id: nav_sys_3
+                  align: right_mid
+                  x: 0
+                  width: 156
+                  text: "系统"
+                  text_align: CENTER
+                  text_font: ui_font_large
+                  text_color: 0x757575
+                  on_click:
+                    - lvgl.page.show: system_page
+
+# --- 本页数据刷新 ---
+interval:
+  - interval: 2s
+    then:
+      - lambda: |-
+          if (!id(lvgl_ready)) return;
+          if (id(ui_screen_off)) return;      // 熄屏时不再刷控件，省 CPU/SPI
+          if (id(ui_current_page) != 0) return;
+
+          char buf[96];
+
+          // ===== 行1：中文时间 / 天气 / 上证指数 =====
+          if (id(ha_time_text).has_state() && !id(ha_time_text).state.empty()) {
+            lv_label_set_text(id(home_time_label), id(ha_time_text).state.c_str());
+          } else {
+            auto now = id(system_time).now();
+            if (now.is_valid()) {
+              static const char* wk[] = {"日","一","二","三","四","五","六"};
+              int w = now.day_of_week - 1; if (w < 0) w = 0;
+              snprintf(buf, sizeof(buf), "%d年%d月%d日 星期%s",
+                       now.year, now.month, now.day_of_month, wk[w]);
+              lv_label_set_text(id(home_time_label), buf);
+            }
+          }
+
+          // 天气：把 weather 实体的英文 state 映射为中文，并在后面附上温度
+          {
+            static const std::vector<std::pair<const char*, const char*>> wx = {
+              {"clear-night", "晴夜"}, {"cloudy", "多云"}, {"exceptional", "极端"},
+              {"fog", "雾"}, {"hail", "冰雹"}, {"lightning", "雷雨"},
+              {"lightning-rainy", "雷阵雨"}, {"partlycloudy", "多云"}, {"pouring", "暴雨"},
+              {"rainy", "雨"}, {"snowy", "雪"}, {"snowy-rainy", "雨夹雪"},
+              {"sunny", "晴"}, {"windy", "大风"}, {"windy-variant", "大风"},
+            };
+            std::string cond = id(ha_weather).state;
+            std::string cn = "";
+            for (auto &p : wx) if (cond == p.first) { cn = p.second; break; }
+
+            // 温度：优先用天气实体的 temperature 属性，退而使用独立的室外温度传感器
+            char tbuf[16] = "";
+            float t = NAN;
+            if (id(ha_weather_temperature).has_state()) t = id(ha_weather_temperature).state;
+            else if (id(outdoor_temperature).has_state()) t = id(outdoor_temperature).state;
+            if (std::isfinite(t)) snprintf(tbuf, sizeof(tbuf), " %.0f℃", t);
+
+            char wbuf[40];
+            if (cn.empty()) snprintf(wbuf, sizeof(wbuf), "--%s", tbuf);
+            else snprintf(wbuf, sizeof(wbuf), "%s%s", cn.c_str(), tbuf);
+            lv_label_set_text(id(home_weather_label), wbuf);
+          }
+
+          // 上证指数
+          if (id(ha_stock).has_state() && !id(ha_stock).state.empty()) {
+            lv_label_set_text(id(home_stock_label), id(ha_stock).state.c_str());
+          } else {
+            lv_label_set_text(id(home_stock_label), "--");
+          }
+
+          // ===== 行2：四格（在家 / 客人 / 手机 / 语音）=====
+          // 着色规则（图标与文字整格同步）：
+          //   在家  数量>0 → 橙 FFB74D；=0 或 -- → 整格灰
+          //   客人  数量>0 → 紫 B39DFF；=0 或 -- → 整格灰
+          //   手机  数量>0 → 绿 59D98B；=0 或 -- → 整格灰
+          //   语音  开 → 蓝 5AA9FF；关 → 红 FF5252；-- → 灰
+          auto set_cnt_color = [](lv_obj_t* lbl, lv_obj_t* icon, esphome::sensor::Sensor* s,
+                                  const char* name, uint32_t on_color) {
+            char b[40];
+            const bool has = std::isfinite(s->state);
+            if (!has) snprintf(b, sizeof(b), "%s: --", name);
+            else snprintf(b, sizeof(b), "%s: %d", name, (int) s->state);
+            lv_label_set_text(lbl, b);
+            const uint32_t c = (has && s->state > 0.0f) ? on_color : 0x757575;
+            lv_obj_set_style_text_color(lbl,  lv_color_hex(c), 0);
+            lv_obj_set_style_text_color(icon, lv_color_hex(c), 0);
+          };
+          set_cnt_color(id(home_server_label),  id(home_server_icon),  id(ha_family_home),  "在家", 0xFFB74D);
+          set_cnt_color(id(home_gateway_label), id(home_gateway_icon), id(ha_guest_visit),  "客人", 0xB39DFF);
+          set_cnt_color(id(home_ap_label),      id(home_ap_icon),      id(ha_phone_online), "手机", 0x59D98B);
+          // 语音广播是开关实体：开=蓝（图标+文字）/ 关=红 / 实体缺失灰 + "--"
+          {
+            const bool has_v = id(ha_voice_broadcast).has_state();
+            const bool on_v  = has_v && id(ha_voice_broadcast).state;
+            lv_label_set_text(id(home_monitor_label),
+                              !has_v ? "语音: --" : (on_v ? "语音: 开" : "语音: 关"));
+            const uint32_t vc = !has_v ? 0x757575 : (on_v ? 0x5AA9FF : 0xFF5252);
+            lv_obj_set_style_text_color(id(home_monitor_label), lv_color_hex(vc), 0);
+            lv_obj_set_style_text_color(id(home_monitor_icon),  lv_color_hex(vc), 0);
+          }
+
+          // ===== 行3：居家模式（在家绿/离家红/其他白）+ 活动轨迹（黄）/ 车位状态（空闲绿/占用红）=====
+          // 用 LVGL 的 recolor 语法在同一 label 内分段着色：
+          //   "#59D98B 在家# #FFD54F 客厅#"
+          // 这样两段文字自然连排、无需测量宽度，也不依赖 lv_text_get_size
+          // 之类版本敏感的 API（LVGL v8→v9 曾改名导致编译失败）。
+          {
+            const std::string& mode = id(ha_home_mode).state;
+            const std::string& act  = id(ha_activity_log).state;
+            bool has_mode = id(ha_home_mode).has_state() && !mode.empty()
+                            && mode != "unknown" && mode != "unavailable";
+            bool has_act  = id(ha_activity_log).has_state() && !act.empty()
+                            && act != "unknown" && act != "unavailable";
+
+            // recolor 语法里的 '#' 是控制符，实体内容若自带 '#' 必须剔除，
+            // 否则会造成着色错乱或显示异常。
+            auto strip_hash = [](const std::string& src) {
+              std::string dst;
+              dst.reserve(src.size());
+              for (char c : src) if (c != '#') dst.push_back(c);
+              return dst;
+            };
+
+            char mbuf[192];
+            std::string m = has_mode ? strip_hash(mode) : "居家模式";
+            std::string a = has_act  ? strip_hash(act)  : "";
+
+            // 模式着色：在家=绿 / 离家=红 / 其他=白（兜底）；活动轨迹固定黄色
+            // 前置图标颜色同步跟随模式色，与文字保持一致
+            const char* mcol = "FFFFFF";
+            if (m.find("在家") != std::string::npos) {
+              mcol = "59D98B";
+            } else if (m.find("离家") != std::string::npos) {
+              mcol = "FF5252";
+            }
+            lv_obj_set_style_text_color(id(home_mode_icon),
+                                        lv_color_hex((uint32_t) strtoul(mcol, nullptr, 16)), 0);
+            if (has_act && has_mode) {
+              snprintf(mbuf, sizeof(mbuf), "#%s %s# #FFD54F %s#", mcol, m.c_str(), a.c_str());
+            } else if (has_act) {
+              snprintf(mbuf, sizeof(mbuf), "#FFD54F %s#", a.c_str());
+            } else if (has_mode) {
+              snprintf(mbuf, sizeof(mbuf), "#%s %s#", mcol, m.c_str());
+            } else {
+              // 无数据占位：图标（上方已设为白）与文字都白，不要留紫色
+              snprintf(mbuf, sizeof(mbuf), "#FFFFFF 居家模式#");
+            }
+            lv_label_set_text(id(home_mode_label), mbuf);
+          }
+          // 车位状态着色：空闲=绿 / 占用=红 / 其他与无数据=橙（图标同步变色）
+          {
+            const std::string& pk = id(ha_parking_status).state;
+            const bool has_pk = id(ha_parking_status).has_state() && !pk.empty()
+                                && pk != "unknown" && pk != "unavailable";
+            uint32_t pkc = 0xFFB74D;
+            if (has_pk) {
+              if (pk.find("空") != std::string::npos)      pkc = 0x59D98B;
+              else if (pk.find("占") != std::string::npos) pkc = 0xFF5252;
+              snprintf(buf, sizeof(buf), "车位状态: %s", pk.c_str());
+            } else {
+              snprintf(buf, sizeof(buf), "车位状态: --");
+            }
+            lv_label_set_text(id(home_parking_label), buf);
+            lv_obj_set_style_text_color(id(home_parking_label), lv_color_hex(pkc), 0);
+            lv_obj_set_style_text_color(id(home_parking_icon), lv_color_hex(pkc), 0);
+          }
+
+          // ===== 行4/行5 左列：设备计数（格式：电灯: 2/36盏）=====
+          auto set_cnt = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name, const char* total) {
+            char b[40];
+            if (std::isfinite(s->state)) snprintf(b, sizeof(b), "%s: %d/%s", name, (int)s->state, total);
+            else snprintf(b, sizeof(b), "%s: --", name);
+            lv_label_set_text(lbl, b);
+          };
+          set_cnt(id(home_light_label),     id(ha_light_on),       "电灯", "36盏");
+          set_cnt(id(home_curtain_label),   id(ha_curtain_closed), "窗帘", "6幅");
+          set_cnt(id(home_climate_label),   id(ha_climate_on),     "空调", "4台");
+          set_cnt(id(home_equipment_label), id(ha_equipment_on),   "电器", "20台");
+
+          // ===== 中列：今日能耗（用电 / 用气 / 电压 / 水压）=====
+          // 数值未就绪时显示 "--"，单位随实体走
+          auto fmt_val = [](char* out, size_t n, const char* name, float v, const char* unit, int prec) {
+            if (!std::isfinite(v)) { snprintf(out, n, "%s: --", name); return; }
+            char num[24];
+            snprintf(num, sizeof(num), prec == 0 ? "%.0f" : (prec == 2 ? "%.2f" : "%.1f"), v);
+            snprintf(out, n, "%s: %s%s", name, num, unit);
+          };
+          char eb[40];
+          // 用电量 sensor.tasmota_energy_today（kWh）
+          fmt_val(eb, sizeof(eb), "用电", id(ha_energy_today).state, "kWh", 2);
+          lv_label_set_text(id(home_energy_today_label), eb);
+          // 用气量 sensor.ri_yong_qi_liang（m³）
+          fmt_val(eb, sizeof(eb), "用气", id(ha_gas_today).state, "m³", 2);
+          lv_label_set_text(id(home_gas_label), eb);
+          // 电压 sensor.tasmota_energy_voltage（V）
+          fmt_val(eb, sizeof(eb), "电压", id(ha_voltage).state, "V", 0);
+          lv_label_set_text(id(home_voltage_label), eb);
+          // 水压 sensor.maze_wateronev3_tp_f8e644（bar）
+          fmt_val(eb, sizeof(eb), "水压", id(ha_water_pressure).state, "bar", 1);
+          lv_label_set_text(id(home_water_pressure_label), eb);
+
+          // ===== 右列：手机状态（只改状态两字，在线绿 / 离线灰；图标颜色固定）=====
+          // 手机在线：有状态再判断在线/离线；实体缺失时显示 "--"
+          auto set_phone = [](lv_obj_t* state_lbl, esphome::binary_sensor::BinarySensor* bs) {
+            if (!bs->has_state()) {
+              lv_label_set_text(state_lbl, "--");
+              lv_obj_set_style_text_color(state_lbl, lv_color_hex(0x757575), 0);
+              return;
+            }
+            lv_label_set_text(state_lbl, bs->state ? "在线" : "离线");
+            lv_obj_set_style_text_color(state_lbl, lv_color_hex(bs->state ? 0x59D98B : 0x757575), 0);
+          };
+          set_phone(id(home_nova13_label), id(ha_nova13));
+          set_phone(id(home_nova12_label), id(ha_nova12));

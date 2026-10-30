@@ -1,0 +1,59 @@
+[
+  {
+    "id": "hd_notify_subflow",
+    "type": "subflow",
+    "name": "推送屏幕通知",
+    "info": "把一条消息推送到 HA Monitor Display 屏幕的通知页。\n\n用法：任何节点的输出连到本子流程输入即可。\n兼容三种接线：①msg.message/msg.title 字符串；②HA action 节点输出（msg.payload={message,title,...}）；③msg.data 带原始数据。\n\n内置处理：递归取值、剥离 emoji 和图片/链接（屏幕无对应字形）、UTF-8 字节安全截断 460B（尽量按行收尾）、加时间戳。\n发布到 MQTT 主题 home/ha-monitor-display/notify（QoS1，retain 关）。\n\n⚠️ 首次使用：打开子流程里的「MQTT → 屏幕通知」节点，选择你的 Mosquitto broker。",
+    "category": "HA Monitor",
+    "in": [
+      {
+        "x": 50,
+        "y": 90,
+        "wires": [
+          {
+            "id": "hd_notify_fn"
+          }
+        ]
+      }
+    ],
+    "out": []
+  },
+  {
+    "id": "hd_notify_fn",
+    "type": "function",
+    "z": "hd_notify_subflow",
+    "name": "拼装与清洗",
+    "func": "// === 取值：兼容多种接线方式 ===\n// 情况A：上游直接给 msg.message / msg.title（字符串）\n// 情况B：上游是 HA action 节点输出，msg.payload = {message,title,notification_id}\n// 情况C：msg.payload 是 HA 响应对象，原始数据在 msg.data\nfunction pick(v, depth) {\n    if (v == null || depth > 4) return \"\";\n    if (typeof v === \"string\") return v;\n    if (typeof v === \"number\" || typeof v === \"boolean\") return String(v);\n    if (Array.isArray(v)) {\n        return v.map(x => pick(x, depth + 1)).filter(Boolean).join(\"\\n\");\n    }\n    if (typeof v === \"object\") {\n        for (const k of [\"message\", \"text\", \"content\", \"payload\", \"data\"]) {\n            if (k in v) {\n                const s = pick(v[k], depth + 1);\n                if (s) return s;\n            }\n        }\n    }\n    return \"\";\n}\nlet text = \"\";\nfor (const cand of [msg.message, msg.payload, msg.data]) {\n    text = pick(cand, 0);\n    if (text) break;\n}\nlet title = String(msg.title || (msg.payload && msg.payload.title) || (msg.data && msg.data.title) || \"\").trim();\n\n// === 清洗：链接 / HTML / emoji（屏幕字库无这些字形） ===\nconst emojiRe = /[\\u{1F000}-\\u{1FAFF}\\u{203C}\\u{2049}\\u{2190}-\\u{21FF}\\u{2300}-\\u{23FF}\\u{2600}-\\u{27BF}\\u{2B00}-\\u{2BFF}\\u{FE00}-\\u{FE0F}\\u{200D}\\u{20E3}]/gu;\ntext = text\n    .replace(/!\\[[^\\]]*\\]\\([^)]*\\)/g, \" \")        // markdown 图片 ![alt](url)\n    .replace(/\\[([^\\]]*)\\]\\([^)]*\\)/g, \"$1\")       // markdown 链接 [text](url) → text\n    .replace(/<img[^>]*>/gi, \" \")                    // HTML 图片\n    .replace(/<a[^>]*>([\\s\\S]*?)<\\/a>/gi, \"$1\")    // HTML 链接 → 文字\n    .replace(/<[^>]+>/g, \" \")                        // 其余 HTML 标签\n    .replace(/https?:\\/\\/\\S+/g, \" \")               // 裸 URL\n    .replace(emojiRe, \"\");\ntitle = title.replace(emojiRe, \"\").replace(/\\s+/g, \" \").trim();\n\n// === 整理换行：去行首空格，3 连换行压成 2 ===\ntext = text.split(\"\\n\").map(l => l.trim()).join(\"\\n\")\n           .replace(/\\n{3,}/g, \"\\n\\n\").trim();\n\nif (!title && !text) return null;                    // 空消息直接丢弃\nif (!title) title = \"通知\";\nif (title.length > 24) title = title.slice(0, 24);\n\n// === UTF-8 字节安全截断（设备端上限 480B，这里 460B 留余量）===\nconst MAXB = 460;                                   // 设备端 480B，留余量\nconst LIM  = MAXB - 3;                              // 给结尾\"…\"预留 3 字节\nif (Buffer.byteLength(text, \"utf8\") > MAXB) {\n    let cut = LIM;\n    while (cut > 0 && Buffer.byteLength(text.slice(0, cut), \"utf8\") > LIM) cut--;\n    const nl = text.lastIndexOf(\"\\n\", cut);          // 尽量回退到行边界，别把一句话砍半\n    if (nl > MAXB * 0.5) cut = nl;\n    text = text.slice(0, cut).trimEnd() + \"…\";\n}\n\nmsg.payload = JSON.stringify({\n    title: title,\n    message: text,\n    ts: Math.floor(Date.now() / 1000)                // Unix 秒，屏幕本地化显示\n});\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 230,
+    "y": 90,
+    "wires": [
+      [
+        "hd_notify_mqtt"
+      ]
+    ]
+  },
+  {
+    "id": "hd_notify_mqtt",
+    "type": "mqtt out",
+    "z": "hd_notify_subflow",
+    "name": "MQTT → 屏幕通知",
+    "topic": "home/ha-monitor-display/notify",
+    "qos": "1",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "",
+    "x": 450,
+    "y": 90,
+    "wires": []
+  }
+]

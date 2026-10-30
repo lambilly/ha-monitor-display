@@ -1,0 +1,1086 @@
+# ==========================================================
+# 主配置：设备 / 网络 / 硬件 / HA 实体
+# 页面布局拆分到 ui/ 目录，改界面只需改对应文件：
+#   ui/ui_common.yaml     公共资源（字体、全局变量、时钟刷新）
+#   ui/page_dashboard.yaml       页面1 概览
+#   ui/page_network.yaml         页面2 网络
+#   ui/page_system.yaml          页面3 系统
+#
+# 接入方式（方案C，双通道并存）：
+#   api  : 本地局域网走 ESPHome Native API（连 Home Assistant，低延迟）
+#   mqtt : 外网走 MQTT/TLS（8883），脱离 HA 也能远程读取/控制
+# ==========================================================
+
+packages:
+  # 页面顺序 = LVGL 页面列表顺序，第一个为开机默认页（概览）
+  page_dashboard: !include ui/page_dashboard.yaml
+  page_network: !include ui/page_network.yaml
+  page_system: !include ui/page_system.yaml
+  ui_common: !include ui/ui_common.yaml
+esphome:
+  name: ha-monitor-display
+  friendly_name: HA Monitor Display
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: ESP32S3
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+logger:
+  level: INFO
+  logs:
+    lvgl: WARN
+
+api:
+  encryption:
+    key: !secret api_key
+  # API 重连参数：网络抖动时自动恢复，不必改
+  reboot_timeout: 15min
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+# ==========================================================
+# MQTT（外网远程通道）
+# ==========================================================
+mqtt:
+  broker: home.example.top          # 阿里云 DDNS 解析到你家公网 IP
+  port: 1883
+  username: your-mqtt-username
+  password: !secret mqtt_password
+  # topic_prefix 只影响本机"对外发布"的主题前缀。
+  # 注意：本机不再向 HA 暴露任何实体（全部 internal: true），
+  #       所以 discovery 关掉，避免在 HA 里生成一堆没用的空实体。
+  topic_prefix: esphome/ha-monitor-display
+  discovery: false
+  keepalive: 30s
+  reboot_timeout: 0s              
+  clean_session: true
+  # --- 主题规划 ---
+  log_topic:
+    topic: esphome/ha-monitor-display/logs
+    level: INFO
+
+  # ==========================================================
+  # 订阅 HA 推送的数据帧
+  # ==========================================================
+  on_json_message:
+    topic: home/ha-monitor-display
+    then:
+      - lambda: |-
+          // 平铺赋值：每个 JSON key → 一个 ha_* 全局变量
+          //   数值：is<float>() 判断，不可用（JSON null）时给 NAN，
+          //        与页面里的 std::isfinite() 判断天然衔接
+          //   布尔：| false 默认值操作符
+          //   文本：is<const char *>() 判断，缺省给空串
+          id(hd_ts) = x["ts"] | 0u;
+          if (x["fan1_rpm"].is<float>()) id(hd_fan1_rpm) = x["fan1_rpm"].as<float>();
+          else id(hd_fan1_rpm) = NAN;
+          if (x["fan2_rpm"].is<float>()) id(hd_fan2_rpm) = x["fan2_rpm"].as<float>();
+          else id(hd_fan2_rpm) = NAN;
+          if (x["fan1_speed"].is<float>()) id(hd_fan1_speed) = x["fan1_speed"].as<float>();
+          else id(hd_fan1_speed) = NAN;
+          if (x["fan2_speed"].is<float>()) id(hd_fan2_speed) = x["fan2_speed"].as<float>();
+          else id(hd_fan2_speed) = NAN;
+          if (x["temp_front"].is<float>()) id(hd_temp_front) = x["temp_front"].as<float>();
+          else id(hd_temp_front) = NAN;
+          if (x["temp_back"].is<float>()) id(hd_temp_back) = x["temp_back"].as<float>();
+          else id(hd_temp_back) = NAN;
+          if (x["temp_in"].is<float>()) id(hd_temp_in) = x["temp_in"].as<float>();
+          else id(hd_temp_in) = NAN;
+          if (x["temp_out"].is<float>()) id(hd_temp_out) = x["temp_out"].as<float>();
+          else id(hd_temp_out) = NAN;
+          if (x["family_home"].is<float>()) id(hd_family_home) = x["family_home"].as<float>();
+          else id(hd_family_home) = NAN;
+          if (x["guest_visit"].is<float>()) id(hd_guest_visit) = x["guest_visit"].as<float>();
+          else id(hd_guest_visit) = NAN;
+          if (x["phone_online"].is<float>()) id(hd_phone_online) = x["phone_online"].as<float>();
+          else id(hd_phone_online) = NAN;
+          if (x["server_count"].is<float>()) id(hd_server_count) = x["server_count"].as<float>();
+          else id(hd_server_count) = NAN;
+          if (x["gateway_count"].is<float>()) id(hd_gateway_count) = x["gateway_count"].as<float>();
+          else id(hd_gateway_count) = NAN;
+          if (x["ap_count"].is<float>()) id(hd_ap_count) = x["ap_count"].as<float>();
+          else id(hd_ap_count) = NAN;
+          if (x["monitor_count"].is<float>()) id(hd_monitor_count) = x["monitor_count"].as<float>();
+          else id(hd_monitor_count) = NAN;
+          if (x["light_on"].is<float>()) id(hd_light_on) = x["light_on"].as<float>();
+          else id(hd_light_on) = NAN;
+          if (x["curtain_closed"].is<float>()) id(hd_curtain_closed) = x["curtain_closed"].as<float>();
+          else id(hd_curtain_closed) = NAN;
+          if (x["climate_on"].is<float>()) id(hd_climate_on) = x["climate_on"].as<float>();
+          else id(hd_climate_on) = NAN;
+          if (x["equipment_on"].is<float>()) id(hd_equipment_on) = x["equipment_on"].as<float>();
+          else id(hd_equipment_on) = NAN;
+          if (x["weather_temp"].is<float>()) id(hd_weather_temp) = x["weather_temp"].as<float>();
+          else id(hd_weather_temp) = NAN;
+          if (x["outdoor_temp"].is<float>()) id(hd_outdoor_temp) = x["outdoor_temp"].as<float>();
+          else id(hd_outdoor_temp) = NAN;
+          if (x["energy_today"].is<float>()) id(hd_energy_today) = x["energy_today"].as<float>();
+          else id(hd_energy_today) = NAN;
+          if (x["gas_today"].is<float>()) id(hd_gas_today) = x["gas_today"].as<float>();
+          else id(hd_gas_today) = NAN;
+          if (x["voltage"].is<float>()) id(hd_voltage) = x["voltage"].as<float>();
+          else id(hd_voltage) = NAN;
+          if (x["water_pressure"].is<float>()) id(hd_water_pressure) = x["water_pressure"].as<float>();
+          else id(hd_water_pressure) = NAN;
+          if (x["wan_uptime"].is<float>()) id(hd_wan_uptime) = x["wan_uptime"].as<float>();
+          else id(hd_wan_uptime) = NAN;
+          if (x["asr_count"].is<float>()) id(hd_asr_count) = x["asr_count"].as<float>();
+          else id(hd_asr_count) = NAN;
+          if (x["router_count"].is<float>()) id(hd_router_count) = x["router_count"].as<float>();
+          else id(hd_router_count) = NAN;
+          if (x["device_ctrl"].is<float>()) id(hd_device_ctrl) = x["device_ctrl"].as<float>();
+          else id(hd_device_ctrl) = NAN;
+          if (x["terminal_count"].is<float>()) id(hd_terminal_count) = x["terminal_count"].as<float>();
+          else id(hd_terminal_count) = NAN;
+          if (x["low_battery"].is<float>()) id(hd_low_battery) = x["low_battery"].as<float>();
+          else id(hd_low_battery) = NAN;
+          if (x["nas_cpu"].is<float>()) id(hd_nas_cpu) = x["nas_cpu"].as<float>();
+          else id(hd_nas_cpu) = NAN;
+          if (x["nas_mem"].is<float>()) id(hd_nas_mem) = x["nas_mem"].as<float>();
+          else id(hd_nas_mem) = NAN;
+          if (x["screen_bright"].is<float>()) id(hd_screen_bright) = x["screen_bright"].as<float>();
+          else id(hd_screen_bright) = NAN;
+          if (x["nas_download"].is<float>()) id(hd_nas_download) = x["nas_download"].as<float>();
+          else id(hd_nas_download) = NAN;
+          if (x["nas_upload"].is<float>()) id(hd_nas_upload) = x["nas_upload"].as<float>();
+          else id(hd_nas_upload) = NAN;
+
+          // 开关类三态：-1=实体不存在/无数据，0=关，1=开
+          //（HA 侧宏 sw() 在实体不可用时输出 null，此处落成 -1）
+          id(hd_nova13)          = x["nova13"].is<int>()          ? x["nova13"].as<int>()          : -1;
+          id(hd_nova12)          = x["nova12"].is<int>()          ? x["nova12"].as<int>()          : -1;
+          id(hd_wan_status)      = x["wan_status"].is<int>()      ? x["wan_status"].as<int>()      : -1;
+          id(hd_voice_broadcast) = x["voice_broadcast"].is<int>() ? x["voice_broadcast"].as<int>() : -1;
+          id(hd_fan_in_switch)   = x["fan_in_switch"].is<int>()   ? x["fan_in_switch"].as<int>()   : -1;
+          id(hd_fan_out_switch)  = x["fan_out_switch"].is<int>()  ? x["fan_out_switch"].as<int>()  : -1;
+
+          id(hd_time_text) = x["time_text"].is<const char *>() ? std::string(x["time_text"].as<const char *>()) : std::string();
+          id(hd_external_ip) = x["external_ip"].is<const char *>() ? std::string(x["external_ip"].as<const char *>()) : std::string();
+          id(hd_weather) = x["weather"].is<const char *>() ? std::string(x["weather"].as<const char *>()) : std::string();
+          id(hd_stock) = x["stock"].is<const char *>() ? std::string(x["stock"].as<const char *>()) : std::string();
+          id(hd_home_mode) = x["home_mode"].is<const char *>() ? std::string(x["home_mode"].as<const char *>()) : std::string();
+          id(hd_activity_log) = x["activity_log"].is<const char *>() ? std::string(x["activity_log"].as<const char *>()) : std::string();
+          id(hd_parking_status) = x["parking_status"].is<const char *>() ? std::string(x["parking_status"].as<const char *>()) : std::string();
+
+          id(ha_data_last_ms) = millis();
+          ESP_LOGD("ha_data", "收到数据帧 ts=%u", (unsigned) id(hd_ts));
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: HA Monitor Fallback
+    password: !secret ap_password
+
+captive_portal:
+web_server:
+  port: 80
+  version: 3
+  auth:
+    username: admin
+    password: !secret web_password
+
+# --- 屏幕硬件配置 ---
+spi:
+  id: display_spi
+  clk_pin: GPIO12
+  mosi_pin: GPIO11
+  miso_pin: GPIO13
+
+i2c:
+  id: touch_i2c
+  scl: GPIO6
+  sda: GPIO7
+  frequency: 100kHz
+
+output:
+  - platform: ledc
+    pin:
+      number: GPIO15
+    id: lcd_backlight_pwm
+    frequency: 20kHz
+
+light:
+  - platform: monochromatic
+    id: lcd_backlight
+    name: "Screen Light"
+    icon: mdi:monitor
+    output: lcd_backlight_pwm
+    restore_mode: ALWAYS_ON
+
+display:
+  - platform: mipi_spi
+    id: lcd_display
+    model: CUSTOM
+    dimensions: 320x480
+    spi_id: display_spi
+    cs_pin: GPIO10
+    dc_pin: GPIO9
+    reset_pin: GPIO8
+    data_rate: 40MHz
+    transform:
+      mirror_x: true
+      mirror_y: false
+      swap_xy: false
+    rotation: 0
+    color_order: bgr
+    invert_colors: true
+    auto_clear_enabled: false
+    update_interval: never
+    init_sequence:
+      - [0xF0, 0xC3]
+      - [0xF0, 0x96]
+      - [0xB4, 0x02]
+      - [0xB7, 0xC6]
+      - [0xC0, 0xC0, 0x00]
+      - [0xC1, 0x13]
+      - [0xC2, 0xA7]
+      - [0xC5, 0x21]
+      - [0xE8, 0x40, 0x8A, 0x1B, 0x1B, 0x23, 0x0A, 0xAC, 0x33]
+      - [0xE0, 0xD2, 0x05, 0x08, 0x06, 0x05, 0x02, 0x2A, 0x44, 0x46, 0x39, 0x15, 0x15, 0x2D, 0x32]
+      - [0xE1, 0x96, 0x08, 0x0C, 0x09, 0x09, 0x25, 0x2E, 0x43, 0x42, 0x35, 0x11, 0x11, 0x28, 0x2E]
+      - [0xF0, 0x3C]
+      - [0xF0, 0x69]
+
+touchscreen:
+  - platform: ft63x6
+    id: touch_panel
+    i2c_id: touch_i2c
+    address: 0x38
+    display: lcd_display
+    reset_pin: GPIO5
+    update_interval: 20ms
+    on_touch:
+      - lambda: id(ui_touch_active) = true;
+      # 熄屏状态下任意触摸立即点亮
+      - if:
+          condition:
+            lambda: return id(ui_screen_off);
+          then:
+            - script.execute: wake_screen
+    on_release:
+      - lambda: id(ui_touch_active) = false;
+
+# --- 时间 ---
+# ==========================================================
+# 时间：只用 SNTP，不依赖 HA
+#   （原 platform: homeassistant 的 time 也需要 Native API，
+#     出门后不可用；SNTP 只要设备能上网就能对时）
+# ==========================================================
+time:
+  - platform: sntp
+    id: system_time
+    timezone: Asia/Shanghai
+    servers:
+      - ntp.aliyun.com
+      - cn.pool.ntp.org
+      - time.cloudflare.com
+
+lvgl:
+  displays: [lcd_display]
+  touchscreens: [touch_panel]
+  rotation: 90                      # 横屏 480x320
+  buffer_size: "25%"
+  draw_rounding: 8
+  resume_on_input: false
+  on_boot:
+    - delay: 800ms
+    - lambda:
+        ESP_LOGI("custom", "LVGL is ready!");
+        id(lvgl_ready) = true;
+    # 开机默认进入概览页
+    - lvgl.page.show: dashboard_page
+  default_font: ui_font_small
+  theme:
+    label:
+      pressed:
+        text_color: 0xFFFFFF
+
+  # ==========================================================
+  # 全局顶层：数据通道离线指示
+  # ----------------------------------------------------------
+  top_layer:
+    widgets:
+      # 离线图标（默认隐藏，由下方 interval 控制显隐）
+      # mdi:cloud-off（实心断云）U+F1BF6；
+      - label:
+          id: offlink_icon
+          align: TOP_RIGHT
+          x: -9
+          y: 6
+          text: "\U000F1BF6"
+          text_font: mdi_icons_12
+          text_color: 0xFF5252
+          hidden: true
+      # 离线文字（与图标同一行，靠左显示"离线"两字）
+      - label:
+          id: offlink_text
+          align: TOP_RIGHT
+          x: -26
+          y: 4
+          text: "离线"
+          text_font: ui_font_small
+          text_color: 0xFF5252
+          hidden: true
+
+debug:
+  id: dbg_comp
+  update_interval: 10s      # 数据刷新周期（loop_time / free 共用）
+
+# ==========================================================
+# HA 数据源
+# ==========================================================
+# ==========================================================
+# 外网数据通道：MQTT 单主题 + 本地结构体缓存
+# ----------------------------------------------------------
+# 数据流：
+#   HA 自动化(每5s) → mqtt publish home/ha-monitor-display (retain)
+#     → 本机 on_json_message 解析 → ha_data 结构体
+#       → 各 template 传感器(1s 刷新) → 页面 lambda 读取
+#
+# 注意：结构体字段名与 JSON key 必须一一对应，
+#       改字段时同步改 ha/monitor_display_push.yaml
+# ==========================================================
+# 平铺 globals：每个 HA 字段一个独立全局变量
+# ----------------------------------------------------------
+# 约定：id 命名 = ha_ + JSON 字段名，一一对应，
+#      改字段时同步改 ha/monitor_display_push.yaml。
+globals:
+  - id: hd_ts
+    type: uint32_t
+    restore_value: false
+    initial_value: '0'
+  - id: hd_fan1_rpm
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_fan2_rpm
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_fan1_speed
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_fan2_speed
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_temp_front
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_temp_back
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_temp_in
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_temp_out
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_family_home
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_guest_visit
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_phone_online
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_server_count
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_gateway_count
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_ap_count
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_monitor_count
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_light_on
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_curtain_closed
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_climate_on
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_equipment_on
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_weather_temp
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_outdoor_temp
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_energy_today
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_gas_today
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_voltage
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_water_pressure
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_wan_uptime
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_asr_count
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_router_count
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_device_ctrl
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_terminal_count
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_low_battery
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_nas_cpu
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_nas_mem
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_screen_bright
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_nas_download
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_nas_upload
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_nova13
+    type: int8_t          # 三态：-1=无数据(null) 0=关 1=开
+    restore_value: false
+    initial_value: '-1'
+  - id: hd_nova12
+    type: int8_t          # 三态：-1=无数据(null) 0=关 1=开
+    restore_value: false
+    initial_value: '-1'
+  - id: hd_wan_status
+    type: int8_t          # 三态：-1=无数据(null) 0=关 1=开
+    restore_value: false
+    initial_value: '-1'
+  - id: hd_voice_broadcast
+    type: int8_t          # 三态：-1=无数据(null) 0=关 1=开
+    restore_value: false
+    initial_value: '-1'
+  - id: hd_fan_in_switch
+    type: int8_t          # 三态：-1=无数据(null) 0=关 1=开
+    restore_value: false
+    initial_value: '-1'
+  - id: hd_fan_out_switch
+    type: int8_t          # 三态：-1=无数据(null) 0=关 1=开
+    restore_value: false
+    initial_value: '-1'
+  - id: hd_time_text
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+  - id: hd_external_ip
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+  - id: hd_weather
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+  - id: hd_stock
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+  - id: hd_home_mode
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+  - id: hd_activity_log
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+  - id: hd_parking_status
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+
+  # 最近一次收到有效数据的时刻（millis，0 表示从未收到）
+  - id: ha_data_last_ms
+    type: uint32_t
+    restore_value: false
+    initial_value: "0"
+
+  # 数据新鲜度阈值：超过该毫秒数没收到新帧就认为离线
+  #   推送周期 5s，取 15s（3 个周期）作为容错窗口
+  - id: ha_stale_ms
+    type: uint32_t
+    restore_value: false
+    initial_value: "15000"
+
+# ==========================================================
+# 本机传感器（与 HA 无关，始终可用）
+# ==========================================================
+sensor:
+  - platform: wifi_signal
+    id: wifi_rssi
+    name: "WiFi RSSI"
+    icon: mdi:wifi
+    update_interval: 15s
+  - platform: uptime
+    id: uptime_sensor
+    icon: mdi:clock-start
+    name: "Uptime"
+
+  # loop_time / free 只能写在 platform: debug 下（由顶层 debug: 组件接管）
+  - platform: debug
+    loop_time:
+      id: loop_time_sensor
+      name: "Loop Time"
+  - platform: debug
+    free:
+      id: free_heap_sensor
+      name: "Free Heap"
+
+  # ==========================================================
+  # 以下为 MQTT 数据帧落地的 template 传感器
+  # ==========================================================
+  # fan1_rpm
+  - platform: template
+    id: ha_fan1_rpm
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_fan1_rpm);
+  # fan2_rpm
+  - platform: template
+    id: ha_fan2_rpm
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_fan2_rpm);
+  # fan1_speed
+  - platform: template
+    id: ha_fan1_speed
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_fan1_speed);
+  # fan2_speed
+  - platform: template
+    id: ha_fan2_speed
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_fan2_speed);
+  # temp_front
+  - platform: template
+    id: ha_temp_front
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_temp_front);
+  # temp_back
+  - platform: template
+    id: ha_temp_back
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_temp_back);
+  # temp_in
+  - platform: template
+    id: ha_temp_in
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_temp_in);
+  # temp_out
+  - platform: template
+    id: ha_temp_out
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_temp_out);
+  # family_home
+  - platform: template
+    id: ha_family_home
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_family_home);
+  # guest_visit
+  - platform: template
+    id: ha_guest_visit
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_guest_visit);
+  # phone_online
+  - platform: template
+    id: ha_phone_online
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_phone_online);
+  # server_count
+  - platform: template
+    id: ha_server_count
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_server_count);
+  # gateway_count
+  - platform: template
+    id: ha_gateway_count
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_gateway_count);
+  # ap_count
+  - platform: template
+    id: ha_ap_count
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_ap_count);
+  # monitor_count
+  - platform: template
+    id: ha_monitor_count
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_monitor_count);
+  # light_on
+  - platform: template
+    id: ha_light_on
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_light_on);
+  # curtain_closed
+  - platform: template
+    id: ha_curtain_closed
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_curtain_closed);
+  # climate_on
+  - platform: template
+    id: ha_climate_on
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_climate_on);
+  # equipment_on
+  - platform: template
+    id: ha_equipment_on
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_equipment_on);
+  # weather_temp
+  - platform: template
+    id: ha_weather_temperature
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_weather_temp);
+  # outdoor_temp
+  - platform: template
+    id: outdoor_temperature
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_outdoor_temp);
+  # energy_today
+  - platform: template
+    id: ha_energy_today
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_energy_today);
+  # gas_today
+  - platform: template
+    id: ha_gas_today
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_gas_today);
+  # voltage
+  - platform: template
+    id: ha_voltage
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_voltage);
+  # water_pressure
+  - platform: template
+    id: ha_water_pressure
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_water_pressure);
+  # wan_uptime
+  - platform: template
+    id: net_wan_uptime
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_wan_uptime);
+  # asr_count
+  - platform: template
+    id: ha_asr_count
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_asr_count);
+  # router_count
+  - platform: template
+    id: ha_router_count
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_router_count);
+  # device_ctrl
+  - platform: template
+    id: ha_device_ctrl
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_device_ctrl);
+  # terminal_count
+  - platform: template
+    id: ha_terminal_count
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_terminal_count);
+  # low_battery
+  - platform: template
+    id: ha_low_battery
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_low_battery);
+  # nas_cpu
+  - platform: template
+    id: ha_nas_cpu
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_nas_cpu);
+  # nas_mem
+  - platform: template
+    id: ha_nas_mem
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_nas_mem);
+  # screen_bright
+  - platform: template
+    id: ha_screen_brightness
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_screen_bright);
+  # nas_download
+  - platform: template
+    id: ha_nas_download
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_nas_download);
+  # nas_upload
+  - platform: template
+    id: ha_nas_upload
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_nas_upload);
+
+number:
+  # 熄屏超时（秒），默认 60s，HA 可调，重启后保留
+  - platform: template
+    id: sleep_timeout_number
+    name: "Sleep Timeout"
+    icon: mdi:timer-outline
+    entity_category: config
+    unit_of_measurement: "s"
+    mode: box
+    min_value: 15
+    max_value: 900
+    step: 5
+    optimistic: true
+    restore_value: true
+    initial_value: 60
+
+switch:
+  # 自动休眠总开关（关掉后常亮，适合调试/演示）
+  - platform: template
+    id: auto_sleep_switch
+    name: "Auto Screen Sleep"
+    icon: mdi:sleep
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    lambda: |-
+      return id(ui_auto_sleep_enabled);
+    turn_on_action:
+      - lambda: id(ui_auto_sleep_enabled) = true;
+    turn_off_action:
+      - lambda: id(ui_auto_sleep_enabled) = false;
+      # 关闭自动休眠时顺便点亮，避免停在黑屏状态
+      - script.execute: wake_screen
+
+script:
+  # 熄屏：先记住当前亮度，再关背光
+  - id: sleep_screen
+    mode: single
+    then:
+      - lambda: |-
+          float b = id(lcd_backlight).remote_values.get_brightness();
+          if (b <= 0.01f) b = 1.0f;   // 已接近 0 时按满亮度恢复，防锁死
+          id(ui_saved_brightness) = b;
+          id(ui_screen_off) = true;
+          ESP_LOGI("sleep", "screen off, saved brightness=%.2f", b);
+      - light.turn_off: lcd_backlight
+
+  # 唤醒：恢复熄屏前的亮度（不是写死 100%）
+  - id: wake_screen
+    mode: single
+    then:
+      - lambda: id(ui_screen_off) = false;
+      - light.turn_on:
+          id: lcd_backlight
+          brightness: !lambda |-
+            return id(ui_saved_brightness);
+      - logger.log: "screen on"
+
+# ==========================================================
+# 开关类实体（MQTT 数据帧落地）
+# ----------------------------------------------------------
+# 说明：TemplateBinarySensor 的 loop() 每轮都会调用 lambda 并
+# publish_state()，本身就会实时刷新，无需 update_interval
+# （该选项在 binary_sensor.template 上并不存在）。
+# 但 loop() 在 MQTT 首帧到达前就会发布初始值，所以这里加
+# ha_data_last_ms == 0 守卫，避免开机瞬间把 "--" 误判成"关"。
+# ==========================================================
+binary_sensor:
+  # nova13
+  - platform: template
+    id: ha_nova13
+    internal: true
+    lambda: |-
+      // 三态：-1 表示 HA 侧实体不存在/无数据，此时不发布（保持 has_state=false）
+      if (id(ha_data_last_ms) == 0 || id(hd_nova13) < 0) return {};
+      return id(hd_nova13) != 0;
+  # nova12
+  - platform: template
+    id: ha_nova12
+    internal: true
+    lambda: |-
+      // 三态：-1 表示 HA 侧实体不存在/无数据，此时不发布（保持 has_state=false）
+      if (id(ha_data_last_ms) == 0 || id(hd_nova12) < 0) return {};
+      return id(hd_nova12) != 0;
+  # wan_status
+  - platform: template
+    id: net_wan_status
+    internal: true
+    lambda: |-
+      // 三态：-1 表示 HA 侧实体不存在/无数据，此时不发布（保持 has_state=false）
+      if (id(ha_data_last_ms) == 0 || id(hd_wan_status) < 0) return {};
+      return id(hd_wan_status) != 0;
+  # voice_broadcast
+  - platform: template
+    id: ha_voice_broadcast
+    internal: true
+    lambda: |-
+      // 三态：-1 表示 HA 侧实体不存在/无数据，此时不发布（保持 has_state=false）
+      if (id(ha_data_last_ms) == 0 || id(hd_voice_broadcast) < 0) return {};
+      return id(hd_voice_broadcast) != 0;
+  # fan_in_switch
+  - platform: template
+    id: ha_fan_in_switch
+    internal: true
+    lambda: |-
+      // 三态：-1 表示 HA 侧实体不存在/无数据，此时不发布（保持 has_state=false）
+      if (id(ha_data_last_ms) == 0 || id(hd_fan_in_switch) < 0) return {};
+      return id(hd_fan_in_switch) != 0;
+  # fan_out_switch
+  - platform: template
+    id: ha_fan_out_switch
+    internal: true
+    lambda: |-
+      // 三态：-1 表示 HA 侧实体不存在/无数据，此时不发布（保持 has_state=false）
+      if (id(ha_data_last_ms) == 0 || id(hd_fan_out_switch) < 0) return {};
+      return id(hd_fan_out_switch) != 0;
+
+# ==========================================================
+# 本机网络信息 + MQTT 文本数据
+# ==========================================================
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      id: wifi_ip_address
+      name: "IP Address"
+      icon: mdi:ip-network
+    ssid:
+      id: wifi_ssid_sensor
+      name: "WiFi SSID"
+      icon: mdi:router-wireless
+    mac_address:
+      id: wifi_mac_sensor
+      name: "MAC Address"
+      icon: mdi:wifi-marker
+  - platform: wifi_info
+    bssid:
+      id: wifi_bssid_sensor
+      name: "WiFi BSSID"
+      icon: mdi:access-point-network
+
+  # ==========================================================
+  # 以下为 MQTT 数据帧落地的 template 文本传感器
+  # ==========================================================
+  # time_text
+  - platform: template
+    id: ha_time_text
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return { id(hd_time_text) };
+  # external_ip
+  - platform: template
+    id: net_external_ip
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return { id(hd_external_ip) };
+  # weather
+  - platform: template
+    id: ha_weather
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return { id(hd_weather) };
+  # stock
+  - platform: template
+    id: ha_stock
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return { id(hd_stock) };
+  # home_mode
+  - platform: template
+    id: ha_home_mode
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return { id(hd_home_mode) };
+  # activity_log
+  - platform: template
+    id: ha_activity_log
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return { id(hd_activity_log) };
+  # parking_status
+  - platform: template
+    id: ha_parking_status
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return { id(hd_parking_status) };

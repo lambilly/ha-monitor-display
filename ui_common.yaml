@@ -1,0 +1,286 @@
+# ==========================================================
+# 公共 UI 资源：字体 / 全局变量 / 时钟刷新
+# 被主配置通过 packages 引入，勿单独删除
+# ==========================================================
+
+# ==========================================================
+# 字体定义
+# ==========================================================
+# 说明：
+#   · ESPHome 的 glyphs 不写时只嵌入英文字母数字，中文必须显式列出；
+#   · 每个 font 条目（每个 id）都会独立生成字形表、互不复用，所以每个
+#     中文字体都要写 glyphs——下面用 YAML 锚点 &cjk_glyphs 复用同一份
+#     字表，避免重复粘贴；
+#   · 字表只列页面实际会显示的中文/符号（约 121 字）+ 完整 ASCII，
+#     体积小、编译快；以后新增文案时把新字加进字表即可。
+#   · 字号约定：ui_font_small=12  ui_font_medium=16  ui_font_large=20，
+#     图标按同行文字字号配对：mdi_icons_12 / mdi_icons=16 / mdi_icons_20
+#
+#   · bpp（bits per pixel）= 每个像素用几位灰度表示抗锯齿：
+#       1 → 只有黑白两档，笔画有明显锯齿；
+#       2 → 4 档灰度（本项目原来用这个），小字号尚可，16/20px 边缘略毛糙；
+#       4 → 16 档灰度（当前值），边缘平滑，最接近 TFT 上"锐利清晰"的观感；
+#       8 → 256 档，肉眼已看不出比 4 更好，纯浪费 Flash。
+#     bpp 只影响"字形位图"这一块的体积，不影响字体文件本身、不影响逻辑。
+#     本项目实测（624 字形 × 3 档 CJK + 47 图标 × 3 档 MDI）：
+#       bpp2 合计约 138KB，bpp4 合计约 273KB，只多 135KB；
+#       16MB Flash 下占比从 0.8% → 1.7%，完全无压力 —— 所以直接用 4。
+# ==========================================================
+
+font:
+  - file: "fonts/NotoSansSC-SemiBold.ttf"
+    id: ui_font_small
+    size: 12
+    bpp: 4
+    glyphs: &cjk_glyphs
+      # 完整 ASCII 可打印字符（含空格）
+      - ' !"#$%&''()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
+      # ---- 中文字表（按用途分组，新增文案时把字加到对应组即可）----
+      # 注意：组与组之间不能有重复字，否则编译报 "Found duplicate glyphs"
+      - "℃³㎡·"            # 符号
+      - "年月日时分秒星期一二三四五六今昨早中晚夜零晨"   # 日期时间（22字）
+      - "晴阴云雨雪雷阵雾霾冰雹风暴寒暖热冷温湿度降"   # 天气（21字）
+      - "家人客来访工作休息睡觉吃饭出入闲"   # 人员身份（16字）
+      - "电器灯帘窗空调扇视机箱屏幕门锁摄头音手车柜夹"   # 设备电器（22字）
+      - "网线路由设备关启通断信号强弱无上站地址端口宽带流量连"   # 网络通信（26字）
+      - "开停运行离在正常异报警故障待加载获取显示"   # 运行状态（20字）
+      - "用水气压力功瓦千米升盏幅台件个"   # 能耗计量（15字）
+      - "存盘读写传速下达进余容间"   # NAS存储（12字）
+      - "系统型固版本内占率循环延钟芯片主"   # 系统信息（16字）
+      - "不于亚优位低使到制前务动参可后名处外大已式总接控散数新暂服未极查校检概模止比监等终络耗能自良览证据称请负质转输道闻高多天小居态状语轩迪逸亮回班莆田铁塔"   # 常用杂项（75字，含城市/运营商 莆田铁塔）
+      # 房间与家具（活动轨迹 sensor.huo_dong_gui_ji 动态文本用；已剔除与原表重复的"客"）
+      - "厅卧室厨卫书房阳餐床沙椅桌梯楼廊"   # 房间家具（17字）
+      # 家电用品（同上；已剔除重复的"电/视/箱/冰/加/湿"）
+      - "壶洗微炉脑衣插播吸尘扫净化"   # 家电用品（13字）
+      # 轨迹动态词（同上；已剔除重复的"检"）
+      - "注册活像充变测有去打磁体红发座感放波激"   # 轨迹动态（19字）
+      # 其他高频场所/设备（活动轨迹可能出现）
+      - "玄储儿次游童物响戏户伞利公秀好"   # 其他高频（12字，含SIGQ"良好"档）
+
+  - file: "fonts/NotoSansSC-SemiBold.ttf"
+    id: ui_font_medium
+    size: 16
+    bpp: 4
+    glyphs: *cjk_glyphs
+
+  - file: "fonts/NotoSansSC-SemiBold.ttf"
+    id: ui_font_large
+    size: 20
+    bpp: 4
+    glyphs: *cjk_glyphs
+
+  - file: "fonts/materialdesignicons-webfont.ttf"
+    id: mdi_icons
+    size: 16
+    bpp: 4
+    glyphs: &mdi_glyphs
+      - "\U000F0826"   # mdi:home-account 在家人数（概览页行2格1）
+      - "\U000F048B"   # mdi:server 服务器（系统页主机名）
+      - "\U000F1087"   # mdi:router-network 网关
+      - "\U000F05A9"   # mdi:wifi AP
+      - "\U000F07AE"   # mdi:cctv 监控
+      - "\U000F06E8"   # mdi:lightbulb-on 电灯
+      - "\U000F1846"   # mdi:curtains 窗帘
+      - "\U000F001B"   # mdi:air-conditioner 空调
+      - "\U000F06A5"   # mdi:power-plug 电器
+      - "\U000F011C"   # mdi:cellphone 手机（概览页行2 手机在线数）
+      - "\U000F0595"   # mdi:weather-partly-cloudy 天气
+      - "\U000F0770"   # mdi:home-lightbulb-outline 其他/传感器
+      - "\U000F0241"   # mdi:flash 用电（闪电）
+      - "\U000F0238"   # mdi:fire 用气（火焰）
+      - "\U000F0D3E"   # mdi:transmission-tower 电压（输电塔）
+      - "\U000F0875"   # mdi:gauge-low 水压（低压表盘）
+      - "\U000F01DA"   # mdi:download 下载速度
+      - "\U000F04C5"   # mdi:speedometer 信号质量（系统页右列）
+      - "\U000F00E0"   # mdi:brightness-7 屏幕亮度（系统页中列）
+      - "\U000F050F"   # mdi:thermometer 温度计（网络页风扇列）
+      - "\U000F0379"   # mdi:monitor 显示器（系统页设备信息-屏幕）
+      - "\U000F0815"   # mdi:cellphone-wireless 手机无线（概览页 Nova13/12）
+      - "\U000F012A"   # mdi:chart-line 上证
+      - "\U000F02DC"   # mdi:home 居家模式
+      - "\U000F010B"   # mdi:car 车位
+      - "\U000F0150"   # mdi:clock-outline 时间
+      - "\U000F0395"   # mdi:newspaper 新闻
+      # --- 网络页（page_network.yaml）新增图标 ---
+      - "\U000F0A5F"   # mdi:ip IP地址
+      - "\U000F0FA8"   # mdi:clock-check 已连接时长
+      - "\U000F048D"   # mdi:server-network 路由在线
+      - "\U000F0FB0"   # mdi:devices 控制设备
+      - "\U000F037A"   # mdi:monitor-multiple 终端在线
+      - "\U000F0083"   # mdi:battery-alert 低电量
+      - "\U000F05CB"   # mdi:account-voice ASR语音
+      - "\U000F08F3"   # mdi:nas NAS
+      - "\U000F0EE0"   # mdi:cpu-64-bit CPU使用
+      - "\U000F035B"   # mdi:memory 内存使用
+      - "\U000F0552"   # mdi:upload 上传速度
+      - "\U000F0210"   # mdi:fan 风扇
+      - "\U000F09AB"   # mdi:toilet 弱电间
+      - "\U000F051F"   # mdi:timer-sand 运行时间
+      - "\U000F11E2"   # mdi:router 路由器
+      - "\U000F059F"   # mdi:web 网络总览
+      # --- 概览页新增 ---
+      - "\U000F0010"   # mdi:account-multiple-plus 客人
+      - "\U000F057E"   # mdi:volume-high 语音广播
+      # --- 离线指示（top_layer 全局状态图标）---
+      - "\U000F1BF6"   # mdi:cloud-off 数据通道断开（实心断云）
+      - "\U000F0164"   # mdi:cloud-off-outline 断云描边版（备用）
+
+  # 图标 12px 版：与 mdi_icons(16px) 共用同一份字形表
+  #   用途：文字用 ui_font_small(12px) 的行，图标也用 12px 才与文字等宽
+  #   行高 13，文字行高 18，所以 label 必须显式 height=18 才能在行内垂直居中
+  - file: "fonts/materialdesignicons-webfont.ttf"
+    id: mdi_icons_12
+    size: 12
+    bpp: 4
+    glyphs: *mdi_glyphs
+
+  # 图标 20px 版：对应 ui_font_large(20px) 的行
+  #   行高 21，文字行高 30，同样靠 label 的 height=30 居中
+  - file: "fonts/materialdesignicons-webfont.ttf"
+    id: mdi_icons_20
+    size: 20
+    bpp: 4
+    glyphs: *mdi_glyphs
+
+globals:
+  - id: ui_touch_active
+    type: bool
+    restore_value: false
+    initial_value: "false"
+  - id: lvgl_ready
+    type: bool
+    restore_value: false
+    initial_value: "false"
+  - id: ui_display_temperature
+    type: float
+    restore_value: false
+    initial_value: "NAN"
+  - id: ui_state_code
+    type: uint8_t
+    restore_value: false
+    initial_value: "5"
+  - id: ui_accent_code
+    type: uint8_t
+    restore_value: false
+    initial_value: "2"
+  - id: ui_current_page
+    type: uint8_t
+    restore_value: false
+    initial_value: "0"
+  # --- 屏幕休眠管理 ---
+  - id: ui_auto_sleep_enabled
+    type: bool
+    restore_value: true
+    initial_value: "true"
+  - id: ui_screen_off
+    type: bool
+    restore_value: false
+    initial_value: "false"
+  - id: ui_saved_brightness
+    type: float
+    restore_value: false
+    initial_value: "1.0"
+# 时钟刷新（概览页行1 的时间标签）
+#   这里统一改写到概览页的 home_time_label，避免引用不存在的 id。
+#   优先用 HA 推送的中文时间实体（ha_time_text），取不到时用本机 SNTP 时间兜底。
+#   SNTP 只要设备能上网就能对时，不依赖 HA 是否可达。
+interval:
+  # ----------------------------------------------------------
+  # 数据通道状态巡检（1 秒一次）
+  #   判定：超过 ha_stale_ms（15s）没收到新的 MQTT 数据帧 → 离线
+  #   开机后前 20 秒不显示离线（等 WiFi + MQTT + 首帧数据到位），
+  #   避免开机瞬间闪一下红字。
+  # ----------------------------------------------------------
+  - interval: 1s
+    then:
+      - lambda: |-
+          if (!id(lvgl_ready)) return;
+
+          const uint32_t now_ms = millis();
+          const uint32_t last   = id(ha_data_last_ms);
+
+          // 开机保护期：2 秒到 20 秒之间不报离线
+          if (now_ms < 20000) {
+            lv_obj_add_flag(id(offlink_icon), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(offlink_text), LV_OBJ_FLAG_HIDDEN);
+            return;
+          }
+
+          const bool stale = (last == 0) || (now_ms - last > id(ha_stale_ms));
+          static bool shown = false;
+          if (stale != shown) {
+            shown = stale;
+            if (stale) {
+              lv_obj_clear_flag(id(offlink_icon), LV_OBJ_FLAG_HIDDEN);
+              lv_obj_clear_flag(id(offlink_text), LV_OBJ_FLAG_HIDDEN);
+              ESP_LOGW("offlink", "数据通道离线（最后更新 %u ms 前）",
+                       (unsigned)(last == 0 ? 0 : now_ms - last));
+            } else {
+              lv_obj_add_flag(id(offlink_icon), LV_OBJ_FLAG_HIDDEN);
+              lv_obj_add_flag(id(offlink_text), LV_OBJ_FLAG_HIDDEN);
+              ESP_LOGI("offlink", "数据通道恢复");
+            }
+          }
+
+  - interval: 1s
+    then:
+      - lambda: |-
+          if (!id(lvgl_ready)) return;
+          if (id(ui_current_page) != 0) return;
+          if (id(ha_time_text).has_state() && !id(ha_time_text).state.empty()) return;
+
+          auto now = id(system_time).now();
+          if (now.is_valid()) {
+            char tbuf[48];
+            static const char* wk[] = {"日", "一", "二", "三", "四", "五", "六"};
+            int w = now.day_of_week - 1;
+            if (w < 0 || w > 6) w = 0;
+            snprintf(tbuf, sizeof(tbuf), "%d月%d日 星期%s %02d:%02d",
+                     now.month, now.day_of_month, wk[w], now.hour, now.minute);
+            lv_label_set_text(id(home_time_label), tbuf);
+          }
+
+  # 启动后做一次字库自检：日志里打印 ok 表示该字已编译进字体，MISS 表示缺失
+  - interval: 15s
+    then:
+      - lambda: |-
+          static bool checked = false;
+          if (checked || !id(lvgl_ready)) return;
+          checked = true;
+          const lv_font_t *f = lv_obj_get_style_text_font(id(home_time_label), LV_PART_MAIN);
+          if (f == nullptr) {
+            ESP_LOGW("font", "home_time_label font is null");
+            return;
+          }
+          static const uint32_t cps[] = {
+            0x6982, 0x89C8, 0x7F51, 0x7EDC, 0x7CFB, 0x7EDF,
+            0x670D, 0x52A1, 0x5668, 0x8BBE, 0x5907, 0x7535,
+          };
+          for (uint32_t cp : cps) {
+            lv_font_glyph_dsc_t dsc;
+            bool ok = lv_font_get_glyph_dsc(f, &dsc, cp, 0);
+            ESP_LOGI("font", "U+%04lX %s", (unsigned long) cp, ok ? "ok" : "MISS");
+          }
+
+  # ============================================================
+  # 熄屏巡检：每秒判断是否该关闭背光
+  #   · 空闲时长取 LVGL 的"无输入时间"（触摸最后活动至今），
+  #     比手写 millis() 更准，也不用自己维护计时变量；
+  #   · 阈值来自 HA 可调的 number 实体 sleep_timeout_number（默认 60s）；
+  #   · 只关背光，不暂停 LVGL —— 唤醒时画面立刻就在，不会卡一下。
+  #   函数名用 lv_disp_get_inactive_time：与 ESPHome 内置 lvgl 的
+  #   lvgl.is_idle 条件实现完全一致（源码 automation.py 里就是
+  #   lv_expr.disp_get_inactive_time(...)）。
+  # ============================================================
+  - interval: 1s
+    then:
+      - lambda: |-
+          if (!id(lvgl_ready)) return;
+          if (id(ui_screen_off)) return;
+          if (!id(ui_auto_sleep_enabled)) return;
+
+          uint32_t idle_ms = lv_disp_get_inactive_time(NULL);
+          uint32_t sleep_ms = (uint32_t) (id(sleep_timeout_number).state * 1000.0f);
+          if (idle_ms >= sleep_ms) {
+            id(sleep_screen).execute();
+          }
