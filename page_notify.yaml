@@ -2,7 +2,7 @@
 # 页面 4：通知列表（不进底部三键导航）
 # ----------------------------------------------------------
 # 入口：任意页面右上角铃铛图标（bell_icon，定义在主配置 top_layer）
-# 返回：底部「返回」键 → 概览页
+# 返回：底部「返回」键 → 家居页
 # 数据：MQTT home/ha-monitor-display/notify → 8 条环形缓冲
 #       （订阅与写入见主配置 on_message，globals 在 ui_common.yaml）
 # 布局：顶栏(标题+条数, y5 h30)
@@ -23,7 +23,7 @@ lvgl:
       scrollbar_mode: "OFF"
       on_load:
         - lambda: |-
-            id(ui_current_page) = 4;      // 通知页 = 第 4 屏（0 概览/2 网络/3 系统，1 弃用）
+            id(ui_current_page) = 4;      // 通知页 = 第 4 屏（0 家居/2 网络/3 系统，1 弃用）
             id(g_notify_unread) = 0;      // 进入即清除未读，铃铛回落灰色
       widgets:
         # ============ 顶栏：通知 | 共 N 条 (y5 h30) ============

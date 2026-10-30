@@ -56,6 +56,8 @@ font:
       - "注册活像充变测有去打磁体红发座感放波激"   # 轨迹动态（19字）
       # 其他高频场所/设备（活动轨迹可能出现）
       - "玄储儿次游童物响戏户伞利公秀好"   # 其他高频（12字，含SIGQ"良好"档）
+      # 活动轨迹补充（房间名/动态词：卫生间 茶桌 影音室 过道 庭院 储藏室 娱乐室 健身房 阅读角 办公桌 车库 宠物）
+      - "茶生走影帽智库庭院藏过娱健身阅办宠乐角"   # 轨迹补充（19字）
 
   - file: "fonts/NotoSansSC-SemiBold.ttf"
     id: ui_font_medium
@@ -124,6 +126,11 @@ font:
       # --- 离线指示（top_layer 全局状态图标）---
       - "\U000F1BF6"   # mdi:cloud-off 数据通道断开（实心断云）
       - "\U000F0164"   # mdi:cloud-off-outline 断云描边版（备用）
+      # --- 区块标题图标（标题文字 12px + 图标 16px，label height:18 垂直居中）---
+      - "\U000F0002"   # mdi:access-point-network 网络运行（网络页左列标题）
+      - "\U000F02FD"   # mdi:information-outline 设备信息（系统页左列标题）
+      - "\U000F029A"   # mdi:gauge 系统负载（系统页中列标题）
+      - "\U000F062E"   # mdi:tune 网络参数（系统页右列标题）
 
   # 图标 12px 版：与 mdi_icons(16px) 共用同一份字形表
   #   用途：文字用 ui_font_small(12px) 的行，图标也用 12px 才与文字等宽

@@ -1,5 +1,5 @@
 # ==========================================================
-# 页面 1：概览（默认首页）
+# 页面 1：家居（默认首页）
 #   6 个标准行，高度均分：320 - 上边距5 - 下边距5 - 5个间距×3 = 295
 #   295 / 6 = 49 余 1 → 余数给首行：行1 高 50，其余 49
 #   行1：中文时间 | 天气与温度 | 上证指数      （字号：small）
@@ -8,7 +8,7 @@
 #   行4：左列「电灯/窗帘」跨两行(101) | 中列「空调/电器」跨两行(101)
 #        | 右列上下两个标准行：Nova13 / Nova12
 #   行5：（左中列已跨行占用）右列下半，行4~行5 合成一个 101 高的视觉块
-#   行6：TAB 导航（概览 | 网络 | 系统）         （字号：medium）
+#   行6：TAB 导航（家居 | 网络 | 系统）         （字号：medium）
 # 依赖 ui_common.yaml 里的字体与全局变量
 # ==========================================================
 
@@ -21,7 +21,7 @@ lvgl:
       scrollable: false
       scrollbar_mode: "OFF"
       on_load:
-        - lambda: id(ui_current_page) = 0;   # 概览页 = 默认首页
+        - lambda: id(ui_current_page) = 0;   # 家居页 = 默认首页
       widgets:
         # ============ 行1：时间 / 天气 / 上证指数 (y5 h50) ============
         - obj:
@@ -261,7 +261,15 @@ lvgl:
               # 标题：电器动态（白色）
               - label:
                   align: left_mid
-                  x: 8
+                  x: 6
+                  y: -42
+                  height: 18
+                  text: "\U000F0FB0"
+                  text_font: mdi_icons
+                  text_color: 0xFFFFFF
+              - label:
+                  align: left_mid
+                  x: 25
                   y: -42
                   text: "电器动态"
                   text_font: ui_font_small
@@ -361,7 +369,15 @@ lvgl:
               # 标题：今日能耗（橙色）—— 下移 2px（-44 → -42）
               - label:
                   align: left_mid
-                  x: 8
+                  x: 6
+                  y: -42
+                  height: 18
+                  text: "\U000F012A"
+                  text_font: mdi_icons
+                  text_color: 0xFFFFFF
+              - label:
+                  align: left_mid
+                  x: 25
                   y: -42
                   text: "今日能耗"
                   text_font: ui_font_small
@@ -531,7 +547,7 @@ lvgl:
                   align: left_mid
                   x: 0
                   width: 156
-                  text: "概览"
+                  text: "家居"
                   text_align: CENTER
                   text_font: ui_font_large
                   text_color: 0x4FD8FA

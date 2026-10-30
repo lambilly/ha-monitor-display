@@ -2,7 +2,7 @@
 # 主配置：设备 / 网络 / 硬件 / HA 实体
 # 页面布局拆分到 ui/ 目录，改界面只需改对应文件：
 #   ui/ui_common.yaml     公共资源（字体、全局变量、时钟刷新）
-#   ui/page_dashboard.yaml       页面1 概览
+#   ui/page_dashboard.yaml       页面1 家居
 #   ui/page_network.yaml         页面2 网络
 #   ui/page_system.yaml          页面3 系统
 #
@@ -12,7 +12,7 @@
 # ==========================================================
 
 packages:
-  # 页面顺序 = LVGL 页面列表顺序，第一个为开机默认页（概览）
+  # 页面顺序 = LVGL 页面列表顺序，第一个为开机默认页（家居）
   page_dashboard: !include ui/page_dashboard.yaml
   page_network: !include ui/page_network.yaml
   page_system: !include ui/page_system.yaml
@@ -297,7 +297,7 @@ lvgl:
     - lambda:
         ESP_LOGI("custom", "LVGL is ready!");
         id(lvgl_ready) = true;
-    # 开机默认进入概览页
+    # 开机默认进入家居页
     - lvgl.page.show: dashboard_page
   default_font: ui_font_small
   theme:

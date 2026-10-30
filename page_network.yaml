@@ -1,14 +1,14 @@
 # ==========================================================
 # 页面 2：网络
 #   行高与 page_dashboard.yaml 完全对齐：
-#     行1 y5   h50  （与概览页行1 一致）
-#     行2 y58  h49  （与概览页行2 一致，由 4 格改为 5 格均分）
+#     行1 y5   h50  （与家居页行1 一致）
+#     行2 y58  h49  （与家居页行2 一致，由 4 格改为 5 格均分）
 #     行3 y110 h153 （剩余空间全部给第三行，三列均分）
-#     行4 y266 h49  （与概览页末行一致）
+#     行4 y266 h49  （与家居页末行一致）
 #   行1：外网 IP / 已连接时长（WAN）
 #   行2：服务器 / 网关 / AP / 设备 / ASR  五列均分
-#   行3：网络总览 | NAS状态 | 风扇运行   三列均分（标题 + 下划线 + 四行）
-#   行4：TAB 导航（概览 | 网络 | 系统）
+#   行3：网络运行 | NAS运行 | 风扇运行   三列均分（标题 + 下划线 + 四行）
+#   行4：TAB 导航（家居 | 网络 | 系统）
 #
 # 依赖 ui_common.yaml 里的字体与全局变量
 # ==========================================================
@@ -197,7 +197,7 @@ lvgl:
         # 列内：标题 align:left_mid y=-60（框高中线 76.5，-60 → 中心 16.5，底边约 23）
         #       横线 y=25（紧贴标题底边下方 2px，左右各留 5px）
         #       四行 align:left_mid y = -32 / -4 / 24 / 52
-        # ---- 左列：网络总览（白色标题）----
+        # ---- 左列：网络运行（白色标题）----
         - obj:
             x: 5
             y: 110
@@ -211,9 +211,17 @@ lvgl:
             widgets:
               - label:
                   align: left_mid
-                  x: 8
+                  x: 5
                   y: -60
-                  text: "网络总览"
+                  height: 18
+                  text: "\U000F0002"
+                  text_font: mdi_icons
+                  text_color: 0xFFFFFF
+              - label:
+                  align: left_mid
+                  x: 24
+                  y: -60
+                  text: "网络运行"
                   text_font: ui_font_small
                   text_color: 0xFFFFFF
               # 标题下划横线：框中 y=26（框高 153，标题底边约 y25），左右各留 5px
@@ -309,9 +317,17 @@ lvgl:
             widgets:
               - label:
                   align: left_mid
-                  x: 5
+                  x: 2
                   y: -60
-                  text: "NAS状态"
+                  height: 18
+                  text: "\U000F08F3"
+                  text_font: mdi_icons
+                  text_color: 0xFFFFFF
+              - label:
+                  align: left_mid
+                  x: 20
+                  y: -60
+                  text: "NAS运行"
                   text_font: ui_font_small
                   text_color: 0xFFFFFF
               - obj:
@@ -405,7 +421,15 @@ lvgl:
             widgets:
               - label:
                   align: left_mid
-                  x: 4
+                  x: 1
+                  y: -60
+                  height: 18
+                  text: "\U000F0210"
+                  text_font: mdi_icons
+                  text_color: 0xFFFFFF
+              - label:
+                  align: left_mid
+                  x: 19
                   y: -60
                   text: "风扇运行"
                   text_font: ui_font_small
@@ -572,7 +596,7 @@ lvgl:
                   align: left_mid
                   x: 0
                   width: 156
-                  text: "概览"
+                  text: "家居"
                   text_align: CENTER
                   text_font: ui_font_large
                   text_color: 0x757575
@@ -651,7 +675,7 @@ interval:
             }
           }
 
-          // ===== 行2：五列在线数（与概览页行2 同款格式）=====
+          // ===== 行2：五列在线数（与家居页行2 同款格式）=====
           auto set_cnt = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name) {
             char b[40];
             if (std::isfinite(s->state)) snprintf(b, sizeof(b), "%s: %d", name, (int)s->state);
