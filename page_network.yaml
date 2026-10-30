@@ -318,7 +318,7 @@ lvgl:
               - label:
                   align: left_mid
                   x: 2
-                  y: -59
+                  y: -58
                   height: 18
                   text: "\U000F08F3"
                   text_font: mdi_icons
