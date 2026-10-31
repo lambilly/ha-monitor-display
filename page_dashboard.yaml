@@ -157,7 +157,7 @@ lvgl:
                   text: "\U000F011C"
                   text_font: mdi_icons_20
                   height: 18
-                  text_color: 0x59D98B
+                  text_color: 0x5AA9FF
               - label:
                   id: home_ap_label
                   align: left_mid
@@ -184,7 +184,7 @@ lvgl:
                   text: "\U000F057E"
                   text_font: mdi_icons_20
                   height: 18
-                  text_color: 0x5AA9FF
+                  text_color: 0x59D98B
               - label:
                   id: home_monitor_label
                   align: left_mid
@@ -651,11 +651,11 @@ interval:
           }
 
           // ===== 行2：四格（在家 / 客人 / 手机 / 语音）=====
-          // 名称恒白（静态字统一白）；数值保留动态色，图标无数据时转白：
-          //   在家  数值>0 → 橙 FFB74D；=0 或无数据 → 灰
-          //   客人  数值>0 → 紫 B39DFF；=0 或无数据 → 灰
-          //   手机  数值>0 → 蓝 5AA9FF；=0 或无数据 → 灰
-          //   语音  开 → 绿 59D98B；关 → 红 FF5252；无数据 → 灰
+          // 名称恒白（静态字统一白）；数值保留动态色；**图标恒为规划基色**：
+          //   在家  图标橙 FFB74D / 客人 图标紫 B39DFF / 手机 图标蓝 5AA9FF
+          //   数值   >0 → 基色；=0 或无数据 → 灰 757575
+          // 图标是「这是哪一格」的定位锚点，不随数值状态灰化/白化 —
+          // 否则没客人时整格无色，四格之间就分不出谁是谁了。
           // 数值靠 recolor 内联着色（label 需 recolor: true）："在家: #FFB74D 3#"
           auto set_cnt_color = [](lv_obj_t* lbl, lv_obj_t* icon, esphome::sensor::Sensor* s,
                                   const char* name, uint32_t on_color) {
@@ -671,7 +671,7 @@ interval:
             }
             lv_label_set_text(lbl, b);
             lv_obj_set_style_text_color(lbl,  lv_color_hex(0xFFFFFF), 0);
-            lv_obj_set_style_text_color(icon, lv_color_hex(has ? vc : 0xFFFFFF), 0);
+            lv_obj_set_style_text_color(icon, lv_color_hex(on_color), 0);   // 图标恒基色
           };
           set_cnt_color(id(home_server_label),  id(home_server_icon),  id(ha_family_home),  "在家", 0xFFB74D);
           set_cnt_color(id(home_gateway_label), id(home_gateway_icon), id(ha_guest_visit),  "客人", 0xB39DFF);
