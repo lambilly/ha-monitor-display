@@ -190,7 +190,7 @@ globals:
     initial_value: "1.0"
   # --- 每页卡片底色（v1.1.0，HA 下拉选色）---
   #   卡片底色 = 该值；screen 四周 5px 边距与卡间 3px 缝隙 = 该值 × 0.5
-  #   默认 0x1E1E1E（石墨档）与改造前观感一致；另提供 深空黑 101012 / 深靛 241A48
+  #   默认 0x1E1E1E（石墨档）与改造前观感一致；另提供 深空黑 101012 / 深靛 241A48 / 亮灰 3A3A3C
   - id: ui_bg_dash
     type: uint32_t
     restore_value: true
