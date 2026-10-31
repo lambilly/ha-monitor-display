@@ -111,6 +111,7 @@ lvgl:
                   text: "在家: --"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
+                  recolor: true
         - obj:
             x: 126
             y: 61
@@ -137,6 +138,7 @@ lvgl:
                   text: "客人: --"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
+                  recolor: true
         - obj:
             x: 249
             y: 61
@@ -163,6 +165,7 @@ lvgl:
                   text: "手机: --"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
+                  recolor: true
         - obj:
             x: 370
             y: 61
@@ -189,6 +192,7 @@ lvgl:
                   text: "语音: --"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
+                  recolor: true
 
         # ============ 行3：居家模式 | 车位状态 (y110 h49) ============
         - obj:
@@ -647,34 +651,47 @@ interval:
           }
 
           // ===== 行2：四格（在家 / 客人 / 手机 / 语音）=====
-          // 着色规则（图标与文字整格同步）：
-          //   在家  数量>0 → 橙 FFB74D；=0 或 -- → 整格灰
-          //   客人  数量>0 → 紫 B39DFF；=0 或 -- → 整格灰
-          //   手机  数量>0 → 蓝 5AA9FF；=0 或 -- → 整格灰
-          //   语音  开 → 绿 59D98B；关 → 红 FF5252；-- → 灰
+          // 名称恒白（静态字统一白）；数值保留动态色，图标无数据时转白：
+          //   在家  数值>0 → 橙 FFB74D；=0 或无数据 → 灰
+          //   客人  数值>0 → 紫 B39DFF；=0 或无数据 → 灰
+          //   手机  数值>0 → 蓝 5AA9FF；=0 或无数据 → 灰
+          //   语音  开 → 绿 59D98B；关 → 红 FF5252；无数据 → 灰
+          // 数值靠 recolor 内联着色（label 需 recolor: true）："在家: #FFB74D 3#"
           auto set_cnt_color = [](lv_obj_t* lbl, lv_obj_t* icon, esphome::sensor::Sensor* s,
                                   const char* name, uint32_t on_color) {
-            char b[40];
+            char b[64];
             const bool has = std::isfinite(s->state);
-            if (!has) snprintf(b, sizeof(b), "%s: --", name);
-            else snprintf(b, sizeof(b), "%s: %d", name, (int) s->state);
+            const uint32_t vc = (has && s->state > 0.0f) ? on_color : 0x757575;
+            if (!has) {
+              snprintf(b, sizeof(b), "%s: #757575 --#", name);
+            } else {
+              snprintf(b, sizeof(b), "%s: #%02X%02X%02X %d#", name,
+                       (unsigned) ((vc >> 16) & 0xFF), (unsigned) ((vc >> 8) & 0xFF),
+                       (unsigned) (vc & 0xFF), (int) s->state);
+            }
             lv_label_set_text(lbl, b);
-            const uint32_t c = (has && s->state > 0.0f) ? on_color : 0x757575;
-            lv_obj_set_style_text_color(lbl,  lv_color_hex(c), 0);
-            lv_obj_set_style_text_color(icon, lv_color_hex(c), 0);
+            lv_obj_set_style_text_color(lbl,  lv_color_hex(0xFFFFFF), 0);
+            lv_obj_set_style_text_color(icon, lv_color_hex(has ? vc : 0xFFFFFF), 0);
           };
           set_cnt_color(id(home_server_label),  id(home_server_icon),  id(ha_family_home),  "在家", 0xFFB74D);
           set_cnt_color(id(home_gateway_label), id(home_gateway_icon), id(ha_guest_visit),  "客人", 0xB39DFF);
           set_cnt_color(id(home_ap_label),      id(home_ap_icon),      id(ha_phone_online), "手机", 0x5AA9FF);
-          // 语音广播是开关实体：开=绿（图标+文字）/ 关=红 / 实体缺失灰 + "--"
+          // 语音广播是开关实体：名称白 / 开=绿 / 关=红 / 无数据灰 + "--"；图标无数据时转白
           {
             const bool has_v = id(ha_voice_broadcast).has_state();
             const bool on_v  = has_v && id(ha_voice_broadcast).state;
-            lv_label_set_text(id(home_monitor_label),
-                              !has_v ? "语音: --" : (on_v ? "语音: 开" : "语音: 关"));
             const uint32_t vc = !has_v ? 0x757575 : (on_v ? 0x59D98B : 0xFF5252);
-            lv_obj_set_style_text_color(id(home_monitor_label), lv_color_hex(vc), 0);
-            lv_obj_set_style_text_color(id(home_monitor_icon),  lv_color_hex(vc), 0);
+            char vb[48];
+            if (!has_v) {
+              snprintf(vb, sizeof(vb), "语音: #757575 --#");
+            } else {
+              snprintf(vb, sizeof(vb), "语音: #%02X%02X%02X %s#",
+                       (unsigned) ((vc >> 16) & 0xFF), (unsigned) ((vc >> 8) & 0xFF),
+                       (unsigned) (vc & 0xFF), on_v ? "开" : "关");
+            }
+            lv_label_set_text(id(home_monitor_label), vb);
+            lv_obj_set_style_text_color(id(home_monitor_label), lv_color_hex(0xFFFFFF), 0);
+            lv_obj_set_style_text_color(id(home_monitor_icon), lv_color_hex(has_v ? vc : 0xFFFFFF), 0);
           }
 
           // ===== 行3：居家模式（在家橙/离家红/休息紫/影音黄）+ 活动轨迹（黄）/ 车位状态 =====
