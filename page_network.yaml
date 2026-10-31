@@ -362,7 +362,7 @@ lvgl:
                   y: -32
                   text: "CPU利用: --"
                   text_font: ui_font_small
-                  text_color: 0xFFB74D
+                  text_color: 0x757575
               # 第2行：内存可用
               - label:
                   align: left_mid
@@ -378,7 +378,7 @@ lvgl:
                   y: -4
                   text: "内存可用: --"
                   text_font: ui_font_small
-                  text_color: 0xB39DFF
+                  text_color: 0x757575
               # 第3行：上传
               - label:
                   align: left_mid
@@ -410,7 +410,7 @@ lvgl:
                   y: 52
                   text: "下载: --"
                   text_font: ui_font_small
-                  text_color: 0xFFD54F
+                  text_color: 0x5AA9FF
 
         # ---- 右列：风扇运行（白色标题）----
         - obj:
@@ -733,11 +733,12 @@ interval:
           // CPU / 内存：百分比，超阈值变色提示
           //   base_color 是常态色（与同行的图标颜色一致）。CPU 常态橙、超限黄/红；
           //   内存常态色就是紫色（和图标一样），但超限时仍然变成黄/红，避免"满了还显示紫色"的误判。
+          //   未载入数据（首帧/实体缺失）→ 灰 757575 的 "--"，与上传/下载的兜底格式一致。
           auto set_pct = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name,
                             uint32_t warn, uint32_t danger, uint32_t base_color) {
             char b[40];
             if (!std::isfinite(s->state)) {
-              snprintf(b, sizeof(b), "%s:--", name);
+              snprintf(b, sizeof(b), "%s: --", name);
               lv_label_set_text(lbl, b);
               lv_obj_set_style_text_color(lbl, lv_color_hex(0x757575), 0);
               return;
@@ -770,9 +771,9 @@ interval:
           set_rate(id(net_nas_download_label), id(ha_nas_download), "下载");
 
           // ===== 行3 右列：风扇四路 =====
-          // 着色规则（“前扇:”等前缀恒用本行图标色，只有后面的状态字变色）：
+          // 着色规则（"前扇:"等前缀恒用本行图标色，只有后面的状态字变色）：
           //   停 / 关 / --(无数据) → 灰 757575
-          //   开、转速 ≤50%       → 绿 59D98B
+          //   开、转速 ≤50%       → 黄 FFD54F（正常运转）
           //   转速 51~80%         → 橙 FFB74D（高负载）
           //   转速 >80%           → 红 FF5252（极高负载）
           auto set_fan = [](lv_obj_t* lbl, esphome::sensor::Sensor* rpm_s,
@@ -785,10 +786,10 @@ interval:
             } else if (rpm < 1.0f) {
               snprintf(b, sizeof(b), "%s: #757575 停#", name);
             } else if (std::isfinite(pct)) {
-              const char* c = pct > 80.0f ? "FF5252" : (pct > 50.0f ? "FFB74D" : "59D98B");
+              const char* c = pct > 80.0f ? "FF5252" : (pct > 50.0f ? "FFB74D" : "FFD54F");
               snprintf(b, sizeof(b), "%s: #%s %d%%#", name, c, (int) pct);
             } else {
-              snprintf(b, sizeof(b), "%s: #59D98B %d转#", name, (int) rpm);
+              snprintf(b, sizeof(b), "%s: #FFD54F %d转#", name, (int) rpm);
             }
             lv_label_set_text(lbl, b);
             lv_obj_set_style_text_color(lbl, lv_color_hex(base), 0);
@@ -803,7 +804,7 @@ interval:
               snprintf(b, sizeof(b), "%s: #757575 --#", name);
             } else {
               snprintf(b, sizeof(b), "%s: #%s %s#", name,
-                       bs->state ? "59D98B" : "757575", bs->state ? "开" : "关");
+                       bs->state ? "FFD54F" : "757575", bs->state ? "开" : "关");
             }
             lv_label_set_text(lbl, b);
             lv_obj_set_style_text_color(lbl, lv_color_hex(base), 0);

@@ -372,7 +372,7 @@ lvgl:
               - label:
                   align: left_mid
                   x: 6
-                  y: -41
+                  y: -40
                   height: 18
                   text: "\U000F0128"
                   text_font: mdi_icons
