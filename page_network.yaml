@@ -60,7 +60,7 @@ lvgl:
                   text: "\U000F0FA8"
                   text_font: mdi_icons_20
                   height: 18
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
               - label:
                   id: net_uptime_label
                   align: left_mid
@@ -225,7 +225,7 @@ lvgl:
                   height: 18
                   text: "\U000F0002"
                   text_font: mdi_icons
-                  text_color: 0xFFFFFF
+                  text_color: 0x4FD8FA
               - label:
                   align: left_mid
                   x: 24
@@ -331,7 +331,7 @@ lvgl:
                   height: 18
                   text: "\U000F08F3"
                   text_font: mdi_icons
-                  text_color: 0xFFFFFF
+                  text_color: 0x4FD8FA
               - label:
                   align: left_mid
                   x: 20
@@ -435,7 +435,7 @@ lvgl:
                   height: 18
                   text: "\U000F0210"
                   text_font: mdi_icons
-                  text_color: 0xFFFFFF
+                  text_color: 0x4FD8FA
               - label:
                   align: left_mid
                   x: 19
@@ -654,13 +654,11 @@ interval:
             lv_label_set_text(id(net_ip_label), buf);
           }
           {
-            // WAN 状态：在线绿 / 离线灰（与 IP 同色联动，一眼能看出是否通外网）
-            // 注意：has_state()==false 表示 HA 侧 wan_status 实体缺失，
-            // 不能当成"离线"，否则会把"没数据"误报成"断网"。
+            // WAN 状态：文字统一白（不再用绿色）；仅离线时转灰提示断网
             const bool wan_known = id(net_wan_status).has_state();
             const bool wan_up    = wan_known && id(net_wan_status).state;
             lv_obj_set_style_text_color(id(net_uptime_label),
-                                        lv_color_hex(wan_up ? 0x59D98B : 0x757575), 0);
+                                        lv_color_hex(wan_up ? 0xFFFFFF : 0x757575), 0);
 
             // 已连接时长：sensor.tp_link_smb_tl_r498gpm_ac_uptime（单位秒）
             float secs = id(net_wan_uptime).state;
