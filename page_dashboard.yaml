@@ -238,6 +238,8 @@ lvgl:
             radius: 10
             scrollable: false
             widgets:
+              # 左栏一行：图标 + "车位状态: 空闲"（垂直居中，位置与改造前一致）
+              # 右栏两行：两车公里数（12px，右对齐），黄=轩逸 / 粉=比亚迪
               - label:
                   id: home_parking_icon
                   align: left_mid
@@ -245,36 +247,33 @@ lvgl:
                   text: "\U000F010B"
                   text_font: mdi_icons_20
                   height: 18
-                  y: -14         # 车位图标字形重心偏高，随"车位状态"行上移对齐
+                  y: -1          # 车位图标字形重心偏高，单独上提 1px 与文字对齐
                   text_color: 0xFFB74D
               - label:
                   id: home_parking_label
                   align: left_mid
                   x: 32
-                  y: -13         # 49px 高卡片塞三行：状态行上移，下方两行 12px 距离
                   text: "车位状态: #757575 --#"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
                   recolor: true
-              # 车辆距离（12px）：轩逸黄 / 比亚迪粉，行色与车位状态图标色一致
+              # 右栏：两行公里数上下排列，右边缘对齐卡片右侧 8px
               - label:
                   id: home_xuanyi_dist_label
-                  align: left_mid
-                  x: 32
-                  y: 3
-                  text: "轩逸: #757575 --#"
+                  align: right_mid
+                  x: -8
+                  y: -9
+                  text: "--"
                   text_font: ui_font_small
-                  text_color: 0xFFD54F
-                  recolor: true
+                  text_color: 0x757575
               - label:
                   id: home_byd_dist_label
-                  align: left_mid
-                  x: 32
-                  y: 17
-                  text: "比亚迪: #757575 --#"
+                  align: right_mid
+                  x: -8
+                  y: 9
+                  text: "--"
                   text_font: ui_font_small
-                  text_color: 0xFF80AB
-                  recolor: true
+                  text_color: 0x757575
 
         # ============ 行4~行5 左列：电器动态（跨两行 h101：标题 + 四行） ============
         # 154x101 内：标题占顶部 17px，四行在下方 84px 内等分 21px/行
@@ -801,17 +800,22 @@ interval:
             lv_obj_set_style_text_color(id(home_parking_icon),  lv_color_hex(pkc), 0);
           }
 
-          // 车辆距离（车位卡片下方两行 12px）：轩逸黄 FFD54F / 比亚迪粉 FF80AB
-          //   行色由静态 text_color 定（常量行不改基色），有数据 "轩逸: 1.23km"，
-          //   无数据仅 "--" 内联灰
-          auto set_dist = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name) {
-            char b[40];
-            if (std::isfinite(s->state)) snprintf(b, sizeof(b), "%s: %.2fkm", name, s->state);
-            else snprintf(b, sizeof(b), "%s: #757575 --#", name);
+          // 车辆距离（车位卡右栏上下两行，12px，只显示"数值+km"）：
+          //   黄 FFD54F = 轩逸 / 粉 FF80AB = 比亚迪，颜色即身份
+          //   无数据显示灰 "--"
+          auto set_dist = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, uint32_t color) {
+            char b[24];
+            if (std::isfinite(s->state)) {
+              snprintf(b, sizeof(b), "%.2fkm", s->state);
+              lv_obj_set_style_text_color(lbl, lv_color_hex(color), 0);
+            } else {
+              snprintf(b, sizeof(b), "--");
+              lv_obj_set_style_text_color(lbl, lv_color_hex(0x757575), 0);
+            }
             lv_label_set_text(lbl, b);
           };
-          set_dist(id(home_xuanyi_dist_label), id(ha_xuanyi_dist), "轩逸");
-          set_dist(id(home_byd_dist_label),    id(ha_byd_dist),    "比亚迪");
+          set_dist(id(home_xuanyi_dist_label), id(ha_xuanyi_dist), 0xFFD54F);
+          set_dist(id(home_byd_dist_label),    id(ha_byd_dist),    0xFF80AB);
 
           // ===== 行4/行5 左列：设备计数（格式：电灯: 2/36盏）=====
           auto set_cnt = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name, const char* total) {
