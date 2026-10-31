@@ -374,7 +374,7 @@ lvgl:
                   x: 6
                   y: -41
                   height: 18
-                  text: "\U000F012C"
+                  text: "\U000F0128"
                   text_font: mdi_icons
                   text_color: 0xFFFFFF
               - label:
