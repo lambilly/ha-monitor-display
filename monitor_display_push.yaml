@@ -7,7 +7,7 @@
 #     packages: !include_dir_named packages
 #
 # 作用：
-#   每 5 秒把这 52 个实体的当前值压成一个 JSON，publish 到
+#   每 5 秒把这 53 个实体的当前值压成一个 JSON，publish 到
 #   home/ha-monitor-display（retain=true），屏幕订阅这一个主题即可
 #   在任何网络下（家里 / 公司 / 酒店）拿到全部数据。
 #
@@ -25,7 +25,7 @@ automation:
   - id: monitor_display_push
     alias: "Monitor Display: 推送数据到 MQTT"
     description: >-
-      把屏幕所需的 52 个实体打包成 JSON 发到 MQTT，
+      把屏幕所需的 53 个实体打包成 JSON 发到 MQTT，
       供 ESP32 在任意网络（含外网）下读取
     mode: single
     max_exceeded: silent
@@ -129,6 +129,7 @@ automation:
                 "stock":           states('sensor.mei_ri_gu_zhi') | default('', true),
                 "stock_chg":       ns.stock_chg,
                 "home_mode":       states('sensor.ju_jia_mo_shi') | default('', true),
+                "mode_volume":     state_attr('sensor.ju_jia_mo_shi', 'volume_percent') | float(none),
                 "activity_log":    states('sensor.huo_dong_gui_ji') | default('', true),
                 "parking_status":  states('sensor.parking_status') | default('', true)
               } | to_json

@@ -181,6 +181,8 @@ mqtt:
           else                                        id(hd_stock_chg) = NAN;
           id(hd_home_mode) = x["home_mode"].is<const char *>() ? std::string(x["home_mode"].as<const char *>()) : std::string();
           id(hd_activity_log) = x["activity_log"].is<const char *>() ? std::string(x["activity_log"].as<const char *>()) : std::string();
+          if (x["mode_volume"].is<float>()) id(hd_mode_volume) = x["mode_volume"].as<float>();
+          else id(hd_mode_volume) = NAN;
           id(hd_parking_status) = x["parking_status"].is<const char *>() ? std::string(x["parking_status"].as<const char *>()) : std::string();
 
           id(ha_data_last_ms) = millis();
@@ -580,6 +582,11 @@ globals:
     type: std::string
     restore_value: false
     initial_value: '""'
+  # 居家模式的音量百分比（sensor.ju_jia_mo_shi 的 volume_percent 属性，如 65）
+  - id: hd_mode_volume
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
   - id: hd_parking_status
     type: std::string
     restore_value: false
@@ -1307,6 +1314,14 @@ text_sensor:
     lambda: |-
       if (id(ha_data_last_ms) == 0) return {};
       return { id(hd_activity_log) };
+  # mode_volume（居家模式音量百分比）
+  - platform: template
+    id: ha_mode_volume
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return { id(hd_mode_volume) };
   # parking_status
   - platform: template
     id: ha_parking_status

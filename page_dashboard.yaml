@@ -210,7 +210,7 @@ lvgl:
               - label:
                   id: home_mode_icon
                   align: left_mid
-                  x: 8
+                  x: 5
                   text: "\U000F02DC"
                   text_font: mdi_icons_20
                   height: 18
@@ -222,7 +222,7 @@ lvgl:
               - label:
                   id: home_mode_label
                   align: left_mid
-                  x: 32
+                  x: 29
                   text: "居家模式"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
@@ -257,11 +257,11 @@ lvgl:
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
                   recolor: true
-              # 右栏：两行公里数上下排列，右边缘距卡片右侧 6px（左列同步左移 3px 让位）
+              # 右栏：两行公里数上下排列，右边缘距卡片右侧 3px；左列距左侧 5px
               - label:
                   id: home_xuanyi_dist_label
                   align: right_mid
-                  x: -6
+                  x: -5
                   y: -8
                   text: "--"
                   text_font: ui_font_small
@@ -269,7 +269,7 @@ lvgl:
               - label:
                   id: home_byd_dist_label
                   align: right_mid
-                  x: -6
+                  x: -5
                   y: 8
                   text: "--"
                   text_font: ui_font_small
@@ -752,6 +752,12 @@ interval:
             std::string m = has_mode ? strip_hash(mode) : "居家模式";
             std::string a = has_act  ? strip_hash(act)  : "";
 
+            // 音量百分比：sensor.ju_jia_mo_shi 的 volume_percent 属性（65 → " 65%"）
+            //   接在轨迹段之后、空一格；属性缺失时不显示（不占位、也不出 --）
+            char vbuf[16] = "";
+            if (std::isfinite(id(ha_mode_volume).state))
+              snprintf(vbuf, sizeof(vbuf), " %.0f%%", id(ha_mode_volume).state);
+
             // 着色规则（10-31 十二轮，用户定）：
             //   **模式色同时上图标与模式文字（文字随图标一起变）**
             //     在家=橙 FFB74D / 离家=红 FF5252 / 休息=紫 B39DFF / 影音=黄 FFD54F
@@ -765,12 +771,12 @@ interval:
             lv_obj_set_style_text_color(id(home_mode_icon),
                                         lv_color_hex((uint32_t) strtoul(mcol, nullptr, 16)), 0);
             if (has_act && has_mode) {
-              snprintf(mbuf, sizeof(mbuf), "#%s %s# #FFFFFF %s#", mcol, m.c_str(), a.c_str());
+              snprintf(mbuf, sizeof(mbuf), "#%s %s# #FFFFFF %s#%s", mcol, m.c_str(), a.c_str(), vbuf);
             } else if (has_act) {
-              snprintf(mbuf, sizeof(mbuf), "#FFFFFF %s#", a.c_str());
+              snprintf(mbuf, sizeof(mbuf), "#FFFFFF %s#%s", a.c_str(), vbuf);
             } else if (has_mode) {
               // 无活动轨迹：占位 "--" 用灰，与车位/电灯等无数据写法一致
-              snprintf(mbuf, sizeof(mbuf), "#%s %s# #757575 --#", mcol, m.c_str());
+              snprintf(mbuf, sizeof(mbuf), "#%s %s# #757575 --#%s", mcol, m.c_str(), vbuf);
             } else {
               snprintf(mbuf, sizeof(mbuf), "#FFFFFF 居家模式# #757575 --#");
             }
