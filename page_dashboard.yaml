@@ -243,7 +243,7 @@ lvgl:
               - label:
                   id: home_parking_icon
                   align: left_mid
-                  x: 8
+                  x: 5
                   text: "\U000F010B"
                   text_font: mdi_icons_20
                   height: 18
@@ -252,25 +252,25 @@ lvgl:
               - label:
                   id: home_parking_label
                   align: left_mid
-                  x: 32
+                  x: 29
                   text: "车位状态: #757575 --#"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
                   recolor: true
-              # 右栏：两行公里数上下排列，右边缘对齐卡片右侧 8px
+              # 右栏：两行公里数上下排列，右边缘距卡片右侧 6px（左列同步左移 3px 让位）
               - label:
                   id: home_xuanyi_dist_label
                   align: right_mid
-                  x: -8
-                  y: -9
+                  x: -6
+                  y: -8
                   text: "--"
                   text_font: ui_font_small
                   text_color: 0x757575
               - label:
                   id: home_byd_dist_label
                   align: right_mid
-                  x: -8
-                  y: 9
+                  x: -6
+                  y: 8
                   text: "--"
                   text_font: ui_font_small
                   text_color: 0x757575
