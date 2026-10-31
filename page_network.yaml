@@ -40,9 +40,11 @@ lvgl:
             radius: 10
             scrollable: false
             widgets:
+              # 行1 左块整体左移 3px（10-31 二十一轮）：图标 x4→1、文字 x26→23
+              #   目的：首元素视觉左边界与第一页行1 的时间文字对齐
               - label:
                   align: left_mid
-                  x: 4
+                  x: 1
                   text: "\U000F0A5F"
                   text_font: mdi_icons_20
                   height: 18
@@ -50,7 +52,7 @@ lvgl:
               - label:
                   id: net_ip_label
                   align: left_mid
-                  x: 26
+                  x: 23
                   text: "外网IP: #757575 --#"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
