@@ -17,6 +17,10 @@ lvgl:
       scrollbar_mode: "OFF"
       on_load:
         - lambda: id(ui_current_page) = 3;   # 系统页
+        # 套用本页当前配色（HA 下拉选了非默认色时，开机/切页后仍能正确显示）
+        - script.execute:
+            id: ui_apply_bg
+            page: 2
       widgets:
         # ============ 行1：标题栏 (y5 h50) ============
         - obj:

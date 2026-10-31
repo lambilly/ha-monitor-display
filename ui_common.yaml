@@ -188,6 +188,21 @@ globals:
     type: float
     restore_value: false
     initial_value: "1.0"
+  # --- 每页卡片底色（v1.1.0，HA 下拉选色）---
+  #   卡片底色 = 该值；screen 四周 5px 边距与卡间 3px 缝隙 = 该值 × 0.6
+  #   默认 0x1E1E1E 即当前配色，选“默认”时画面零变化
+  - id: ui_bg_dash
+    type: uint32_t
+    restore_value: true
+    initial_value: "0x1E1E1E"
+  - id: ui_bg_net
+    type: uint32_t
+    restore_value: true
+    initial_value: "0x1E1E1E"
+  - id: ui_bg_sys
+    type: uint32_t
+    restore_value: true
+    initial_value: "0x1E1E1E"
 # 时钟刷新（概览页行1 的时间标签）
 #   这里统一改写到概览页的 home_time_label，避免引用不存在的 id。
 #   优先用 HA 推送的中文时间实体（ha_time_text），取不到时用本机 SNTP 时间兜底。

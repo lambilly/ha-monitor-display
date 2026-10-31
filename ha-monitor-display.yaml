@@ -923,6 +923,90 @@ number:
     restore_value: true
     initial_value: 60
 
+select:
+  # ----------------------------------------------------------
+  # 每页卡片底色（HA 下拉选色，v1.1.0）
+  #   只提供深色系：白字与橙紫绿蓝图标要在底色上读得清，
+  #   固件侧另有每通道 0x40 上限钳制（防止以后误加速度更亮的选项）。
+  #   选中即重绘（无需重启）；断电重启由 restore_value 恢复上次选择。
+  #   缝隙色（四周边距/卡间）不单独暴露，由选色自动压暗到 60%。
+  # ----------------------------------------------------------
+  - platform: template
+    id: sel_bg_dash
+    name: "Dashboard Bg Color"
+    icon: mdi:palette
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_option: "默认深灰 1E1E1E"
+    options:
+      - "默认深灰 1E1E1E"
+      - "纯黑 101010"
+      - "石墨 2A2A2A"
+      - "深蓝 13223B"
+      - "深紫 1D1832"
+      - "深绿 0F2419"
+      - "深青 0C2326"
+      - "暗褐 241D16"
+    on_value:
+      - lambda: |-
+          // 选项形如“深蓝 13223B”，取末尾 6 位十六进制即色值
+          if (x.size() < 6) return;
+          id(ui_bg_dash) = (uint32_t) strtoul(x.c_str() + x.size() - 6, nullptr, 16);
+      - script.execute:
+          id: ui_apply_bg
+          page: 0
+
+  - platform: template
+    id: sel_bg_net
+    name: "Network Bg Color"
+    icon: mdi:palette
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_option: "默认深灰 1E1E1E"
+    options:
+      - "默认深灰 1E1E1E"
+      - "纯黑 101010"
+      - "石墨 2A2A2A"
+      - "深蓝 13223B"
+      - "深紫 1D1832"
+      - "深绿 0F2419"
+      - "深青 0C2326"
+      - "暗褐 241D16"
+    on_value:
+      - lambda: |-
+          if (x.size() < 6) return;
+          id(ui_bg_net) = (uint32_t) strtoul(x.c_str() + x.size() - 6, nullptr, 16);
+      - script.execute:
+          id: ui_apply_bg
+          page: 1
+
+  - platform: template
+    id: sel_bg_sys
+    name: "System Bg Color"
+    icon: mdi:palette
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_option: "默认深灰 1E1E1E"
+    options:
+      - "默认深灰 1E1E1E"
+      - "纯黑 101010"
+      - "石墨 2A2A2A"
+      - "深蓝 13223B"
+      - "深紫 1D1832"
+      - "深绿 0F2419"
+      - "深青 0C2326"
+      - "暗褐 241D16"
+    on_value:
+      - lambda: |-
+          if (x.size() < 6) return;
+          id(ui_bg_sys) = (uint32_t) strtoul(x.c_str() + x.size() - 6, nullptr, 16);
+      - script.execute:
+          id: ui_apply_bg
+          page: 2
+
 switch:
   # 自动休眠总开关（关掉后常亮，适合调试/演示）
   - platform: template
@@ -942,6 +1026,51 @@ switch:
       - script.execute: wake_screen
 
 script:
+  # ----------------------------------------------------------
+  # 应用页面背景配色（v1.1.0）
+  #   卡片底色 = HA 下拉选定色；四周 5px 边距 + 卡间 3px 缝隙 = 选定色 × 0.6
+  #   0.6 倍是为保持既有层次：原 1E1E1E 卡片 / 121212 缝隙 正好是 0.6 倍关系，
+  #   因此选“默认深灰”时画面与改造前逐像素一致。
+  #   深色钳制：每通道上限 0x40，防止背景过亮让白字/彩色图标读不清。
+  #   page: 0=家居  1=网络  2=系统
+  # ----------------------------------------------------------
+  - id: ui_apply_bg
+    mode: restart
+    parameters:
+      page: int
+    then:
+      - lambda: |-
+          if (!id(lvgl_ready)) return;
+
+          lv_obj_t* scr = (page == 0) ? id(dashboard_page)
+                        : ((page == 1) ? id(network_page) : id(system_page));
+          if (scr == nullptr) return;
+
+          uint32_t c = (page == 0) ? id(ui_bg_dash)
+                     : ((page == 1) ? id(ui_bg_net) : id(ui_bg_sys));
+
+          // 深色钳制（每通道 ≤ 0x40）
+          uint32_t r = (c >> 16) & 0xFF;
+          uint32_t g = (c >> 8) & 0xFF;
+          uint32_t b = c & 0xFF;
+          if (r > 0x40) r = 0x40;
+          if (g > 0x40) g = 0x40;
+          if (b > 0x40) b = 0x40;
+          const uint32_t card = (r << 16) | (g << 8) | b;
+
+          // 缝隙/边距：同色压暗到 60%
+          const uint32_t gap = ((r * 6 / 10) << 16) | ((g * 6 / 10) << 8) | (b * 6 / 10);
+          lv_obj_set_style_bg_color(scr, lv_color_hex(gap), 0);
+
+          // 所有顶层容器（各卡片 + TAB 导航栏）统一底色；跳过 5px 以下的装饰线
+          const uint32_t n = lv_obj_get_child_count(scr);
+          for (uint32_t i = 0; i < n; i++) {
+            lv_obj_t* ch = lv_obj_get_child(scr, i);
+            if (ch == nullptr) continue;
+            if (lv_obj_get_height(ch) <= 5) continue;
+            lv_obj_set_style_bg_color(ch, lv_color_hex(card), 0);
+          }
+
   # 熄屏：先记住当前亮度，再关背光
   - id: sleep_screen
     mode: single
