@@ -66,6 +66,9 @@ automation:
             {%- set stk = state_attr('sensor.mei_ri_gu_zhi', 'sh000001')
                           or state_attr('sensor.mei_ri_gu_zhi', 'Sh000001') -%}
             {%- set ns.stock_chg = stk.get('changeRatio') if stk is mapping and 'changeRatio' in stk else none -%}
+            {#- 车辆距离（km）：车位状态卡片下方两行（轩逸黄 / 比亚迪粉）。
+                注意：注释只能用这种花括号注释放在表达式外，
+                表达式内部出现井号会直接语法报错。 -#}
             {{
               {
                 "ts": now().timestamp() | int,
@@ -98,7 +101,6 @@ automation:
                 "voltage":          states('sensor.tasmota_energy_voltage') | float(none),
                 "water_pressure":   states('sensor.maze_wateronev3_tp_f8e644') | float(none),
 
-                # 车辆距离（km）：车位状态卡片下方两行（轩逸黄 / 比亚迪粉）
                 "xuanyi_dist":      states('sensor.wo_de_jia_xuan_yi_distance') | float(none),
                 "byd_dist":         states('sensor.wo_de_jia_bi_ya_di_distance') | float(none),
 
