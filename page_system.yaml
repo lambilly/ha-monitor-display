@@ -60,7 +60,7 @@ lvgl:
                   x: 299
                   text: "运行: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
 
         # ============ 行2：两个框 (y58 h49) ============
         # 470 - 3 = 467 → 宽 [233, 234]，x = 5 / 241
@@ -89,7 +89,7 @@ lvgl:
                   x: 24
                   text: "SSID: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
         - obj:
             x: 241
             y: 58
@@ -114,7 +114,7 @@ lvgl:
                   x: 22
                   text: "IP: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
 
         # ============ 行3：三列均分 (y110 h153) ============
         # 470 - 2*3 = 464 → 464/3 = 154 余 2 → 宽 [155,155,154]
@@ -273,7 +273,7 @@ lvgl:
                   y: -32
                   text: "内存: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               # 第2行：PSRAM
               - label:
                   align: left_mid
@@ -289,7 +289,7 @@ lvgl:
                   y: -4
                   text: "外存: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               # 第3行：主循环耗时
               - label:
                   align: left_mid
@@ -305,7 +305,7 @@ lvgl:
                   y: 24
                   text: "循环: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               # 第4行：屏幕亮度（light.ha_monitor_display_screen_light 的 brightness 属性）
               - label:
                   align: left_mid
@@ -321,7 +321,7 @@ lvgl:
                   y: 52
                   text: "亮度: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
 
         # ---- 右列：网络参数（白色标题）----
         - obj:
@@ -377,7 +377,7 @@ lvgl:
                   y: -4
                   text: "RSSI: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               # 第4行：WiFi 连接
               - label:
                   align: left_mid
@@ -393,7 +393,7 @@ lvgl:
                   y: 52
                   text: "WiFi: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
                   recolor: true
               # 第3行：外网（MQTT 通道状态）
               - label:
@@ -410,7 +410,7 @@ lvgl:
                   y: 24
                   text: "MQTT: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
                   recolor: true
               # 第1行：信号质量（使用 signal 图标，比 DNS 更贴合语义）
               - label:
@@ -427,7 +427,7 @@ lvgl:
                   y: -32
                   text: "SIGQ: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
                   recolor: true
 
         # ============ 行4：TAB 导航 (y266 h49) ============
@@ -494,6 +494,7 @@ interval:
             else if (mins >= 60) snprintf(buf, sizeof(buf), "运行: %d小时%d分", mins / 60, mins % 60);
             else snprintf(buf, sizeof(buf), "运行: %d分钟", mins);
             lv_label_set_text(id(sys_uptime_top_label), buf);
+            lv_obj_set_style_text_color(id(sys_uptime_top_label), lv_color_hex(0xFFFFFF), 0);
           }
 
           // ===== 行2：IP / SSID  =====
@@ -501,11 +502,16 @@ interval:
             const std::string &ssid = id(wifi_ssid_sensor).state;
             snprintf(buf, sizeof(buf), "SSID: %s", ssid.empty() ? "--" : ssid.c_str());
             lv_label_set_text(id(sys_ssid_label), buf);
+            // -- 灰 / 有数据白
+            lv_obj_set_style_text_color(id(sys_ssid_label),
+                                        lv_color_hex(ssid.empty() ? 0x757575 : 0xFFFFFF), 0);
           }
           {
             const std::string &ip = id(wifi_ip_address).state;
             snprintf(buf, sizeof(buf), "IP: %s", ip.empty() ? "--" : ip.c_str());
             lv_label_set_text(id(sys_ip_label), buf);
+            lv_obj_set_style_text_color(id(sys_ip_label),
+                                        lv_color_hex(ip.empty() ? 0x757575 : 0xFFFFFF), 0);
           }
           // ===== 行3 中列：系统负载 =====
           // 内存/PSRAM 都取自 debug 组件（free_heap_sensor 是 debug.free 的 id）
@@ -514,6 +520,8 @@ interval:
             if (std::isfinite(heap) && heap > 0) snprintf(buf, sizeof(buf), "内存: %uK", (unsigned) (heap / 1024.0f));
             else snprintf(buf, sizeof(buf), "内存: --");
             lv_label_set_text(id(sys_heap_label), buf);
+            lv_obj_set_style_text_color(id(sys_heap_label),
+                                        lv_color_hex((std::isfinite(heap) && heap > 0) ? 0xFFFFFF : 0x757575), 0);
           }
 
           {
@@ -522,12 +530,14 @@ interval:
             if (ps > 0) snprintf(buf, sizeof(buf), "外存: %uK", (unsigned) (ps / 1024));
             else snprintf(buf, sizeof(buf), "外存: --");
             lv_label_set_text(id(sys_psram_label), buf);
+            lv_obj_set_style_text_color(id(sys_psram_label), lv_color_hex(ps > 0 ? 0xFFFFFF : 0x757575), 0);
           }
           {
             float ms = id(loop_time_sensor).state;
             if (std::isfinite(ms)) snprintf(buf, sizeof(buf), "循环: %.0fms", ms);
             else snprintf(buf, sizeof(buf), "循环: --");
             lv_label_set_text(id(sys_loop_label), buf);
+            lv_obj_set_style_text_color(id(sys_loop_label), lv_color_hex(std::isfinite(ms) ? 0xFFFFFF : 0x757575), 0);
           }
           {
             // 屏幕亮度：直接读本机灯实体（number 滑块与 HA 调节都落在这里，实时准确）。
@@ -539,13 +549,16 @@ interval:
             if (pct > 100) pct = 100;
             snprintf(buf, sizeof(buf), "亮度: %d%%", pct);
             lv_label_set_text(id(sys_brightness_label), buf);
+            lv_obj_set_style_text_color(id(sys_brightness_label), lv_color_hex(0xFFFFFF), 0);
           }
           // ===== 行3 右列：网络参数（SIGQ / RSSI / MQTT / WiFi）=====
           if (std::isfinite(id(wifi_rssi).state)) {
             snprintf(buf, sizeof(buf), "RSSI: %ddB", (int) id(wifi_rssi).state);
             lv_label_set_text(id(sys_rssi_label), buf);
+            lv_obj_set_style_text_color(id(sys_rssi_label), lv_color_hex(0xFFFFFF), 0);
           } else {
             lv_label_set_text(id(sys_rssi_label), "RSSI: --");
+            lv_obj_set_style_text_color(id(sys_rssi_label), lv_color_hex(0x757575), 0);
           }
 
           {
@@ -554,6 +567,7 @@ interval:
             const std::string &ip = id(wifi_ip_address).state;
             lv_label_set_text(id(sys_gw3_label),
                               ip.empty() ? "WiFi: #757575 断开#" : "WiFi: 已连接");
+            lv_obj_set_style_text_color(id(sys_gw3_label), lv_color_hex(0xFFFFFF), 0);
           }
           {
             // 外网通道状态（MQTT 是否连上，代表脱离家里 WiFi 时能否取数）
@@ -561,6 +575,7 @@ interval:
             const bool mq = mqtt::global_mqtt_client != nullptr && mqtt::global_mqtt_client->is_connected();
             lv_label_set_text(id(sys_wait_label),
                               mq ? "MQTT: #59D98B 连通#" : "MQTT: #FF5252 断开#");
+            lv_obj_set_style_text_color(id(sys_wait_label), lv_color_hex(0xFFFFFF), 0);
           }
           // 信号质量（右列第1行）：只有“优秀/良好/微弱”三档两个字变色
           //   优秀绿 / 良好黄 / 微弱红 / 无数据灰；"SIGQ: " 前缀恒用本行橙色
@@ -573,4 +588,5 @@ interval:
             } else {
               lv_label_set_text(id(sys_quality_label), "SIGQ: #757575 --#");
             }
+            lv_obj_set_style_text_color(id(sys_quality_label), lv_color_hex(0xFFFFFF), 0);
           }

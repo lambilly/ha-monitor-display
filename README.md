@@ -4,14 +4,14 @@ ESP32-S3 桌面信息屏，跑 ESPHome + LVGL，显示 Home Assistant 的家庭�
 
 ## 硬件
 
-| 项目 | 规格 |
-|---|---|
+| 项目 | 规格                                           |
+| -- | -------------------------------------------- |
 | 主控 | ESP32-S3 N16R8（16MB Flash + 8MB octal PSRAM） |
-| 屏幕 | 4.0" ST7796S 320×480，SPI |
-| 触摸 | FT6336U 电容触摸，I2C 地址 0x38 |
-| 供电 | 电池 |
+| 屏幕 | 4.0" ST7796S 320×480，SPI                     |
+| 触摸 | FT6336U 电容触摸，I2C 地址 0x38                     |
+| 供电 | 电池                                           |
 
-引脚：SPI `clk=12 / mosi=11 / miso=13`，`cs=10 / dc=9 / rst=8`，背光 PWM `15`，触摸 I2C `scl=6 / sda=7 / rst=5`。GPIO35/36/37 被 PSRAM 占用，不可用。
+引脚：SPI `clk=12 / mosi=11 / miso=13`，`cs=10 / dc=9 / rst=8`，背光 PWM `15`，触摸 I2C `scl=6 / sda=7 / rst=5`。GPIO35/36/37 被 PSRAM 占用，不可用。  
 详细接线见 `硬件焊接接线指南.md`。
 
 ## 版本说明
@@ -26,7 +26,7 @@ ESP32-S3 桌面信息屏，跑 ESPHome + LVGL，显示 Home Assistant 的家庭�
 
 ## 文件结构
 
-> 本仓库里 YAML 平铺在根目录；部署到 ESPHome 时把 `ui_*` / `page_*` 放进 `/config/esphome/ui/`，
+> 本仓库里 YAML 平铺在根目录；部署到 ESPHome 时把 `ui_*` / `page_*` 放进 `/config/esphome/ui/`，  
 > 主配置 `ha-monitor-display.yaml` 留在 `/config/esphome/` 根下。
 
 ```
@@ -67,3 +67,4 @@ HA 自动化（每 5s） ──mqtt.publish──▶  home/ha-monitor-display (r
 - [ ] Node-RED 子流程导入 `NR子流程-推送屏幕通知.json`，选好 broker
 - [ ] 滚动新闻 `home/ha-monitor-display/news`
 - [ ] MQTT 1883 → 8883 + TLS
+

@@ -59,7 +59,7 @@ lvgl:
                   x: 222
                   text: "--"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               - label:
                   id: home_stock_icon
                   align: left_mid
@@ -110,7 +110,7 @@ lvgl:
                   x: 18
                   text: "在家: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
                   recolor: true
         - obj:
             x: 126
@@ -137,7 +137,7 @@ lvgl:
                   x: 18
                   text: "客人: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
                   recolor: true
         - obj:
             x: 249
@@ -164,7 +164,7 @@ lvgl:
                   x: 16
                   text: "手机: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
                   recolor: true
         - obj:
             x: 370
@@ -191,7 +191,7 @@ lvgl:
                   x: 18
                   text: "语音: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
                   recolor: true
 
         # ============ 行3：居家模式 | 车位状态 (y110 h49) ============
@@ -252,7 +252,7 @@ lvgl:
                   x: 32
                   text: "车位状态: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
 
         # ============ 行4~行5 左列：电器动态（跨两行 h101：标题 + 四行） ============
         # 154x101 内：标题占顶部 17px，四行在下方 84px 内等分 21px/行
@@ -313,7 +313,7 @@ lvgl:
                   y: -22
                   text: "电灯: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               # 第2行：窗帘
               - label:
                   align: left_mid
@@ -329,7 +329,7 @@ lvgl:
                   y: -2
                   text: "窗帘: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               # 第3行：空调
               - label:
                   align: left_mid
@@ -345,7 +345,7 @@ lvgl:
                   y: 18
                   text: "空调: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               # 第4行：电器
               - label:
                   align: left_mid
@@ -361,7 +361,7 @@ lvgl:
                   y: 38
                   text: "电器: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
 
         # ============ 行4~行5 中列：今日能耗（跨两行 h101：标题 + 四行） ============
         # 用电 / 用气 / 电压 / 水压；四行等分 21px/行，y：-27 / -6 / +15 / +36
@@ -420,7 +420,7 @@ lvgl:
                   y: -22
                   text: "用电: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               # 第2行：用气
               - label:
                   align: left_mid
@@ -436,7 +436,7 @@ lvgl:
                   y: -2
                   text: "用气: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               # 第3行：电压
               - label:
                   align: left_mid
@@ -452,7 +452,7 @@ lvgl:
                   y: 18
                   text: "电压: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               # 第4行：水压
               - label:
                   align: left_mid
@@ -468,7 +468,7 @@ lvgl:
                   y: 38
                   text: "水压: --"
                   text_font: ui_font_small
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
 
         # ============ 行4~行5 右侧上格：Nova13 (y162 h49) ============
         # 图标固定天蓝；名字白色固定；状态字单独 label，在线绿/离线灰
@@ -633,6 +633,9 @@ interval:
             if (cn.empty()) snprintf(wbuf, sizeof(wbuf), "--%s", tbuf);
             else snprintf(wbuf, sizeof(wbuf), "%s%s", cn.c_str(), tbuf);
             lv_label_set_text(id(home_weather_label), wbuf);
+            // 无天气数据时 "--" 灰；有数据显示白
+            lv_obj_set_style_text_color(id(home_weather_label),
+                                        lv_color_hex(cn.empty() ? 0x757575 : 0xFFFFFF), 0);
           }
 
           // 上证指数：数值文本 + 整体着色
@@ -762,7 +765,8 @@ interval:
               snprintf(buf, sizeof(buf), "车位状态: --");
             }
             lv_label_set_text(id(home_parking_label), buf);
-            lv_obj_set_style_text_color(id(home_parking_label), lv_color_hex(0xFFFFFF), 0);
+            // 文字：有数据白 / 无数据灰（全局规则：-- 一律灰）
+            lv_obj_set_style_text_color(id(home_parking_label), lv_color_hex(has_pk ? 0xFFFFFF : 0x757575), 0);
             lv_obj_set_style_text_color(id(home_parking_icon),  lv_color_hex(pkc), 0);
           }
 
@@ -772,6 +776,7 @@ interval:
             if (std::isfinite(s->state)) snprintf(b, sizeof(b), "%s: %d/%s", name, (int)s->state, total);
             else snprintf(b, sizeof(b), "%s: --", name);
             lv_label_set_text(lbl, b);
+            lv_obj_set_style_text_color(lbl, lv_color_hex(std::isfinite(s->state) ? 0xFFFFFF : 0x757575), 0);
           };
           set_cnt(id(home_light_label),     id(ha_light_on),       "电灯", "36盏");
           set_cnt(id(home_curtain_label),   id(ha_curtain_closed), "窗帘", "6幅");
@@ -780,25 +785,29 @@ interval:
 
           // ===== 中列：今日能耗（用电 / 用气 / 电压 / 水压）=====
           // 数值未就绪时显示 "--"，单位随实体走
-          auto fmt_val = [](char* out, size_t n, const char* name, float v, const char* unit, int prec) {
-            if (!std::isfinite(v)) { snprintf(out, n, "%s: --", name); return; }
+          // 数值未就绪时显示 "--"（灰），有数据白色；单位随实体走
+          auto fmt_val = [](lv_obj_t* lbl, const char* name, float v, const char* unit, int prec) {
+            char out[40];
+            if (!std::isfinite(v)) {
+              snprintf(out, sizeof(out), "%s: --", name);
+              lv_label_set_text(lbl, out);
+              lv_obj_set_style_text_color(lbl, lv_color_hex(0x757575), 0);   // -- 灰
+              return;
+            }
             char num[24];
             snprintf(num, sizeof(num), prec == 0 ? "%.0f" : (prec == 2 ? "%.2f" : "%.1f"), v);
-            snprintf(out, n, "%s: %s%s", name, num, unit);
+            snprintf(out, sizeof(out), "%s: %s%s", name, num, unit);
+            lv_label_set_text(lbl, out);
+            lv_obj_set_style_text_color(lbl, lv_color_hex(0xFFFFFF), 0);
           };
-          char eb[40];
           // 用电量 sensor.tasmota_energy_today（kWh）
-          fmt_val(eb, sizeof(eb), "用电", id(ha_energy_today).state, "kWh", 2);
-          lv_label_set_text(id(home_energy_today_label), eb);
+          fmt_val(id(home_energy_today_label), "用电", id(ha_energy_today).state, "kWh", 2);
           // 用气量 sensor.ri_yong_qi_liang（m³）
-          fmt_val(eb, sizeof(eb), "用气", id(ha_gas_today).state, "m³", 2);
-          lv_label_set_text(id(home_gas_label), eb);
+          fmt_val(id(home_gas_label), "用气", id(ha_gas_today).state, "m³", 2);
           // 电压 sensor.tasmota_energy_voltage（V）
-          fmt_val(eb, sizeof(eb), "电压", id(ha_voltage).state, "V", 0);
-          lv_label_set_text(id(home_voltage_label), eb);
+          fmt_val(id(home_voltage_label), "电压", id(ha_voltage).state, "V", 0);
           // 水压 sensor.maze_wateronev3_tp_f8e644（bar）
-          fmt_val(eb, sizeof(eb), "水压", id(ha_water_pressure).state, "bar", 1);
-          lv_label_set_text(id(home_water_pressure_label), eb);
+          fmt_val(id(home_water_pressure_label), "水压", id(ha_water_pressure).state, "bar", 1);
 
           // ===== 右列：手机状态（只改状态两字，在线绿 / 离线灰；图标颜色固定）=====
           // 手机在线：有状态再判断在线/离线；实体缺失时显示 "--"
