@@ -81,18 +81,19 @@ lvgl:
             scrollable: false
             widgets:
               - label:
+                  id: net_server_icon
                   align: left_mid
                   x: -5
                   text: "\U000F048B"
                   text_font: mdi_icons
-                  text_color: 0x5AA9FF
+                  text_color: 0x757575
               - label:
                   id: net_server_label
                   align: left_mid
                   x: 11
                   text: "主机: --"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0x757575
         - obj:
             x: 102
             y: 61
@@ -105,18 +106,19 @@ lvgl:
             scrollable: false
             widgets:
               - label:
+                  id: net_gateway_icon
                   align: left_mid
                   x: -5
                   text: "\U000F1087"
                   text_font: mdi_icons
-                  text_color: 0x9B8CFF
+                  text_color: 0x757575
               - label:
                   id: net_gateway_label
                   align: left_mid
                   x: 11
                   text: "网关: --"
                   text_font: ui_font_small
-                  text_color: 0x9B8CFF
+                  text_color: 0x757575
         - obj:
             x: 199
             y: 61
@@ -129,18 +131,19 @@ lvgl:
             scrollable: false
             widgets:
               - label:
+                  id: net_ap_icon
                   align: left_mid
                   x: -5
                   text: "\U000F05A9"
                   text_font: mdi_icons
-                  text_color: 0x4FD8FA
+                  text_color: 0x757575
               - label:
                   id: net_ap_label
                   align: left_mid
                   x: 11
                   text: "无线: --"
                   text_font: ui_font_small
-                  text_color: 0x4FD8FA
+                  text_color: 0x757575
         - obj:
             x: 296
             y: 61
@@ -153,18 +156,19 @@ lvgl:
             scrollable: false
             widgets:
               - label:
+                  id: net_monitor_icon
                   align: left_mid
                   x: -5
                   text: "\U000F07AE"
                   text_font: mdi_icons
-                  text_color: 0x59D98B
+                  text_color: 0x757575
               - label:
                   id: net_monitor_label
                   align: left_mid
                   x: 11
                   text: "设备: --"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0x757575
         # 第5列：ASR 在线数（橙）
         - obj:
             x: 392
@@ -178,18 +182,19 @@ lvgl:
             scrollable: false
             widgets:
               - label:
+                  id: net_asr_icon
                   align: left_mid
                   x: -5
                   text: "\U000F05CB"
                   text_font: mdi_icons
-                  text_color: 0xF2B85B
+                  text_color: 0x757575
               - label:
                   id: net_asr_label
                   align: left_mid
                   x: 11
                   text: "语音: --"
                   text_font: ui_font_small
-                  text_color: 0xF2B85B
+                  text_color: 0x757575
 
         # ============ 行3：三列均分 (y110 h153) ============
         # 470 - 2*3 = 464 → 464/3 = 154 余 2 → 宽 [155,155,154]
@@ -260,7 +265,7 @@ lvgl:
                   y: -4
                   text: "\U000F0FB0"
                   text_font: mdi_icons
-                  text_color: 0x59D98B
+                  text_color: 0xB39DFF
               - label:
                   id: net_ctrl_label
                   align: left_mid
@@ -268,7 +273,7 @@ lvgl:
                   y: -4
                   text: "控制设备: --"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0xB39DFF
               # 第3行：终端在线
               - label:
                   align: left_mid
@@ -276,7 +281,7 @@ lvgl:
                   y: 24
                   text: "\U000F037A"
                   text_font: mdi_icons
-                  text_color: 0x5AA9FF
+                  text_color: 0x59D98B
               - label:
                   id: net_terminal_label
                   align: left_mid
@@ -284,7 +289,7 @@ lvgl:
                   y: 24
                   text: "终端在线: --"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0x59D98B
               # 第4行：低电量数
               - label:
                   align: left_mid
@@ -292,7 +297,7 @@ lvgl:
                   y: 52
                   text: "\U000F0083"
                   text_font: mdi_icons
-                  text_color: 0xFFD54F
+                  text_color: 0x5AA9FF
               - label:
                   id: net_battery_label
                   align: left_mid
@@ -300,7 +305,7 @@ lvgl:
                   y: 52
                   text: "低电量数: --"
                   text_font: ui_font_small
-                  text_color: 0xFFD54F
+                  text_color: 0x5AA9FF
                   recolor: true
 
         # ---- 中列：NAS运行（白色标题）----
@@ -365,7 +370,7 @@ lvgl:
                   y: -4
                   text: "\U000F035B"
                   text_font: mdi_icons
-                  text_color: 0x59D98B
+                  text_color: 0xB39DFF
               - label:
                   id: net_nas_mem_label
                   align: left_mid
@@ -373,7 +378,7 @@ lvgl:
                   y: -4
                   text: "内存可用: --"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0xB39DFF
               # 第3行：上传
               - label:
                   align: left_mid
@@ -381,7 +386,7 @@ lvgl:
                   y: 24
                   text: "\U000F0552"
                   text_font: mdi_icons
-                  text_color: 0x5AA9FF
+                  text_color: 0x59D98B
               - label:
                   id: net_nas_upload_label
                   align: left_mid
@@ -389,7 +394,7 @@ lvgl:
                   y: 24
                   text: "上传: --"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0x59D98B
               # 第4行：下载
               - label:
                   align: left_mid
@@ -397,7 +402,7 @@ lvgl:
                   y: 52
                   text: "\U000F01DA"
                   text_font: mdi_icons
-                  text_color: 0xFFD54F
+                  text_color: 0x5AA9FF
               - label:
                   id: net_nas_download_label
                   align: left_mid
@@ -453,7 +458,7 @@ lvgl:
                   y: -32
                   text: "\U000F0210"
                   text_font: mdi_icons
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFB74D
               - label:
                   id: net_fan_front_label
                   align: left_mid
@@ -461,7 +466,7 @@ lvgl:
                   y: -32
                   text: "前扇: --"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFB74D
                   recolor: true
               # 前扇温度：温度计图标（红）+ 数值
               - label:
@@ -552,7 +557,7 @@ lvgl:
                   y: 52
                   text: "\U000F0210"
                   text_font: mdi_icons
-                  text_color: 0xFFB74D
+                  text_color: 0x5AA9FF
               - label:
                   id: net_fan_out_label
                   align: left_mid
@@ -560,7 +565,7 @@ lvgl:
                   y: 52
                   text: "出扇: 关"
                   text_font: ui_font_small
-                  text_color: 0xFFB74D
+                  text_color: 0x5AA9FF
                   recolor: true
               # 出扇温度：温度计图标（绿）+ 数值
               - label:
@@ -675,18 +680,26 @@ interval:
             }
           }
 
-          // ===== 行2：五列在线数（与家居页行2 同款格式）=====
-          auto set_cnt = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name) {
+          // ===== 行2：五列在线数（图标+文字整格同步着色）=====
+          //   >0 → 各格固定色（主机红/网关紫/无线橙/设备蓝/语音绿）
+          //   =0 → 红 FF5252（离线告警）
+          //   --  → 灰 757575（无数据不算离线）
+          auto set_cnt = [](lv_obj_t* lbl, lv_obj_t* icon, esphome::sensor::Sensor* s,
+                            const char* name, uint32_t on_color) {
             char b[40];
-            if (std::isfinite(s->state)) snprintf(b, sizeof(b), "%s: %d", name, (int)s->state);
-            else snprintf(b, sizeof(b), "%s: --", name);
+            const bool has = std::isfinite(s->state);
+            if (!has) snprintf(b, sizeof(b), "%s: --", name);
+            else snprintf(b, sizeof(b), "%s: %d", name, (int) s->state);
             lv_label_set_text(lbl, b);
+            const uint32_t c = !has ? 0x757575 : (s->state > 0.0f ? on_color : 0xFF5252);
+            lv_obj_set_style_text_color(lbl,  lv_color_hex(c), 0);
+            lv_obj_set_style_text_color(icon, lv_color_hex(c), 0);
           };
-          set_cnt(id(net_server_label),  id(ha_server_count),  "主机");
-          set_cnt(id(net_gateway_label), id(ha_gateway_count), "网关");
-          set_cnt(id(net_ap_label),      id(ha_ap_count),      "无线");
-          set_cnt(id(net_monitor_label), id(ha_monitor_count), "设备");
-          set_cnt(id(net_asr_label),     id(ha_asr_count),     "语音");
+          set_cnt(id(net_server_label),  id(net_server_icon),  id(ha_server_count),  "主机", 0xFF5252);
+          set_cnt(id(net_gateway_label), id(net_gateway_icon), id(ha_gateway_count), "网关", 0xB39DFF);
+          set_cnt(id(net_ap_label),      id(net_ap_icon),      id(ha_ap_count),      "无线", 0xFFB74D);
+          set_cnt(id(net_monitor_label), id(net_monitor_icon), id(ha_monitor_count), "设备", 0x5AA9FF);
+          set_cnt(id(net_asr_label),     id(net_asr_icon),     id(ha_asr_count),     "语音", 0x59D98B);
 
           // ===== 行3 左列：网络总览 =====
           // 行2 那组（主机/网关/无线/设备/语音）是"数字本身即答案"，不加单位；
@@ -702,8 +715,8 @@ interval:
           set_cnt_u(id(net_ctrl_label),     id(ha_device_ctrl),    "控制设备", "个");
           set_cnt_u(id(net_terminal_label), id(ha_terminal_count), "终端在线", "个");
 
-          // 低电量数：整行恒黄（与图标一致）；有低电量(>0)时“只把数量数字标红”，
-          // 其余文字与图标保持黄色；=0 全黄；-- 灰
+          // 低电量数：整行恒蓝（与图标一致）；有低电量(>0)时“只把数量数字标红”，
+          // 其余文字与图标保持蓝色；=0 全蓝；-- 灰
           {
             float v = id(ha_low_battery).state;
             if (std::isfinite(v)) {
@@ -713,13 +726,13 @@ interval:
               snprintf(buf, sizeof(buf), "低电量数: #757575 --#");
             }
             lv_label_set_text(id(net_battery_label), buf);
-            lv_obj_set_style_text_color(id(net_battery_label), lv_color_hex(0xFFD54F), 0);
+            lv_obj_set_style_text_color(id(net_battery_label), lv_color_hex(0x5AA9FF), 0);
           }
 
-          // ===== 行3 中列：NAS状态（CPU / 内存 / 上传 / 下载）=====
+          // ===== 行3 中列：NAS运行（CPU / 内存 / 上传 / 下载）=====
           // CPU / 内存：百分比，超阈值变色提示
           //   base_color 是常态色（与同行的图标颜色一致）。CPU 常态橙、超限黄/红；
-          //   内存常态色就是绿色（和图标一样），但超限时仍然变成黄/红，避免"满了还显示绿色"的误判。
+          //   内存常态色就是紫色（和图标一样），但超限时仍然变成黄/红，避免"满了还显示紫色"的误判。
           auto set_pct = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name,
                             uint32_t warn, uint32_t danger, uint32_t base_color) {
             char b[40];
@@ -736,7 +749,7 @@ interval:
                 lbl, lv_color_hex(v >= (int) danger ? 0xFF5252 : (v >= (int) warn ? 0xFFD54F : base_color)), 0);
           };
           set_pct(id(net_nas_cpu_label), id(ha_nas_cpu), "CPU利用", 70, 90, 0xFFB74D);
-          set_pct(id(net_nas_mem_label), id(ha_nas_mem), "内存可用", 75, 92, 0x59D98B);
+          set_pct(id(net_nas_mem_label), id(ha_nas_mem), "内存可用", 75, 92, 0xB39DFF);
 
           // 网速（实体单位通常为 B/s，自适应 KB/s、MB/s）；上传/下载共用
           auto set_rate = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name) {
@@ -780,7 +793,7 @@ interval:
             lv_label_set_text(lbl, b);
             lv_obj_set_style_text_color(lbl, lv_color_hex(base), 0);
           };
-          set_fan(id(net_fan_front_label), id(ha_fan1_rpm), id(ha_fan1_speed), "前扇", 0x5AA9FF);
+          set_fan(id(net_fan_front_label), id(ha_fan1_rpm), id(ha_fan1_speed), "前扇", 0xFFB74D);
           set_fan(id(net_fan_back_label),  id(ha_fan2_rpm), id(ha_fan2_speed), "后扇", 0xB39DFF);
           // 进扇/出扇是 Sonoff 开关（switch 域），只表示开/关，没有转速
           auto set_sw_fan = [](lv_obj_t* lbl, esphome::binary_sensor::BinarySensor* bs,
@@ -796,7 +809,7 @@ interval:
             lv_obj_set_style_text_color(lbl, lv_color_hex(base), 0);
           };
           set_sw_fan(id(net_fan_in_label),  id(ha_fan_in_switch),  "进扇", 0x59D98B);
-          set_sw_fan(id(net_fan_out_label), id(ha_fan_out_switch), "出扇", 0xFFB74D);
+          set_sw_fan(id(net_fan_out_label), id(ha_fan_out_switch), "出扇", 0x5AA9FF);
 
           // 四路温度：紧跟风扇状态后面（温度计图标固定色，数值统一浅灰）
           auto set_temp = [](lv_obj_t* lbl, esphome::sensor::Sensor* s) {

@@ -57,26 +57,28 @@ lvgl:
                   text_font: ui_font_medium
                   text_color: 0x5AA9FF
               - label:
+                  id: home_stock_icon
                   align: left_mid
                   x: 315
                   text: "\U000F012A"
                   text_font: mdi_icons_20
                   height: 18
-                  text_color: 0xFFFFFF
-              # “上证:”值白色
+                  text_color: 0x757575
+              # “上证:”前缀（颜色由 lambda 随涨跌同步）
               - label:
+                  id: home_stock_prefix
                   align: left_mid
                   x: 337
                   text: "上证:"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
               - label:
                   id: home_stock_label
                   align: left_mid
                   x: 377
                   text: "--"
                   text_font: ui_font_medium
-                  text_color: 0xFFFFFF
+                  text_color: 0x757575
 
         # ============ 行2：四格设备在线数 (y58 h49) ============
         - obj:
@@ -625,19 +627,27 @@ interval:
             lv_label_set_text(id(home_weather_label), wbuf);
           }
 
-          // 上证指数
-          if (id(ha_stock).has_state() && !id(ha_stock).state.empty()) {
-            lv_label_set_text(id(home_stock_label), id(ha_stock).state.c_str());
-          } else {
-            lv_label_set_text(id(home_stock_label), "--");
+          // 上证指数：数值文本 + 整体着色
+          //   涨跌看 ha_stock_chg（推送自 sensor.mei_ri_gu_zhi 属性 Sh000001.changeRatio）
+          //   >0 涨红 / <0 跌绿 / =0 平白 / 无数据灰（图标、"上证:"前缀、数值三件套同步）
+          {
+            const bool has_txt = id(ha_stock).has_state() && !id(ha_stock).state.empty();
+            lv_label_set_text(id(home_stock_label), has_txt ? id(ha_stock).state.c_str() : "--");
+            const float chg = id(ha_stock_chg).state;
+            const uint32_t sc = std::isfinite(chg)
+                                ? (chg > 0.0f ? 0xFF5252 : (chg < 0.0f ? 0x59D98B : 0xFFFFFF))
+                                : 0x757575;
+            lv_obj_set_style_text_color(id(home_stock_icon),   lv_color_hex(sc), 0);
+            lv_obj_set_style_text_color(id(home_stock_prefix), lv_color_hex(sc), 0);
+            lv_obj_set_style_text_color(id(home_stock_label),  lv_color_hex(sc), 0);
           }
 
           // ===== 行2：四格（在家 / 客人 / 手机 / 语音）=====
           // 着色规则（图标与文字整格同步）：
           //   在家  数量>0 → 橙 FFB74D；=0 或 -- → 整格灰
           //   客人  数量>0 → 紫 B39DFF；=0 或 -- → 整格灰
-          //   手机  数量>0 → 绿 59D98B；=0 或 -- → 整格灰
-          //   语音  开 → 蓝 5AA9FF；关 → 红 FF5252；-- → 灰
+          //   手机  数量>0 → 蓝 5AA9FF；=0 或 -- → 整格灰
+          //   语音  开 → 绿 59D98B；关 → 红 FF5252；-- → 灰
           auto set_cnt_color = [](lv_obj_t* lbl, lv_obj_t* icon, esphome::sensor::Sensor* s,
                                   const char* name, uint32_t on_color) {
             char b[40];
@@ -651,19 +661,19 @@ interval:
           };
           set_cnt_color(id(home_server_label),  id(home_server_icon),  id(ha_family_home),  "在家", 0xFFB74D);
           set_cnt_color(id(home_gateway_label), id(home_gateway_icon), id(ha_guest_visit),  "客人", 0xB39DFF);
-          set_cnt_color(id(home_ap_label),      id(home_ap_icon),      id(ha_phone_online), "手机", 0x59D98B);
-          // 语音广播是开关实体：开=蓝（图标+文字）/ 关=红 / 实体缺失灰 + "--"
+          set_cnt_color(id(home_ap_label),      id(home_ap_icon),      id(ha_phone_online), "手机", 0x5AA9FF);
+          // 语音广播是开关实体：开=绿（图标+文字）/ 关=红 / 实体缺失灰 + "--"
           {
             const bool has_v = id(ha_voice_broadcast).has_state();
             const bool on_v  = has_v && id(ha_voice_broadcast).state;
             lv_label_set_text(id(home_monitor_label),
                               !has_v ? "语音: --" : (on_v ? "语音: 开" : "语音: 关"));
-            const uint32_t vc = !has_v ? 0x757575 : (on_v ? 0x5AA9FF : 0xFF5252);
+            const uint32_t vc = !has_v ? 0x757575 : (on_v ? 0x59D98B : 0xFF5252);
             lv_obj_set_style_text_color(id(home_monitor_label), lv_color_hex(vc), 0);
             lv_obj_set_style_text_color(id(home_monitor_icon),  lv_color_hex(vc), 0);
           }
 
-          // ===== 行3：居家模式（在家绿/离家红/其他白）+ 活动轨迹（黄）/ 车位状态（空闲绿/占用红）=====
+          // ===== 行3：居家模式（在家橙/离家红/休息紫/影音黄）+ 活动轨迹（黄）/ 车位状态 =====
           // 用 LVGL 的 recolor 语法在同一 label 内分段着色：
           //   "#59D98B 在家# #FFD54F 客厅#"
           // 这样两段文字自然连排、无需测量宽度，也不依赖 lv_text_get_size
@@ -689,14 +699,13 @@ interval:
             std::string m = has_mode ? strip_hash(mode) : "居家模式";
             std::string a = has_act  ? strip_hash(act)  : "";
 
-            // 模式着色：在家=绿 / 离家=红 / 其他=白（兜底）；活动轨迹固定黄色
-            // 前置图标颜色同步跟随模式色，与文字保持一致
+            // 模式着色：在家=橙 / 离家=红 / 休息=紫 / 影音=黄 / 其他=白（兜底）；
+            // 图标默认白（"打底白色"），有模式时随模式色，与文字保持一致
             const char* mcol = "FFFFFF";
-            if (m.find("在家") != std::string::npos) {
-              mcol = "59D98B";
-            } else if (m.find("离家") != std::string::npos) {
-              mcol = "FF5252";
-            }
+            if      (m.find("在家") != std::string::npos) { mcol = "FFB74D"; }
+            else if (m.find("离家") != std::string::npos) { mcol = "FF5252"; }
+            else if (m.find("休息") != std::string::npos) { mcol = "B39DFF"; }
+            else if (m.find("影音") != std::string::npos) { mcol = "FFD54F"; }
             lv_obj_set_style_text_color(id(home_mode_icon),
                                         lv_color_hex((uint32_t) strtoul(mcol, nullptr, 16)), 0);
             if (has_act && has_mode) {
@@ -711,15 +720,16 @@ interval:
             }
             lv_label_set_text(id(home_mode_label), mbuf);
           }
-          // 车位状态着色：空闲=绿 / 占用=红 / 其他与无数据=橙（图标同步变色）
+          // 车位状态着色：空闲=绿 / 比亚迪=粉 FF80AB / 轩逸=黄 / 其他与无数据=白（打底白，图标同步变色）
           {
             const std::string& pk = id(ha_parking_status).state;
             const bool has_pk = id(ha_parking_status).has_state() && !pk.empty()
                                 && pk != "unknown" && pk != "unavailable";
-            uint32_t pkc = 0xFFB74D;
+            uint32_t pkc = 0xFFFFFF;
             if (has_pk) {
-              if (pk.find("空") != std::string::npos)      pkc = 0x59D98B;
-              else if (pk.find("占") != std::string::npos) pkc = 0xFF5252;
+              if      (pk.find("空")     != std::string::npos) pkc = 0x59D98B;
+              else if (pk.find("比亚迪") != std::string::npos) pkc = 0xFF80AB;
+              else if (pk.find("轩逸")   != std::string::npos) pkc = 0xFFD54F;
               snprintf(buf, sizeof(buf), "车位状态: %s", pk.c_str());
             } else {
               snprintf(buf, sizeof(buf), "车位状态: --");

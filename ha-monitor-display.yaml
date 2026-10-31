@@ -167,6 +167,10 @@ mqtt:
           id(hd_external_ip) = x["external_ip"].is<const char *>() ? std::string(x["external_ip"].as<const char *>()) : std::string();
           id(hd_weather) = x["weather"].is<const char *>() ? std::string(x["weather"].as<const char *>()) : std::string();
           id(hd_stock) = x["stock"].is<const char *>() ? std::string(x["stock"].as<const char *>()) : std::string();
+          // 上证涨跌幅：JSON 数字直接取；HA 若发字符串（如 "0.35"）用 atof 兜底；null/缺失 → NAN（界面显灰）
+          if (x["stock_chg"].is<float>())             id(hd_stock_chg) = x["stock_chg"].as<float>();
+          else if (x["stock_chg"].is<const char *>()) id(hd_stock_chg) = atof(x["stock_chg"].as<const char *>());
+          else                                        id(hd_stock_chg) = NAN;
           id(hd_home_mode) = x["home_mode"].is<const char *>() ? std::string(x["home_mode"].as<const char *>()) : std::string();
           id(hd_activity_log) = x["activity_log"].is<const char *>() ? std::string(x["activity_log"].as<const char *>()) : std::string();
           id(hd_parking_status) = x["parking_status"].is<const char *>() ? std::string(x["parking_status"].as<const char *>()) : std::string();
@@ -543,6 +547,10 @@ globals:
     type: std::string
     restore_value: false
     initial_value: '""'
+  - id: hd_stock_chg
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
   - id: hd_home_mode
     type: std::string
     restore_value: false
@@ -1060,6 +1068,14 @@ text_sensor:
     lambda: |-
       if (id(ha_data_last_ms) == 0) return {};
       return { id(hd_stock) };
+  # stock_chg（上证涨跌幅：>0 涨红 / <0 跌绿 / =0 平白 / NAN 无数据灰）
+  - platform: template
+    id: ha_stock_chg
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_stock_chg);
   # home_mode
   - platform: template
     id: ha_home_mode

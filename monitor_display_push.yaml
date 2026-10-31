@@ -114,6 +114,8 @@ automation:
                 "external_ip":     states('sensor.tp_link_smb_tl_r498gpm_ac_external_ip') | default('', true),
                 "weather":         states('weather.tian_qi') | default('', true),
                 "stock":           states('sensor.mei_ri_gu_zhi') | default('', true),
+                "stock_chg":       ((state_attr('sensor.mei_ri_gu_zhi', 'Sh000001') or {}).get('changeRatio')
+                                    if state_attr('sensor.mei_ri_gu_zhi', 'Sh000001') is mapping else none),
                 "home_mode":       states('sensor.ju_jia_mo_shi') | default('', true),
                 "activity_log":    states('sensor.huo_dong_gui_ji') | default('', true),
                 "parking_status":  states('sensor.parking_status') | default('', true)
