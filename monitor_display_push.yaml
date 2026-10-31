@@ -52,13 +52,20 @@ automation:
                   wan_status      = none,
                   voice_broadcast = none,
                   fan_in_switch   = none,
-                  fan_out_switch  = none) -%}
+                  fan_out_switch  = none,
+                  stock_chg       = none) -%}
             {%- set ns.nova13          = none if states('binary_sensor.lam_nova13') in ['unknown', 'unavailable'] else (1 if is_state('binary_sensor.lam_nova13', 'on') else 0) -%}
             {%- set ns.nova12          = none if states('binary_sensor.su_nova12') in ['unknown', 'unavailable'] else (1 if is_state('binary_sensor.su_nova12', 'on') else 0) -%}
             {%- set ns.wan_status      = none if states('binary_sensor.tp_link_smb_tl_r498gpm_ac_wan_status') in ['unknown', 'unavailable'] else (1 if is_state('binary_sensor.tp_link_smb_tl_r498gpm_ac_wan_status', 'on') else 0) -%}
             {%- set ns.voice_broadcast = none if states('switch.voice_broadcast') in ['unknown', 'unavailable'] else (1 if is_state('switch.voice_broadcast', 'on') else 0) -%}
             {%- set ns.fan_in_switch   = none if states('switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1') in ['unknown', 'unavailable'] else (1 if is_state('switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1', 'on') else 0) -%}
             {%- set ns.fan_out_switch  = none if states('switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2') in ['unknown', 'unavailable'] else (1 if is_state('switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2', 'on') else 0) -%}
+            {#- 上证涨跌幅：sensor.mei_ri_gu_zhi 的属性键是 sh000001（全小写），
+                 里面 changeRatio 就是涨跌幅（涨为正、跌为负）。
+                 兼容 Sh000001 写法；属性缺失/不是字典/没有该键 -> none（屏幕显灰）。 -#}
+            {%- set stk = state_attr('sensor.mei_ri_gu_zhi', 'sh000001')
+                          or state_attr('sensor.mei_ri_gu_zhi', 'Sh000001') -%}
+            {%- set ns.stock_chg = stk.get('changeRatio') if stk is mapping and 'changeRatio' in stk else none -%}
             {{
               {
                 "ts": now().timestamp() | int,
@@ -114,8 +121,7 @@ automation:
                 "external_ip":     states('sensor.tp_link_smb_tl_r498gpm_ac_external_ip') | default('', true),
                 "weather":         states('weather.tian_qi') | default('', true),
                 "stock":           states('sensor.mei_ri_gu_zhi') | default('', true),
-                "stock_chg":       ((state_attr('sensor.mei_ri_gu_zhi', 'Sh000001') or {}).get('changeRatio')
-                                    if state_attr('sensor.mei_ri_gu_zhi', 'Sh000001') is mapping else none),
+                "stock_chg":       ns.stock_chg,
                 "home_mode":       states('sensor.ju_jia_mo_shi') | default('', true),
                 "activity_log":    states('sensor.huo_dong_gui_ji') | default('', true),
                 "parking_status":  states('sensor.parking_status') | default('', true)
