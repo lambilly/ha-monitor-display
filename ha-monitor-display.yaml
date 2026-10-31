@@ -892,6 +892,16 @@ sensor:
     lambda: |-
       if (id(ha_data_last_ms) == 0) return {};
       return id(hd_nas_upload);
+  # stock_chg（上证涨跌幅：>0 涨红 / <0 跌绿 / =0 平白 / NAN 无数据灰）
+  # 注意：必须是 float 传感器（放在 sensor: 段），text_sensor 返回 std::string，
+  #       页面要的是数值比较，放错段会编译报 could not convert 'float' 错误。
+  - platform: template
+    id: ha_stock_chg
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_stock_chg);
 
 number:
   # 熄屏超时（秒），默认 60s，HA 可调，重启后保留
@@ -1068,14 +1078,6 @@ text_sensor:
     lambda: |-
       if (id(ha_data_last_ms) == 0) return {};
       return { id(hd_stock) };
-  # stock_chg（上证涨跌幅：>0 涨红 / <0 跌绿 / =0 平白 / NAN 无数据灰）
-  - platform: template
-    id: ha_stock_chg
-    internal: true
-    update_interval: 1s
-    lambda: |-
-      if (id(ha_data_last_ms) == 0) return {};
-      return id(hd_stock_chg);
   # home_mode
   - platform: template
     id: ha_home_mode
