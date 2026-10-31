@@ -135,6 +135,10 @@ mqtt:
           else id(hd_voltage) = NAN;
           if (x["water_pressure"].is<float>()) id(hd_water_pressure) = x["water_pressure"].as<float>();
           else id(hd_water_pressure) = NAN;
+          if (x["xuanyi_dist"].is<float>()) id(hd_xuanyi_dist) = x["xuanyi_dist"].as<float>();
+          else id(hd_xuanyi_dist) = NAN;
+          if (x["byd_dist"].is<float>()) id(hd_byd_dist) = x["byd_dist"].as<float>();
+          else id(hd_byd_dist) = NAN;
           if (x["wan_uptime"].is<float>()) id(hd_wan_uptime) = x["wan_uptime"].as<float>();
           else id(hd_wan_uptime) = NAN;
           if (x["asr_count"].is<float>()) id(hd_asr_count) = x["asr_count"].as<float>();
@@ -460,6 +464,15 @@ globals:
     restore_value: false
     initial_value: 'NAN'
   - id: hd_gas_today
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  # 车辆到家的距离（km）：轩逸 / 比亚迪
+  - id: hd_xuanyi_dist
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_byd_dist
     type: float
     restore_value: false
     initial_value: 'NAN'
@@ -796,6 +809,22 @@ sensor:
     lambda: |-
       if (id(ha_data_last_ms) == 0) return {};
       return id(hd_gas_today);
+  # xuanyi_dist（轩逸距离 km）
+  - platform: template
+    id: ha_xuanyi_dist
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_xuanyi_dist);
+  # byd_dist（比亚迪距离 km）
+  - platform: template
+    id: ha_byd_dist
+    internal: true
+    update_interval: 1s
+    lambda: |-
+      if (id(ha_data_last_ms) == 0) return {};
+      return id(hd_byd_dist);
   # voltage
   - platform: template
     id: ha_voltage

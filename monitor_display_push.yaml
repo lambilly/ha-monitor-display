@@ -7,7 +7,7 @@
 #     packages: !include_dir_named packages
 #
 # 作用：
-#   每 5 秒把这 50 个实体的当前值压成一个 JSON，publish 到
+#   每 5 秒把这 52 个实体的当前值压成一个 JSON，publish 到
 #   home/ha-monitor-display（retain=true），屏幕订阅这一个主题即可
 #   在任何网络下（家里 / 公司 / 酒店）拿到全部数据。
 #
@@ -25,7 +25,7 @@ automation:
   - id: monitor_display_push
     alias: "Monitor Display: 推送数据到 MQTT"
     description: >-
-      把屏幕所需的 50 个实体打包成 JSON 发到 MQTT，
+      把屏幕所需的 52 个实体打包成 JSON 发到 MQTT，
       供 ESP32 在任意网络（含外网）下读取
     mode: single
     max_exceeded: silent
@@ -97,6 +97,10 @@ automation:
                 "gas_today":        states('sensor.ri_yong_qi_liang') | float(none),
                 "voltage":          states('sensor.tasmota_energy_voltage') | float(none),
                 "water_pressure":   states('sensor.maze_wateronev3_tp_f8e644') | float(none),
+
+                # 车辆距离（km）：车位状态卡片下方两行（轩逸黄 / 比亚迪粉）
+                "xuanyi_dist":      states('sensor.wo_de_jia_xuan_yi_distance') | float(none),
+                "byd_dist":         states('sensor.wo_de_jia_bi_ya_di_distance') | float(none),
 
                 "wan_uptime":       states('sensor.tp_link_smb_tl_r498gpm_ac_uptime') | float(none),
                 "asr_count":        states('sensor.asr_online_count') | float(none),
