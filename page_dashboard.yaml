@@ -221,7 +221,7 @@ lvgl:
               - label:
                   id: home_mode_label
                   align: left_mid
-                  x: 34
+                  x: 32
                   text: "居家模式"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
@@ -249,7 +249,7 @@ lvgl:
               - label:
                   id: home_parking_label
                   align: left_mid
-                  x: 34
+                  x: 32
                   text: "车位状态: --"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
@@ -720,8 +720,12 @@ interval:
             std::string m = has_mode ? strip_hash(mode) : "居家模式";
             std::string a = has_act  ? strip_hash(act)  : "";
 
-            // 模式着色：在家=橙 / 离家=红 / 休息=紫 / 影音=黄 / 其他=白（兜底）；
-            // 图标默认白（"打底白色"），有模式时随模式色，与文字保持一致
+            // 着色规则（10-31 六轮，用户定）：
+            //   **模式色只上图标，文字一律白** —— 图标负责"当前是什么模式"，
+            //   文字负责内容，避免整行花掉。
+            //     在家=橙 FFB74D / 离家=红 FF5252 / 休息=紫 B39DFF / 影音=黄 FFD54F
+            //     其余模式与无数据=白（兜底）
+            //   活动轨迹：有活动=白 / 无活动=灰 757575 占位 "--"
             const char* mcol = "FFFFFF";
             if      (m.find("在家") != std::string::npos) { mcol = "FFB74D"; }
             else if (m.find("离家") != std::string::npos) { mcol = "FF5252"; }
@@ -730,18 +734,19 @@ interval:
             lv_obj_set_style_text_color(id(home_mode_icon),
                                         lv_color_hex((uint32_t) strtoul(mcol, nullptr, 16)), 0);
             if (has_act && has_mode) {
-              snprintf(mbuf, sizeof(mbuf), "#%s %s# #FFD54F %s#", mcol, m.c_str(), a.c_str());
+              snprintf(mbuf, sizeof(mbuf), "#FFFFFF %s# #FFFFFF %s#", m.c_str(), a.c_str());
             } else if (has_act) {
-              snprintf(mbuf, sizeof(mbuf), "#FFD54F %s#", a.c_str());
+              snprintf(mbuf, sizeof(mbuf), "#FFFFFF %s#", a.c_str());
             } else if (has_mode) {
-              snprintf(mbuf, sizeof(mbuf), "#%s %s#", mcol, m.c_str());
+              // 无活动轨迹：占位 "--" 用灰，与车位/电灯等无数据写法一致
+              snprintf(mbuf, sizeof(mbuf), "#FFFFFF %s# #757575 --#", m.c_str());
             } else {
-              // 无数据占位：图标（上方已设为白）与文字都白，不要留紫色
-              snprintf(mbuf, sizeof(mbuf), "#FFFFFF 居家模式#");
+              snprintf(mbuf, sizeof(mbuf), "#FFFFFF 居家模式# #757575 --#");
             }
             lv_label_set_text(id(home_mode_label), mbuf);
           }
-          // 车位状态着色：空闲=绿 / 比亚迪=粉 FF80AB / 轩逸=黄 / 其他与无数据=白（打底白，图标同步变色）
+          // 车位状态着色（10-31 六轮，用户定）：**状态色只上图标，文字一律白**
+          //   空闲=绿 59D98B / 比亚迪=粉 FF80AB / 轩逸=黄 FFD54F / 其他与无数据=白
           {
             const std::string& pk = id(ha_parking_status).state;
             const bool has_pk = id(ha_parking_status).has_state() && !pk.empty()
@@ -756,8 +761,8 @@ interval:
               snprintf(buf, sizeof(buf), "车位状态: --");
             }
             lv_label_set_text(id(home_parking_label), buf);
-            lv_obj_set_style_text_color(id(home_parking_label), lv_color_hex(pkc), 0);
-            lv_obj_set_style_text_color(id(home_parking_icon), lv_color_hex(pkc), 0);
+            lv_obj_set_style_text_color(id(home_parking_label), lv_color_hex(0xFFFFFF), 0);
+            lv_obj_set_style_text_color(id(home_parking_icon),  lv_color_hex(pkc), 0);
           }
 
           // ===== 行4/行5 左列：设备计数（格式：电灯: 2/36盏）=====
