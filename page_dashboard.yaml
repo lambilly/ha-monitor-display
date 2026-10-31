@@ -676,7 +676,8 @@ interval:
           set_cnt_color(id(home_server_label),  id(home_server_icon),  id(ha_family_home),  "在家", 0xFFB74D);
           set_cnt_color(id(home_gateway_label), id(home_gateway_icon), id(ha_guest_visit),  "客人", 0xB39DFF);
           set_cnt_color(id(home_ap_label),      id(home_ap_icon),      id(ha_phone_online), "手机", 0x5AA9FF);
-          // 语音广播是开关实体：名称白 / 开=绿 / 关=红 / 无数据灰 + "--"；图标无数据时转白
+          // 语音广播是开关实体：名称白 / 数值 开=绿 / 关=红 / 无数据灰 + "--"
+          // 图标与前三个逻辑一致：恒为规划基色绿 59D98B（格位锚点，不随状态变色）
           {
             const bool has_v = id(ha_voice_broadcast).has_state();
             const bool on_v  = has_v && id(ha_voice_broadcast).state;
@@ -691,7 +692,7 @@ interval:
             }
             lv_label_set_text(id(home_monitor_label), vb);
             lv_obj_set_style_text_color(id(home_monitor_label), lv_color_hex(0xFFFFFF), 0);
-            lv_obj_set_style_text_color(id(home_monitor_icon), lv_color_hex(has_v ? vc : 0xFFFFFF), 0);
+            lv_obj_set_style_text_color(id(home_monitor_icon), lv_color_hex(0x59D98B), 0);   // 图标恒绿
           }
 
           // ===== 行3：居家模式（在家橙/离家红/休息紫/影音黄）+ 活动轨迹（黄）/ 车位状态 =====
