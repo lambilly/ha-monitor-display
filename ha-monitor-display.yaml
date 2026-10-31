@@ -181,8 +181,22 @@ mqtt:
           else                                        id(hd_stock_chg) = NAN;
           id(hd_home_mode) = x["home_mode"].is<const char *>() ? std::string(x["home_mode"].as<const char *>()) : std::string();
           id(hd_activity_log) = x["activity_log"].is<const char *>() ? std::string(x["activity_log"].as<const char *>()) : std::string();
-          if (x["mode_volume"].is<float>()) id(hd_mode_volume) = x["mode_volume"].as<float>();
-          else id(hd_mode_volume) = NAN;
+          // 音量百分比：数字直接用；HA 若发 "65%"/"65" 之类字符串则提数字；null/缺失/非数字 → NAN
+          {
+            float mv = NAN;
+            if (x["mode_volume"].is<float>()) {
+              mv = x["mode_volume"].as<float>();
+            } else if (x["mode_volume"].is<const char *>()) {
+              const char *p = x["mode_volume"].as<const char *>();
+              if (p != nullptr && ((p[0] >= '0' && p[0] <= '9') || p[0] == '-')) mv = atof(p);
+            }
+            id(hd_mode_volume) = std::isfinite(mv) ? mv : NAN;
+            static bool mv_warned = false;
+            if (!std::isfinite(mv) && !mv_warned) {
+              mv_warned = true;
+              ESP_LOGW("ha_data", "mode_volume 缺失或非数值（HA 侧 sensor.ju_jia_mo_shi 无 volume_percent 属性？）");
+            }
+          }
           id(hd_parking_status) = x["parking_status"].is<const char *>() ? std::string(x["parking_status"].as<const char *>()) : std::string();
 
           id(ha_data_last_ms) = millis();

@@ -617,7 +617,7 @@ lvgl:
               - label:
                   id: nav_dash_1
                   align: left_mid
-                  x: 0
+                  x: -10
                   width: 156
                   text: "家居"
                   text_align: CENTER
@@ -637,7 +637,7 @@ lvgl:
               - label:
                   id: nav_sys_1
                   align: right_mid
-                  x: 0
+                  x: 10
                   width: 156
                   text: "系统"
                   text_align: CENTER

@@ -60,6 +60,14 @@ automation:
             {%- set ns.voice_broadcast = none if states('switch.voice_broadcast') in ['unknown', 'unavailable'] else (1 if is_state('switch.voice_broadcast', 'on') else 0) -%}
             {%- set ns.fan_in_switch   = none if states('switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1') in ['unknown', 'unavailable'] else (1 if is_state('switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1', 'on') else 0) -%}
             {%- set ns.fan_out_switch  = none if states('switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2') in ['unknown', 'unavailable'] else (1 if is_state('switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2', 'on') else 0) -%}
+            {#- 居家模式音量百分比：属性名依次尝试 volume_percent / volume / volume_level / percentage；
+                 值可能是 65、"65%"、65.0，统一去除百分号后转数字；全取不到则为 none（屏幕不显示）。 -#}
+            {%- set ns.vol_raw = none -%}
+            {%- for _a in ['volume_percent', 'volume', 'volume_level', 'percentage'] -%}
+              {%- if ns.vol_raw is none -%}
+                {%- set ns.vol_raw = state_attr('sensor.ju_jia_mo_shi', _a) -%}
+              {%- endif -%}
+            {%- endfor -%}
             {#- 上证涨跌幅：sensor.mei_ri_gu_zhi 的属性键是 sh000001（全小写），
                  里面 changeRatio 就是涨跌幅（涨为正、跌为负）。
                  兼容 Sh000001 写法；属性缺失/不是字典/没有该键 -> none（屏幕显灰）。 -#}
@@ -129,7 +137,7 @@ automation:
                 "stock":           states('sensor.mei_ri_gu_zhi') | default('', true),
                 "stock_chg":       ns.stock_chg,
                 "home_mode":       states('sensor.ju_jia_mo_shi') | default('', true),
-                "mode_volume":     state_attr('sensor.ju_jia_mo_shi', 'volume_percent') | float(none),
+                "mode_volume":     ns.vol_raw | string | replace('%', '') | float(none),
                 "activity_log":    states('sensor.huo_dong_gui_ji') | default('', true),
                 "parking_status":  states('sensor.parking_status') | default('', true)
               } | to_json

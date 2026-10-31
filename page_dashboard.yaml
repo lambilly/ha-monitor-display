@@ -243,7 +243,7 @@ lvgl:
               - label:
                   id: home_parking_icon
                   align: left_mid
-                  x: 5
+                  x: 2
                   text: "\U000F010B"
                   text_font: mdi_icons_20
                   height: 18
@@ -252,16 +252,16 @@ lvgl:
               - label:
                   id: home_parking_label
                   align: left_mid
-                  x: 29
+                  x: 26
                   text: "车位状态: #757575 --#"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
                   recolor: true
-              # 右栏：两行公里数上下排列，右边缘距卡片右侧 3px；左列距左侧 5px
+              # 右栏：两行公里数上下排列，右边缘距卡片外侧 3px；左列距左侧 2px
               - label:
                   id: home_xuanyi_dist_label
                   align: right_mid
-                  x: -5
+                  x: -3
                   y: -8
                   text: "--"
                   text_font: ui_font_small
@@ -269,7 +269,7 @@ lvgl:
               - label:
                   id: home_byd_dist_label
                   align: right_mid
-                  x: -5
+                  x: -3
                   y: 8
                   text: "--"
                   text_font: ui_font_small
@@ -389,7 +389,7 @@ lvgl:
                   recolor: true
 
         # ============ 行4~行5 中列：今日能耗（跨两行 h101：标题 + 四行） ============
-        # 用电 / 用气 / 电压 / 水压；四行等分 21px/行，y：-27 / -6 / +15 / +36
+        # 电压 / 水压 / 用气 / 用电（10-31 十九轮改序）；四行等分 21px/行，y：-27 / -6 / +15 / +36
         - obj:
             x: 162
             y: 162
@@ -430,71 +430,73 @@ lvgl:
                   radius: 0
                   scrollable: false
                   clickable: false
-              # 第1行：用电
+              # 行序（10-31 十九轮，用户定）：电压 / 水压 / 用气 / 用电
+              # 行位配色不变，仍是黄 FFB74D / 紫 B39DFF / 蓝 5AA9FF / 绿 59D98B
+              # 第1行：电压（黄）
               - label:
                   align: left_mid
                   x: 6
                   y: -22
-                  text: "\U000F0241"
-                  text_font: mdi_icons
-                  text_color: 0xFFB74D
-              - label:
-                  id: home_energy_today_label
-                  align: left_mid
-                  x: 25
-                  y: -22
-                  text: "用电: #757575 --#"
-                  text_font: ui_font_small
-                  text_color: 0xFFFFFF
-                  recolor: true
-              # 第2行：用气
-              - label:
-                  align: left_mid
-                  x: 6
-                  y: -2
-                  text: "\U000F0238"
-                  text_font: mdi_icons
-                  text_color: 0xB39DFF
-              - label:
-                  id: home_gas_label
-                  align: left_mid
-                  x: 25
-                  y: -2
-                  text: "用气: #757575 --#"
-                  text_font: ui_font_small
-                  text_color: 0xFFFFFF
-                  recolor: true
-              # 第3行：电压
-              - label:
-                  align: left_mid
-                  x: 6
-                  y: 18
                   text: "\U000F0D3E"
                   text_font: mdi_icons
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFB74D
               - label:
                   id: home_voltage_label
                   align: left_mid
                   x: 25
-                  y: 18
+                  y: -22
                   text: "电压: #757575 --#"
                   text_font: ui_font_small
                   text_color: 0xFFFFFF
                   recolor: true
-              # 第4行：水压
+              # 第2行：水压（紫）
               - label:
                   align: left_mid
                   x: 6
-                  y: 38
+                  y: -2
                   text: "\U000F0875"
                   text_font: mdi_icons
-                  text_color: 0x59D98B
+                  text_color: 0xB39DFF
               - label:
                   id: home_water_pressure_label
                   align: left_mid
                   x: 25
-                  y: 38
+                  y: -2
                   text: "水压: #757575 --#"
+                  text_font: ui_font_small
+                  text_color: 0xFFFFFF
+                  recolor: true
+              # 第3行：用气（蓝）
+              - label:
+                  align: left_mid
+                  x: 6
+                  y: 18
+                  text: "\U000F0238"
+                  text_font: mdi_icons
+                  text_color: 0x5AA9FF
+              - label:
+                  id: home_gas_label
+                  align: left_mid
+                  x: 25
+                  y: 18
+                  text: "用气: #757575 --#"
+                  text_font: ui_font_small
+                  text_color: 0xFFFFFF
+                  recolor: true
+              # 第4行：用电（绿）
+              - label:
+                  align: left_mid
+                  x: 6
+                  y: 38
+                  text: "\U000F0241"
+                  text_font: mdi_icons
+                  text_color: 0x59D98B
+              - label:
+                  id: home_energy_today_label
+                  align: left_mid
+                  x: 25
+                  y: 38
+                  text: "用电: #757575 --#"
                   text_font: ui_font_small
                   text_color: 0xFFFFFF
                   recolor: true
@@ -584,7 +586,7 @@ lvgl:
               - label:
                   id: nav_dash_3
                   align: left_mid
-                  x: 0
+                  x: -10
                   width: 156
                   text: "家居"
                   text_align: CENTER
@@ -604,7 +606,7 @@ lvgl:
               - label:
                   id: nav_sys_3
                   align: right_mid
-                  x: 0
+                  x: 10
                   width: 156
                   text: "系统"
                   text_align: CENTER
@@ -836,7 +838,7 @@ interval:
           set_cnt(id(home_climate_label),   id(ha_climate_on),     "空调", "4台");
           set_cnt(id(home_equipment_label), id(ha_equipment_on),   "电器", "20台");
 
-          // ===== 中列：今日能耗（用电 / 用气 / 电压 / 水压）=====
+          // ===== 中列：今日能耗（电压 / 水压 / 用气 / 用电）=====
           // 名称恒白；数值未就绪时仅 "--" 内联灰，有数据白色；单位随实体走
           auto fmt_val = [](lv_obj_t* lbl, const char* name, float v, const char* unit, int prec) {
             char out[40];
