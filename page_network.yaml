@@ -261,7 +261,7 @@ lvgl:
                   y: -32
                   text: "路由在线: --"
                   text_font: ui_font_small
-                  text_color: 0xFFB74D
+                  text_color: 0xFFFFFF
               # 第2行：控制设备
               - label:
                   align: left_mid
@@ -277,7 +277,7 @@ lvgl:
                   y: -4
                   text: "控制设备: --"
                   text_font: ui_font_small
-                  text_color: 0xB39DFF
+                  text_color: 0xFFFFFF
               # 第3行：终端在线
               - label:
                   align: left_mid
@@ -293,7 +293,7 @@ lvgl:
                   y: 24
                   text: "终端在线: --"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
               # 第4行：低电量数
               - label:
                   align: left_mid
@@ -309,7 +309,7 @@ lvgl:
                   y: 52
                   text: "低电量数: --"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
                   recolor: true
 
         # ---- 中列：NAS运行（白色标题）----
@@ -366,7 +366,7 @@ lvgl:
                   y: -32
                   text: "CPU利用: --"
                   text_font: ui_font_small
-                  text_color: 0xFFB74D
+                  text_color: 0xFFFFFF
               # 第2行：内存可用
               - label:
                   align: left_mid
@@ -382,7 +382,7 @@ lvgl:
                   y: -4
                   text: "内存可用: --"
                   text_font: ui_font_small
-                  text_color: 0xB39DFF
+                  text_color: 0xFFFFFF
               # 第3行：上传
               - label:
                   align: left_mid
@@ -398,7 +398,7 @@ lvgl:
                   y: 24
                   text: "上传: --"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
               # 第4行：下载
               - label:
                   align: left_mid
@@ -414,7 +414,7 @@ lvgl:
                   y: 52
                   text: "下载: --"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
 
         # ---- 右列：风扇运行（白色标题）----
         - obj:
@@ -470,7 +470,7 @@ lvgl:
                   y: -32
                   text: "前扇: --"
                   text_font: ui_font_small
-                  text_color: 0xFFB74D
+                  text_color: 0xFFFFFF
                   recolor: true
               # 前扇温度：温度计图标（红）+ 数值
               - label:
@@ -487,7 +487,7 @@ lvgl:
                   y: -32
                   text: "--"
                   text_font: ui_font_small
-                  text_color: 0xE0E0E0
+                  text_color: 0xFFFFFF
               # 第2行：后扇
               - label:
                   align: left_mid
@@ -503,7 +503,7 @@ lvgl:
                   y: -4
                   text: "后扇: --"
                   text_font: ui_font_small
-                  text_color: 0xB39DFF
+                  text_color: 0xFFFFFF
                   recolor: true
               # 后扇温度：温度计图标（橙）+ 数值
               - label:
@@ -520,7 +520,7 @@ lvgl:
                   y: -4
                   text: "--"
                   text_font: ui_font_small
-                  text_color: 0xE0E0E0
+                  text_color: 0xFFFFFF
               # 第3行：进扇
               - label:
                   align: left_mid
@@ -536,7 +536,7 @@ lvgl:
                   y: 24
                   text: "进扇: 关"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
                   recolor: true
               # 进扇温度：温度计图标（黄）+ 数值
               - label:
@@ -553,7 +553,7 @@ lvgl:
                   y: 24
                   text: "--"
                   text_font: ui_font_small
-                  text_color: 0xE0E0E0
+                  text_color: 0xFFFFFF
               # 第4行：出扇
               - label:
                   align: left_mid
@@ -569,7 +569,7 @@ lvgl:
                   y: 52
                   text: "出扇: 关"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
                   recolor: true
               # 出扇温度：温度计图标（绿）+ 数值
               - label:
@@ -586,7 +586,7 @@ lvgl:
                   y: 52
                   text: "--"
                   text_font: ui_font_small
-                  text_color: 0xE0E0E0
+                  text_color: 0xFFFFFF
 
         # ============ 行4：TAB 导航 (y266 h49) ============
         - obj:
@@ -730,7 +730,7 @@ interval:
               snprintf(buf, sizeof(buf), "低电量数: #757575 --#");
             }
             lv_label_set_text(id(net_battery_label), buf);
-            lv_obj_set_style_text_color(id(net_battery_label), lv_color_hex(0x5AA9FF), 0);
+            lv_obj_set_style_text_color(id(net_battery_label), lv_color_hex(0xFFFFFF), 0);
           }
 
           // ===== 行3 中列：NAS运行（CPU / 内存 / 上传 / 下载）=====
@@ -754,8 +754,8 @@ interval:
             lv_obj_set_style_text_color(
                 lbl, lv_color_hex(v >= (int) danger ? 0xFF5252 : (v >= (int) warn ? 0xFFD54F : base_color)), 0);
           };
-          set_pct(id(net_nas_cpu_label), id(ha_nas_cpu), "CPU利用", 70, 90, 0xFFB74D);
-          set_pct(id(net_nas_mem_label), id(ha_nas_mem), "内存可用", 75, 92, 0xB39DFF);
+          set_pct(id(net_nas_cpu_label), id(ha_nas_cpu), "CPU利用", 70, 90, 0xFFFFFF);
+          set_pct(id(net_nas_mem_label), id(ha_nas_mem), "内存可用", 75, 92, 0xFFFFFF);
 
           // 网速（实体单位通常为 B/s，自适应 KB/s、MB/s）；上传/下载共用
           auto set_rate = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name) {
@@ -799,8 +799,8 @@ interval:
             lv_label_set_text(lbl, b);
             lv_obj_set_style_text_color(lbl, lv_color_hex(base), 0);
           };
-          set_fan(id(net_fan_front_label), id(ha_fan1_rpm), id(ha_fan1_speed), "前扇", 0xFFB74D);
-          set_fan(id(net_fan_back_label),  id(ha_fan2_rpm), id(ha_fan2_speed), "后扇", 0xB39DFF);
+          set_fan(id(net_fan_front_label), id(ha_fan1_rpm), id(ha_fan1_speed), "前扇", 0xFFFFFF);
+          set_fan(id(net_fan_back_label),  id(ha_fan2_rpm), id(ha_fan2_speed), "后扇", 0xFFFFFF);
           // 进扇/出扇是 Sonoff 开关（switch 域），只表示开/关，没有转速
           auto set_sw_fan = [](lv_obj_t* lbl, esphome::binary_sensor::BinarySensor* bs,
                                const char* name, uint32_t base) {
@@ -814,8 +814,8 @@ interval:
             lv_label_set_text(lbl, b);
             lv_obj_set_style_text_color(lbl, lv_color_hex(base), 0);
           };
-          set_sw_fan(id(net_fan_in_label),  id(ha_fan_in_switch),  "进扇", 0x59D98B);
-          set_sw_fan(id(net_fan_out_label), id(ha_fan_out_switch), "出扇", 0x5AA9FF);
+          set_sw_fan(id(net_fan_in_label),  id(ha_fan_in_switch),  "进扇", 0xFFFFFF);
+          set_sw_fan(id(net_fan_out_label), id(ha_fan_out_switch), "出扇", 0xFFFFFF);
 
           // 四路温度：紧跟风扇状态后面（温度计图标固定色，数值统一浅灰）
           auto set_temp = [](lv_obj_t* lbl, esphome::sensor::Sensor* s) {

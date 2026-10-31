@@ -45,7 +45,7 @@ lvgl:
                   x: 3
                   text: "加载中..."
                   text_font: ui_font_medium
-                  text_color: 0xE0E0E0
+                  text_color: 0xFFFFFF
               - label:
                   align: left_mid
                   x: 200
@@ -59,7 +59,7 @@ lvgl:
                   x: 222
                   text: "--"
                   text_font: ui_font_medium
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
               - label:
                   id: home_stock_icon
                   align: left_mid
@@ -110,7 +110,7 @@ lvgl:
                   x: 18
                   text: "在家: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFB74D
+                  text_color: 0xFFFFFF
         - obj:
             x: 126
             y: 61
@@ -136,7 +136,7 @@ lvgl:
                   x: 18
                   text: "客人: --"
                   text_font: ui_font_medium
-                  text_color: 0xB39DFF
+                  text_color: 0xFFFFFF
         - obj:
             x: 249
             y: 61
@@ -162,7 +162,7 @@ lvgl:
                   x: 16
                   text: "手机: --"
                   text_font: ui_font_medium
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
         - obj:
             x: 370
             y: 61
@@ -188,7 +188,7 @@ lvgl:
                   x: 18
                   text: "语音: --"
                   text_font: ui_font_medium
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
 
         # ============ 行3：居家模式 | 车位状态 (y110 h49) ============
         - obj:
@@ -248,7 +248,7 @@ lvgl:
                   x: 34
                   text: "车位状态: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFB74D
+                  text_color: 0xFFFFFF
 
         # ============ 行4~行5 左列：电器动态（跨两行 h101：标题 + 四行） ============
         # 154x101 内：标题占顶部 17px，四行在下方 84px 内等分 21px/行
@@ -309,7 +309,7 @@ lvgl:
                   y: -22
                   text: "电灯: --"
                   text_font: ui_font_small
-                  text_color: 0xFFB74D
+                  text_color: 0xFFFFFF
               # 第2行：窗帘
               - label:
                   align: left_mid
@@ -325,7 +325,7 @@ lvgl:
                   y: -2
                   text: "窗帘: --"
                   text_font: ui_font_small
-                  text_color: 0xB39DFF
+                  text_color: 0xFFFFFF
               # 第3行：空调
               - label:
                   align: left_mid
@@ -341,7 +341,7 @@ lvgl:
                   y: 18
                   text: "空调: --"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
               # 第4行：电器
               - label:
                   align: left_mid
@@ -357,7 +357,7 @@ lvgl:
                   y: 38
                   text: "电器: --"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
 
         # ============ 行4~行5 中列：今日能耗（跨两行 h101：标题 + 四行） ============
         # 用电 / 用气 / 电压 / 水压；四行等分 21px/行，y：-27 / -6 / +15 / +36
@@ -416,7 +416,7 @@ lvgl:
                   y: -22
                   text: "用电: --"
                   text_font: ui_font_small
-                  text_color: 0xFFB74D
+                  text_color: 0xFFFFFF
               # 第2行：用气
               - label:
                   align: left_mid
@@ -432,7 +432,7 @@ lvgl:
                   y: -2
                   text: "用气: --"
                   text_font: ui_font_small
-                  text_color: 0xB39DFF
+                  text_color: 0xFFFFFF
               # 第3行：电压
               - label:
                   align: left_mid
@@ -448,7 +448,7 @@ lvgl:
                   y: 18
                   text: "电压: --"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
               # 第4行：水压
               - label:
                   align: left_mid
@@ -464,7 +464,7 @@ lvgl:
                   y: 38
                   text: "水压: --"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
 
         # ============ 行4~行5 右侧上格：Nova13 (y162 h49) ============
         # 图标固定天蓝；名字白色固定；状态字单独 label，在线绿/离线灰
@@ -492,7 +492,7 @@ lvgl:
                   x: 26
                   text: "Nova13"
                   text_font: ui_font_medium
-                  text_color: 0xE0E0E0
+                  text_color: 0xFFFFFF
               - label:
                   id: home_nova13_label
                   align: left_mid
@@ -527,7 +527,7 @@ lvgl:
                   x: 26
                   text: "Nova12"
                   text_font: ui_font_medium
-                  text_color: 0xE0E0E0
+                  text_color: 0xFFFFFF
               - label:
                   id: home_nova12_label
                   align: left_mid

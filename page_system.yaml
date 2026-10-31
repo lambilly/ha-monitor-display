@@ -46,7 +46,7 @@ lvgl:
                   x: 26
                   text: "系统状态"
                   text_font: ui_font_medium
-                  text_color: 0xE0E0E0
+                  text_color: 0xFFFFFF
               - label:
                   align: left_mid
                   x: 277
@@ -60,7 +60,7 @@ lvgl:
                   x: 299
                   text: "运行: --"
                   text_font: ui_font_medium
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
 
         # ============ 行2：两个框 (y58 h49) ============
         # 470 - 3 = 467 → 宽 [233, 234]，x = 5 / 241
@@ -89,7 +89,7 @@ lvgl:
                   x: 24
                   text: "SSID: --"
                   text_font: ui_font_medium
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
         - obj:
             x: 241
             y: 58
@@ -114,7 +114,7 @@ lvgl:
                   x: 22
                   text: "IP: --"
                   text_font: ui_font_medium
-                  text_color: 0xFFD54F
+                  text_color: 0xFFFFFF
 
         # ============ 行3：三列均分 (y110 h153) ============
         # 470 - 2*3 = 464 → 464/3 = 154 余 2 → 宽 [155,155,154]
@@ -172,7 +172,7 @@ lvgl:
                   y: -32
                   text: "主机: 监视屏"
                   text_font: ui_font_small
-                  text_color: 0xFFB74D
+                  text_color: 0xFFFFFF
               # 第2行：芯片
               - label:
                   align: left_mid
@@ -187,7 +187,7 @@ lvgl:
                   y: -4
                   text: "芯片: ESP32-S3"
                   text_font: ui_font_small
-                  text_color: 0xB39DFF
+                  text_color: 0xFFFFFF
               # 第3行：屏幕
               - label:
                   align: left_mid
@@ -202,7 +202,7 @@ lvgl:
                   y: 24
                   text: "屏幕: 480x320"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
               # 第4行：固件
               - label:
                   align: left_mid
@@ -217,7 +217,7 @@ lvgl:
                   y: 52
                   text: "固件: ESPHome"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
 
         # ---- 中列：系统负载（白色标题）----
         - obj:
@@ -273,7 +273,7 @@ lvgl:
                   y: -32
                   text: "内存: --"
                   text_font: ui_font_small
-                  text_color: 0xFFB74D
+                  text_color: 0xFFFFFF
               # 第2行：PSRAM
               - label:
                   align: left_mid
@@ -289,7 +289,7 @@ lvgl:
                   y: -4
                   text: "外存: --"
                   text_font: ui_font_small
-                  text_color: 0xB39DFF
+                  text_color: 0xFFFFFF
               # 第3行：主循环耗时
               - label:
                   align: left_mid
@@ -305,7 +305,7 @@ lvgl:
                   y: 24
                   text: "循环: --"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
               # 第4行：屏幕亮度（light.ha_monitor_display_screen_light 的 brightness 属性）
               - label:
                   align: left_mid
@@ -321,7 +321,7 @@ lvgl:
                   y: 52
                   text: "亮度: --"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
 
         # ---- 右列：网络参数（白色标题）----
         - obj:
@@ -377,7 +377,7 @@ lvgl:
                   y: -4
                   text: "RSSI: --"
                   text_font: ui_font_small
-                  text_color: 0xB39DFF
+                  text_color: 0xFFFFFF
               # 第4行：WiFi 连接
               - label:
                   align: left_mid
@@ -393,7 +393,7 @@ lvgl:
                   y: 52
                   text: "WiFi: --"
                   text_font: ui_font_small
-                  text_color: 0x5AA9FF
+                  text_color: 0xFFFFFF
                   recolor: true
               # 第3行：外网（MQTT 通道状态）
               - label:
@@ -410,7 +410,7 @@ lvgl:
                   y: 24
                   text: "MQTT: --"
                   text_font: ui_font_small
-                  text_color: 0x59D98B
+                  text_color: 0xFFFFFF
                   recolor: true
               # 第1行：信号质量（使用 signal 图标，比 DNS 更贴合语义）
               - label:
@@ -427,7 +427,7 @@ lvgl:
                   y: -32
                   text: "SIGQ: --"
                   text_font: ui_font_small
-                  text_color: 0xFFB74D
+                  text_color: 0xFFFFFF
                   recolor: true
 
         # ============ 行4：TAB 导航 (y266 h49) ============
