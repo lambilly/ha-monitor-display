@@ -1046,8 +1046,9 @@ script:
       - lambda: |-
           if (!id(lvgl_ready)) return;
 
-          lv_obj_t* scr = (page == 0) ? id(dashboard_page)
-                        : ((page == 1) ? id(network_page) : id(system_page));
+          // 注意：page 对象是 LvPageType*，底层 lv_obj_t* 在 ->obj 成员里
+          lv_obj_t* scr = (page == 0) ? id(dashboard_page)->obj
+                        : ((page == 1) ? id(network_page)->obj : id(system_page)->obj);
           if (scr == nullptr) return;
 
           uint32_t c = (page == 0) ? id(ui_bg_dash)
