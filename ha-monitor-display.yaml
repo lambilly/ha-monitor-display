@@ -190,6 +190,10 @@ web_server:
   port: 80
   version: 3
   auth:
+    # digest：密码只以哈希形式走网络（basic 是 Base64，等于明文）
+    # 2027.1.0 起 ESPHome 的默认值也会变成 digest，现在显式指定可提前对齐。
+    # 注意：用 curl 等 REST 客户端访问需加 --digest（例：curl --digest -u admin:密码 http://IP/）。
+    type: digest
     username: admin
     password: !secret web_password
 
