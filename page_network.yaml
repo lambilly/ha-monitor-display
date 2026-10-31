@@ -362,7 +362,7 @@ lvgl:
                   y: -32
                   text: "CPU利用: --"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFB74D
               # 第2行：内存可用
               - label:
                   align: left_mid
@@ -378,7 +378,7 @@ lvgl:
                   y: -4
                   text: "内存可用: --"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xB39DFF
               # 第3行：上传
               - label:
                   align: left_mid
@@ -733,14 +733,15 @@ interval:
           // CPU / 内存：百分比，超阈值变色提示
           //   base_color 是常态色（与同行的图标颜色一致）。CPU 常态橙、超限黄/红；
           //   内存常态色就是紫色（和图标一样），但超限时仍然变成黄/红，避免"满了还显示紫色"的误判。
-          //   未载入数据（首帧/实体缺失）→ 灰 757575 的 "--"，与上传/下载的兜底格式一致。
+          //   未载入数据（首帧/实体缺失）→ 基色 "--"，与同行的图标同色；
+          //   这一行为与上传/下载的兜底一致（无数据仍保持本行基色，不用灰色）。
           auto set_pct = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name,
                             uint32_t warn, uint32_t danger, uint32_t base_color) {
             char b[40];
             if (!std::isfinite(s->state)) {
               snprintf(b, sizeof(b), "%s: --", name);
               lv_label_set_text(lbl, b);
-              lv_obj_set_style_text_color(lbl, lv_color_hex(0x757575), 0);
+              lv_obj_set_style_text_color(lbl, lv_color_hex(base_color), 0);
               return;
             }
             int v = (int) s->state;
