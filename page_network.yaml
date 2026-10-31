@@ -51,9 +51,10 @@ lvgl:
                   id: net_ip_label
                   align: left_mid
                   x: 26
-                  text: "外网IP: --"
+                  text: "外网IP: #757575 --#"
                   text_font: ui_font_medium
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
               - label:
                   align: left_mid
                   x: 277
@@ -65,9 +66,10 @@ lvgl:
                   id: net_uptime_label
                   align: left_mid
                   x: 299
-                  text: "已连接: --"
+                  text: "已连接: #757575 --#"
                   text_font: ui_font_medium
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
 
         # ============ 行2：五列均分 (y61 h41，高宽各比标准行小 8/5px) ============
         # 470 - 4*3 = 458 → 458/5 = 91 余 3 → 宽 [92,92,92,91,91]
@@ -95,9 +97,10 @@ lvgl:
                   id: net_server_label
                   align: left_mid
                   x: 11
-                  text: "主机: --"
+                  text: "主机: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
         - obj:
             x: 102
             y: 61
@@ -120,9 +123,10 @@ lvgl:
                   id: net_gateway_label
                   align: left_mid
                   x: 11
-                  text: "网关: --"
+                  text: "网关: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
         - obj:
             x: 199
             y: 61
@@ -145,9 +149,10 @@ lvgl:
                   id: net_ap_label
                   align: left_mid
                   x: 11
-                  text: "无线: --"
+                  text: "无线: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
         - obj:
             x: 296
             y: 61
@@ -170,9 +175,10 @@ lvgl:
                   id: net_monitor_label
                   align: left_mid
                   x: 11
-                  text: "设备: --"
+                  text: "设备: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
         # 第5列：ASR 在线数（橙）
         - obj:
             x: 392
@@ -196,9 +202,10 @@ lvgl:
                   id: net_asr_label
                   align: left_mid
                   x: 11
-                  text: "语音: --"
+                  text: "语音: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
 
         # ============ 行3：三列均分 (y110 h153) ============
         # 470 - 2*3 = 464 → 464/3 = 154 余 2 → 宽 [155,155,154]
@@ -259,9 +266,10 @@ lvgl:
                   align: left_mid
                   x: 24
                   y: -32
-                  text: "路由在线: --"
+                  text: "路由在线: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
               # 第2行：控制设备
               - label:
                   align: left_mid
@@ -275,9 +283,10 @@ lvgl:
                   align: left_mid
                   x: 24
                   y: -4
-                  text: "控制设备: --"
+                  text: "控制设备: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
               # 第3行：终端在线
               - label:
                   align: left_mid
@@ -291,9 +300,10 @@ lvgl:
                   align: left_mid
                   x: 24
                   y: 24
-                  text: "终端在线: --"
+                  text: "终端在线: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
               # 第4行：低电量数
               - label:
                   align: left_mid
@@ -307,9 +317,9 @@ lvgl:
                   align: left_mid
                   x: 24
                   y: 52
-                  text: "低电量数: --"
+                  text: "低电量数: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
                   recolor: true
 
         # ---- 中列：NAS运行（白色标题）----
@@ -364,9 +374,10 @@ lvgl:
                   align: left_mid
                   x: 20
                   y: -32
-                  text: "CPU利用: --"
+                  text: "CPU利用: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
               # 第2行：内存可用
               - label:
                   align: left_mid
@@ -380,9 +391,10 @@ lvgl:
                   align: left_mid
                   x: 20
                   y: -4
-                  text: "内存可用: --"
+                  text: "内存可用: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
               # 第3行：上传
               - label:
                   align: left_mid
@@ -396,9 +408,10 @@ lvgl:
                   align: left_mid
                   x: 20
                   y: 24
-                  text: "上传: --"
+                  text: "上传: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
               # 第4行：下载
               - label:
                   align: left_mid
@@ -412,9 +425,10 @@ lvgl:
                   align: left_mid
                   x: 20
                   y: 52
-                  text: "下载: --"
+                  text: "下载: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
+                  recolor: true
 
         # ---- 右列：风扇运行（白色标题）----
         - obj:
@@ -468,9 +482,9 @@ lvgl:
                   align: left_mid
                   x: 19
                   y: -32
-                  text: "前扇: --"
+                  text: "前扇: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
                   recolor: true
               # 前扇温度：温度计图标（红）+ 数值
               - label:
@@ -501,9 +515,9 @@ lvgl:
                   align: left_mid
                   x: 19
                   y: -4
-                  text: "后扇: --"
+                  text: "后扇: #757575 --#"
                   text_font: ui_font_small
-                  text_color: 0x757575
+                  text_color: 0xFFFFFF
                   recolor: true
               # 后扇温度：温度计图标（橙）+ 数值
               - label:
@@ -649,29 +663,27 @@ interval:
           // ===== 行1：外网 IP / 已连接时长 =====
           {
             std::string ip = id(net_external_ip).state;
-            if (ip.empty()) snprintf(buf, sizeof(buf), "外网IP: --");
+            if (ip.empty()) snprintf(buf, sizeof(buf), "外网IP: #757575 --#");
             else snprintf(buf, sizeof(buf), "外网IP: %s", ip.c_str());
             lv_label_set_text(id(net_ip_label), buf);
-            // 无 IP 数据时 "--" 灰；有数据显示白
-            lv_obj_set_style_text_color(id(net_ip_label),
-                                        lv_color_hex(ip.empty() ? 0x757575 : 0xFFFFFF), 0);
+            // 名称恒白；无 IP 数据时仅 "--" 内联灰
+            lv_obj_set_style_text_color(id(net_ip_label), lv_color_hex(0xFFFFFF), 0);
           }
           {
-            // WAN 状态：在线白；离线与无数据（--）一律灰
+            // WAN 状态：名称恒白；离线整行灰（断网提示）；无数据（--）仅值内联灰
             const bool wan_known = id(net_wan_status).has_state();
             const bool wan_up    = wan_known && id(net_wan_status).state;
+            lv_obj_set_style_text_color(id(net_uptime_label),
+                                        lv_color_hex((wan_known && !wan_up) ? 0x757575 : 0xFFFFFF), 0);
 
             // 已连接时长：sensor.tp_link_smb_tl_r498gpm_ac_uptime（单位秒）
             float secs = id(net_wan_uptime).state;
-            const bool secs_ok = std::isfinite(secs) && secs >= 0;
-            lv_obj_set_style_text_color(id(net_uptime_label),
-                                        lv_color_hex((wan_known && wan_up && secs_ok) ? 0xFFFFFF : 0x757575), 0);
             if (!wan_known) {
-              lv_label_set_text(id(net_uptime_label), "已连接: --");
+              lv_label_set_text(id(net_uptime_label), "已连接: #757575 --#");
             } else if (!wan_up) {
               lv_label_set_text(id(net_uptime_label), "已连接: 离线");
             } else if (!std::isfinite(secs) || secs < 0) {
-              lv_label_set_text(id(net_uptime_label), "已连接: --");
+              lv_label_set_text(id(net_uptime_label), "已连接: #757575 --#");
             } else {
               // 单位自适应：<1小时显示分钟，<1天显示小时，否则 天+小时
               int total = (int) secs;
@@ -714,9 +726,9 @@ interval:
                               const char* name, const char* unit) {
             char b[40];
             if (std::isfinite(s->state)) snprintf(b, sizeof(b), "%s: %d%s", name, (int) s->state, unit);
-            else snprintf(b, sizeof(b), "%s: --", name);
+            else snprintf(b, sizeof(b), "%s: #757575 --#", name);
             lv_label_set_text(lbl, b);
-            lv_obj_set_style_text_color(lbl, lv_color_hex(std::isfinite(s->state) ? 0xFFFFFF : 0x757575), 0);
+            lv_obj_set_style_text_color(lbl, lv_color_hex(0xFFFFFF), 0);   // 名称恒白，仅 -- 内联灰
           };
           set_cnt_u(id(net_router_label),   id(ha_router_count),   "路由在线", "台");
           set_cnt_u(id(net_ctrl_label),     id(ha_device_ctrl),    "控制设备", "个");
@@ -740,14 +752,14 @@ interval:
           // CPU / 内存：百分比，超阈值变色提示
           //   base_color 是常态色（与同行的图标颜色一致）。CPU 常态橙、超限黄/红；
           //   内存常态色就是紫色（和图标一样），但超限时仍然变成黄/红，避免"满了还显示紫色"的误判。
-          //   未载入数据（首帧/实体缺失）→ 灰色 "--"（全局规则：-- 一律灰，不再用基色兜底）。
+          //   未载入数据（首帧/实体缺失）→ 名称保持基色白，仅 "--" 内联灰。
           auto set_pct = [](lv_obj_t* lbl, esphome::sensor::Sensor* s, const char* name,
                             uint32_t warn, uint32_t danger, uint32_t base_color) {
             char b[40];
             if (!std::isfinite(s->state)) {
-              snprintf(b, sizeof(b), "%s: --", name);
+              snprintf(b, sizeof(b), "%s: #757575 --#", name);
               lv_label_set_text(lbl, b);
-              lv_obj_set_style_text_color(lbl, lv_color_hex(0x757575), 0);   // -- 灰
+              lv_obj_set_style_text_color(lbl, lv_color_hex(base_color), 0);
               return;
             }
             int v = (int) s->state;
@@ -764,7 +776,7 @@ interval:
             char b[40];
             float v = s->state;
             if (!std::isfinite(v) || v < 0) {
-              snprintf(b, sizeof(b), "%s: --", name);
+              snprintf(b, sizeof(b), "%s: #757575 --#", name);
             } else if (v < 1024.0f) {
               snprintf(b, sizeof(b), "%s: %d B/s", name, (int) v);
             } else if (v < 1024.0f * 1024.0f) {
@@ -773,8 +785,8 @@ interval:
               snprintf(b, sizeof(b), "%s: %.2f MB/s", name, v / 1048576.0f);
             }
             lv_label_set_text(lbl, b);
-            // -- 灰 / 有数据白
-            lv_obj_set_style_text_color(lbl, lv_color_hex((std::isfinite(v) && v >= 0) ? 0xFFFFFF : 0x757575), 0);
+            // 名称恒白；无数据仅 "--" 内联灰
+            lv_obj_set_style_text_color(lbl, lv_color_hex(0xFFFFFF), 0);
           };
           set_rate(id(net_nas_upload_label),   id(ha_nas_upload),   "上传");
           set_rate(id(net_nas_download_label), id(ha_nas_download), "下载");
