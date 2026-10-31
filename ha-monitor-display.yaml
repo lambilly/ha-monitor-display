@@ -927,6 +927,34 @@ number:
     restore_value: true
     initial_value: 60
 
+  # 屏幕亮度滑块（%，v1.1.1）。唯一数据源 = 本机灯实体 lcd_backlight：
+  #   显示值 lambda 轮询灯实体当前亮度（在 HA 里直接调 light 实体，滑块 2s 内跟随）；
+  #   set_action 把滑块值写回灯实体，同时更新熄屏恢复用的 ui_saved_brightness。
+  #   熄屏期间滑块显示空值，防止误触把屏点亮；最低 10% 防止调到看不见。
+  - platform: template
+    id: screen_brightness_number
+    name: "Screen Brightness"
+    icon: mdi:brightness-percent
+    entity_category: config
+    unit_of_measurement: "%"
+    mode: slider
+    min_value: 10
+    max_value: 100
+    step: 5
+    update_interval: 2s
+    lambda: |-
+      if (id(ui_screen_off)) return {};
+      return id(lcd_backlight).remote_values.get_brightness() * 100.0f;
+    set_action:
+      - lambda: |-
+          const float b = x / 100.0f;
+          id(ui_saved_brightness) = b;
+          if (!id(ui_screen_off)) {
+            auto call = id(lcd_backlight).turn_on();
+            call.set_brightness(b);
+            call.perform();
+          }
+
 select:
   # ----------------------------------------------------------
   # 每页卡片底色（HA 下拉选色，v1.1.0）
