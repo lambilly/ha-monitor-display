@@ -17,7 +17,7 @@ lvgl:
     - id: dashboard_page
       width: 480
       height: 320
-      bg_color: 0x121212
+      bg_color: 0x0F0F0F
       scrollable: false
       scrollbar_mode: "OFF"
       on_load:

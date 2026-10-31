@@ -189,8 +189,8 @@ globals:
     restore_value: false
     initial_value: "1.0"
   # --- 每页卡片底色（v1.1.0，HA 下拉选色）---
-  #   卡片底色 = 该值；screen 四周 5px 边距与卡间 3px 缝隙 = 该值 × 0.6
-  #   默认 0x1E1E1E 即当前配色，选“默认”时画面零变化
+  #   卡片底色 = 该值；screen 四周 5px 边距与卡间 3px 缝隙 = 该值 × 0.5
+  #   默认 0x1E1E1E（石墨档）与改造前观感一致；其余档位按 HA iOS 深色主题色阶提饱和
   - id: ui_bg_dash
     type: uint32_t
     restore_value: true
