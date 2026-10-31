@@ -733,12 +733,11 @@ interval:
             std::string m = has_mode ? strip_hash(mode) : "居家模式";
             std::string a = has_act  ? strip_hash(act)  : "";
 
-            // 着色规则（10-31 六轮，用户定）：
-            //   **模式色只上图标，文字一律白** —— 图标负责"当前是什么模式"，
-            //   文字负责内容，避免整行花掉。
+            // 着色规则（10-31 十二轮，用户定）：
+            //   **模式色同时上图标与模式文字（文字随图标一起变）**
             //     在家=橙 FFB74D / 离家=红 FF5252 / 休息=紫 B39DFF / 影音=黄 FFD54F
             //     其余模式与无数据=白（兜底）
-            //   活动轨迹：有活动=白 / 无活动=灰 757575 占位 "--"
+            //   活动轨迹段恒白；无活动=灰 757575 占位 "--"
             const char* mcol = "FFFFFF";
             if      (m.find("在家") != std::string::npos) { mcol = "FFB74D"; }
             else if (m.find("离家") != std::string::npos) { mcol = "FF5252"; }
@@ -747,19 +746,20 @@ interval:
             lv_obj_set_style_text_color(id(home_mode_icon),
                                         lv_color_hex((uint32_t) strtoul(mcol, nullptr, 16)), 0);
             if (has_act && has_mode) {
-              snprintf(mbuf, sizeof(mbuf), "#FFFFFF %s# #FFFFFF %s#", m.c_str(), a.c_str());
+              snprintf(mbuf, sizeof(mbuf), "#%s %s# #FFFFFF %s#", mcol, m.c_str(), a.c_str());
             } else if (has_act) {
               snprintf(mbuf, sizeof(mbuf), "#FFFFFF %s#", a.c_str());
             } else if (has_mode) {
               // 无活动轨迹：占位 "--" 用灰，与车位/电灯等无数据写法一致
-              snprintf(mbuf, sizeof(mbuf), "#FFFFFF %s# #757575 --#", m.c_str());
+              snprintf(mbuf, sizeof(mbuf), "#%s %s# #757575 --#", mcol, m.c_str());
             } else {
               snprintf(mbuf, sizeof(mbuf), "#FFFFFF 居家模式# #757575 --#");
             }
             lv_label_set_text(id(home_mode_label), mbuf);
           }
-          // 车位状态着色（10-31 六轮，用户定）：**状态色只上图标，文字一律白**
+          // 车位状态着色（10-31 十二轮，用户定）：**状态字随图标一起变色**
           //   空闲=绿 59D98B / 比亚迪=粉 FF80AB / 轩逸=黄 FFD54F / 其他与无数据=白
+          //   前缀"车位状态:"恒白；无数据仅 "--" 内联灰
           {
             const std::string& pk = id(ha_parking_status).state;
             const bool has_pk = id(ha_parking_status).has_state() && !pk.empty()
@@ -769,12 +769,14 @@ interval:
               if      (pk.find("空")     != std::string::npos) pkc = 0x59D98B;
               else if (pk.find("比亚迪") != std::string::npos) pkc = 0xFF80AB;
               else if (pk.find("轩逸")   != std::string::npos) pkc = 0xFFD54F;
-              snprintf(buf, sizeof(buf), "车位状态: %s", pk.c_str());
+              snprintf(buf, sizeof(buf), "车位状态: #%02X%02X%02X %s#",
+                       (unsigned) ((pkc >> 16) & 0xFF), (unsigned) ((pkc >> 8) & 0xFF),
+                       (unsigned) (pkc & 0xFF), pk.c_str());
             } else {
               snprintf(buf, sizeof(buf), "车位状态: #757575 --#");
             }
             lv_label_set_text(id(home_parking_label), buf);
-            // 文字恒白；无数据仅 "--" 内联灰
+            // 前缀基色恒白；状态字与 "--" 由内联 tag 着色
             lv_obj_set_style_text_color(id(home_parking_label), lv_color_hex(0xFFFFFF), 0);
             lv_obj_set_style_text_color(id(home_parking_icon),  lv_color_hex(pkc), 0);
           }
