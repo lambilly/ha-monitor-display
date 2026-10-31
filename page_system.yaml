@@ -62,6 +62,15 @@ lvgl:
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
                   recolor: true
+              # 当前时间：24 小时制 HH:MM，卡片水平居中，白色
+              #   SNTP 未同步前显示灰 --:--（内联写法），同步后由 interval 刷为白
+              - label:
+                  id: sys_time_label
+                  align: center
+                  text: "#757575 --:--#"
+                  text_font: ui_font_medium
+                  text_color: 0xFFFFFF
+                  recolor: true
 
         # ============ 行2：两个框 (y58 h49) ============
         # 470 - 3 = 467 → 宽 [233, 234]，x = 5 / 241
@@ -594,4 +603,22 @@ interval:
               lv_label_set_text(id(sys_quality_label), "SIGQ: #757575 --#");
             }
             lv_obj_set_style_text_color(id(sys_quality_label), lv_color_hex(0xFFFFFF), 0);
+          }
+
+  # ----------------------------------------------------------
+  # 当前时间（行1 居中）：1 秒一次，24 小时制 HH:MM
+  #   数据源 system_time（SNTP，Asia/Shanghai）；未同步时保持灰 --:--
+  # ----------------------------------------------------------
+  - interval: 1s
+    then:
+      - lambda: |-
+          if (!id(lvgl_ready)) return;
+          if (id(ui_screen_off)) return;      // 熄屏时不刷，唤醒后下一秒自动补上
+          if (id(ui_current_page) != 3) return;
+
+          auto now = id(system_time).now();
+          if (now.is_valid()) {
+            char tbuf[8];
+            snprintf(tbuf, sizeof(tbuf), "%02d:%02d", now.hour, now.minute);
+            lv_label_set_text(id(sys_time_label), tbuf);
           }
