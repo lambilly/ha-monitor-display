@@ -47,9 +47,10 @@ lvgl:
                   text: "系统状态"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
+              # 运行组（图标 + 文字）整体右移 15px：图标 x277→292、文字 x299→314
               - label:
                   align: left_mid
-                  x: 277
+                  x: 292
                   text: "\U000F051F"
                   text_font: mdi_icons_20
                   height: 18
@@ -57,7 +58,7 @@ lvgl:
               - label:
                   id: sys_uptime_top_label
                   align: left_mid
-                  x: 299
+                  x: 314
                   text: "运行: #757575 --#"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
@@ -71,6 +72,15 @@ lvgl:
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
                   recolor: true
+              # 时钟图标（黄 FFD54F）：紧跟时间左侧、与时间构成一组
+              #   "21:50" 宽 42.1px、图标 20px、间距 4px → 图标中心相对卡片中心 -35px
+              - label:
+                  align: center
+                  x: -35
+                  text: "\U000F0150"
+                  text_font: mdi_icons_20
+                  height: 18
+                  text_color: 0xFFD54F
 
         # ============ 行2：两个框 (y58 h49) ============
         # 470 - 3 = 467 → 宽 [233, 234]，x = 5 / 241
@@ -462,7 +472,7 @@ lvgl:
               - label:
                   id: nav_dash_2
                   align: left_mid
-                  x: -10
+                  x: -15
                   width: 156
                   text: "家居"
                   text_align: CENTER
@@ -484,7 +494,7 @@ lvgl:
               - label:
                   id: nav_sys_2
                   align: right_mid
-                  x: 10
+                  x: 15
                   width: 156
                   text: "系统"
                   text_align: CENTER

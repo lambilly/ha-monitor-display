@@ -586,7 +586,7 @@ lvgl:
               - label:
                   id: nav_dash_3
                   align: left_mid
-                  x: -10
+                  x: -15
                   width: 156
                   text: "家居"
                   text_align: CENTER
@@ -606,7 +606,7 @@ lvgl:
               - label:
                   id: nav_sys_3
                   align: right_mid
-                  x: 10
+                  x: 15
                   width: 156
                   text: "系统"
                   text_align: CENTER
@@ -754,12 +754,6 @@ interval:
             std::string m = has_mode ? strip_hash(mode) : "居家模式";
             std::string a = has_act  ? strip_hash(act)  : "";
 
-            // 音量百分比：sensor.ju_jia_mo_shi 的 volume_percent 属性（65 → " 65%"）
-            //   接在轨迹段之后、空一格；属性缺失时不显示（不占位、也不出 --）
-            char vbuf[16] = "";
-            if (std::isfinite(id(ha_mode_volume).state))
-              snprintf(vbuf, sizeof(vbuf), " %.0f%%", id(ha_mode_volume).state);
-
             // 着色规则（10-31 十二轮，用户定）：
             //   **模式色同时上图标与模式文字（文字随图标一起变）**
             //     在家=橙 FFB74D / 离家=红 FF5252 / 休息=紫 B39DFF / 影音=黄 FFD54F
@@ -772,13 +766,22 @@ interval:
             else if (m.find("影音") != std::string::npos) { mcol = "FFD54F"; }
             lv_obj_set_style_text_color(id(home_mode_icon),
                                         lv_color_hex((uint32_t) strtoul(mcol, nullptr, 16)), 0);
+
+            // 音量百分比（10-31 二十轮改位）：sensor.ju_jia_mo_shi 的 volume_percent 属性
+            //   位置在**模式之后、活动轨迹之前**，颜色与模式字同色；
+            //   属性缺失时不显示（不占位、也不出 --）
+            char vseg[32] = "";
+            if (std::isfinite(id(ha_mode_volume).state))
+              snprintf(vseg, sizeof(vseg), " #%s %.0f%%#", mcol, id(ha_mode_volume).state);
+
             if (has_act && has_mode) {
-              snprintf(mbuf, sizeof(mbuf), "#%s %s# #FFFFFF %s#%s", mcol, m.c_str(), a.c_str(), vbuf);
+              snprintf(mbuf, sizeof(mbuf), "#%s %s#%s #FFFFFF %s#", mcol, m.c_str(), vseg, a.c_str());
             } else if (has_act) {
-              snprintf(mbuf, sizeof(mbuf), "#FFFFFF %s#%s", a.c_str(), vbuf);
+              // 无模式状态时 mcol 为白，百分比仍排在轨迹之前
+              snprintf(mbuf, sizeof(mbuf), "%s #FFFFFF %s#", vseg[0] ? vseg + 1 : "", a.c_str());
             } else if (has_mode) {
               // 无活动轨迹：占位 "--" 用灰，与车位/电灯等无数据写法一致
-              snprintf(mbuf, sizeof(mbuf), "#%s %s# #757575 --#%s", mcol, m.c_str(), vbuf);
+              snprintf(mbuf, sizeof(mbuf), "#%s %s#%s #757575 --#", mcol, m.c_str(), vseg);
             } else {
               snprintf(mbuf, sizeof(mbuf), "#FFFFFF 居家模式# #757575 --#");
             }
