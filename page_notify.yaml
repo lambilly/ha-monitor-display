@@ -319,7 +319,7 @@ script:
           //   w=450 h≈(行数×17)  → 正常
           //   w=很宽 h=17        → 宽度没锁住，文本排成一行
           //   w=450 h=17 但有换行符 → LVGL 没按 \n 断（不太可能，通常前面 h 会涨）
-          ESP_LOGD("notify", "重绘 view=%d/%d rev=%u  正文label w=%d h=%d  文本%u字节",
+          ESP_LOGI("notify", "重绘 view=%d/%d rev=%u  正文label w=%d h=%d  文本%u字节",
                    ns_notify::view, n, (unsigned) ns_notify::rev,
                    (int) lv_obj_get_width(id(notify_body)),
                    (int) lv_obj_get_height(id(notify_body)),

@@ -49,10 +49,10 @@ logger:
   level: INFO
   logs:
     lvgl: WARN
-    # 通知链路：调试折行问题时把 ESP_LOGD 也打出来（用户 11-01 要求抓串口）
-    #   默认全局 INFO 会吞掉 D 级日志，这里单独给 notify 这个 tag 放开。
-    #   只在「有新消息 / 重绘」时打，量很小，平时留着不影响。
-    notify: DEBUG
+    # 注：ESPHome 不允许某个 tag 的级别「比全局更细」
+    #   （notify: DEBUG + 全局 INFO 会直接报 Failed config），
+    #   所以通知链路的诊断日志一律用 ESP_LOGI，走全局 INFO 即可见。
+    #   量很小：只在收到新消息、以及真的重绘时各打一两行。
 
 api:
   encryption:
