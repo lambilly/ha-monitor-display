@@ -1,16 +1,20 @@
 # ==========================================================
-# 页面 4：通知列表（不进底部三键导航）
+# 页面 4：通知（v2.0 NOTIFY）—— 单条全屏 + 上下切换
 # ----------------------------------------------------------
-# 入口：任意页面右上角铃铛图标（bell_icon，定义在主配置 top_layer）
-# 返回：底部「返回」键 → 家居页
-# 数据：MQTT home/ha-monitor-display/notify → 8 条环形缓冲
-#       （订阅与写入见主配置 on_message，globals 在 ui_common.yaml）
-# 布局：顶栏(标题+条数, y5 h30)
-#       4 条通知槽(高 59，y = 39/100/161/222)
-#       底栏返回键(y286 h29)
-# 字体：标题/正文用 ui_font_notify（GB2312 常用字全量 12px，
-#       通知文本任意字都能显示）；顶栏「通知」/「返回」用白名单字体
-# 渲染：1s 巡检（本文件底部 interval），最新一条在最上
+# 入口：底部四键 TAB 的「通知」（四页共用同一套 TAB）
+# 数据：MQTT home/ha-monitor-display/notify
+#       → ns_notify 8 槽环形缓冲（ui/notify_store.h，单条正文上限 3.5KB）
+# 版式（480x320）：
+#   y5   h30  顶栏：左侧青色竖条 + 标题（12px 白，超长省略）｜右侧相对时间
+#   y38  h188 正文：可滚动容器，内嵌一个 450px 宽 label（12px 白，自动换行）
+#   y230 h32  切换条：‹ 上一条 ｜ 下一条 › ｜ 删除
+#   y266 h49  四键 TAB
+# 交互：上一条 = 往更旧翻（view+1），下一条 = 往更新翻（view-1），删除 = 删掉当前这条
+# 刷新：只在 ns_notify::rev 变化时重绘；进页强制刷一次
+# 字体：正文/标题/时间用 ui_font_notify（GB2312 一级 3755 字全量）
+#       TAB 用白名单 ui_font_large（不为大字表多付三份体积）
+# 配色：静态文字纯白；时间/次要 757575；青色只留给 TAB 当前页与标题竖条
+#       卡片底色由 ui_apply_bg(page: 3) 涂，与家居页共用 ui_bg_dash
 # ==========================================================
 
 lvgl:
@@ -18,15 +22,20 @@ lvgl:
     - id: notify_page
       width: 480
       height: 320
-      bg_color: 0x121212
+      bg_color: 0x1E1E1E
       scrollable: false
       scrollbar_mode: "OFF"
       on_load:
         - lambda: |-
-            id(ui_current_page) = 4;      // 通知页 = 第 4 屏（0 家居/2 网络/3 系统，1 弃用）
-            id(g_notify_unread) = 0;      // 进入即清除未读，铃铛回落灰色
+            id(ui_current_page) = 4;   // 0 家居 / 2 网络 / 3 系统 / 4 通知（1 弃用）
+            ns_notify::unread = 0;     // 进页即清未读
+        - script.execute: notify_render
+        # 底色跟随家居页（page: 3 = 通知页）
+        - script.execute:
+            id: ui_apply_bg
+            page: 3
       widgets:
-        # ============ 顶栏：通知 | 共 N 条 (y5 h30) ============
+        # ============ 顶栏：标题 ｜ 相对时间 (y5 h30) ============
         - obj:
             x: 5
             y: 5
@@ -38,220 +47,168 @@ lvgl:
             radius: 10
             scrollable: false
             widgets:
-              - label:
-                  id: notify_title_label
+              # 青色竖条：标题标识（v1.1 起青色专用于「当前/标题」）
+              - obj:
                   align: left_mid
-                  x: 10
-                  text: "通知"
-                  text_font: ui_font_medium
-                  text_color: 0xE0E0E0
+                  x: 9
+                  width: 3
+                  height: 14
+                  bg_color: 0x4FD8FA
+                  border_width: 0
+                  outline_width: 0
+                  radius: 2
+                  scrollable: false
               - label:
-                  id: notify_count_label
+                  id: notify_title
+                  align: left_mid
+                  x: 18
+                  width: 320
+                  long_mode: DOT
+                  recolor: true
+                  text: "通知"
+                  text_font: ui_font_notify
+                  text_color: 0xFFFFFF
+              - label:
+                  id: notify_time_rel
                   align: right_mid
                   x: -10
-                  text: "共 0 条"
-                  text_font: ui_font_small
-                  text_color: 0x9E9E9E
+                  text: ""
+                  text_font: ui_font_notify
+                  text_color: 0x757575
 
-        # ============ 通知槽 1（最新）y39 h59 ============
+        # ============ 正文：可滚动 (y38 h188) ============
         - obj:
+            id: notify_body_obj
             x: 5
-            y: 39
+            y: 38
             width: 470
-            height: 59
+            height: 188
             bg_color: 0x1E1E1E
             border_width: 1
             outline_width: 0
             radius: 10
-            scrollable: false
+            scrollable: true
+            scrollbar_mode: "OFF"
             widgets:
               - label:
-                  id: notify_t1
-                  align: TOP_LEFT
+                  id: notify_body
                   x: 10
-                  y: 3
-                  width: 330
-                  long_mode: DOT
+                  y: 8
+                  width: 448
+                  long_mode: WRAP
+                  recolor: true
                   text: ""
                   text_font: ui_font_notify
-                  text_color: 0xE0E0E0
-              - label:
-                  id: notify_time1
-                  align: TOP_RIGHT
-                  x: -10
-                  y: 3
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0x757575
-              - label:
-                  id: notify_m1
-                  align: TOP_LEFT
-                  x: 10
-                  y: 22
-                  width: 450
-                  height: 36
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0xBDBDBD
+                  text_color: 0xFFFFFF
 
-        # ============ 通知槽 2 y100 h59 ============
-        - obj:
-            x: 5
-            y: 100
-            width: 470
-            height: 59
-            bg_color: 0x1E1E1E
-            border_width: 1
-            outline_width: 0
-            radius: 10
-            scrollable: false
-            widgets:
-              - label:
-                  id: notify_t2
-                  align: TOP_LEFT
-                  x: 10
-                  y: 3
-                  width: 330
-                  long_mode: DOT
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0xE0E0E0
-              - label:
-                  id: notify_time2
-                  align: TOP_RIGHT
-                  x: -10
-                  y: 3
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0x757575
-              - label:
-                  id: notify_m2
-                  align: TOP_LEFT
-                  x: 10
-                  y: 22
-                  width: 450
-                  height: 36
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0xBDBDBD
-
-        # ============ 通知槽 3 y161 h59 ============
-        - obj:
-            x: 5
-            y: 161
-            width: 470
-            height: 59
-            bg_color: 0x1E1E1E
-            border_width: 1
-            outline_width: 0
-            radius: 10
-            scrollable: false
-            widgets:
-              - label:
-                  id: notify_t3
-                  align: TOP_LEFT
-                  x: 10
-                  y: 3
-                  width: 330
-                  long_mode: DOT
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0xE0E0E0
-              - label:
-                  id: notify_time3
-                  align: TOP_RIGHT
-                  x: -10
-                  y: 3
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0x757575
-              - label:
-                  id: notify_m3
-                  align: TOP_LEFT
-                  x: 10
-                  y: 22
-                  width: 450
-                  height: 36
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0xBDBDBD
-
-        # ============ 通知槽 4 y222 h59 ============
-        - obj:
-            x: 5
-            y: 222
-            width: 470
-            height: 59
-            bg_color: 0x1E1E1E
-            border_width: 1
-            outline_width: 0
-            radius: 10
-            scrollable: false
-            widgets:
-              - label:
-                  id: notify_t4
-                  align: TOP_LEFT
-                  x: 10
-                  y: 3
-                  width: 330
-                  long_mode: DOT
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0xE0E0E0
-              - label:
-                  id: notify_time4
-                  align: TOP_RIGHT
-                  x: -10
-                  y: 3
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0x757575
-              - label:
-                  id: notify_m4
-                  align: TOP_LEFT
-                  x: 10
-                  y: 22
-                  width: 450
-                  height: 36
-                  text: ""
-                  text_font: ui_font_notify
-                  text_color: 0xBDBDBD
-
-        # 空态提示（无通知时显示，居中偏上）
+        # ============ 空态（无通知时） ============
         - label:
             id: notify_empty_label
             align: center
             x: 0
-            y: -40
+            y: -30
             text: "暂无通知"
             text_font: ui_font_medium
-            text_color: 0x616161
+            text_color: 0x757575
 
-        # ============ 底栏：返回键 (y286 h29) ============
+        # ============ 切换条 (y230 h32) ============
         - obj:
+            id: notify_switch_bar
             x: 5
-            y: 286
+            y: 230
             width: 470
-            height: 29
+            height: 32
             bg_color: 0x1E1E1E
             border_width: 1
-            outline_width: 1
+            outline_width: 0
             radius: 10
             scrollable: false
             widgets:
               - label:
-                  id: nav_notify_back
+                  align: left_mid
+                  x: 20
+                  width: 140
+                  text: "‹ 上一条"
+                  text_align: CENTER
+                  text_font: ui_font_notify
+                  text_color: 0xFFFFFF
+                  on_click:
+                    - lambda: |-
+                        if (ns_notify::view < ns_notify::count - 1) ns_notify::view++;
+                        id(notify_render).execute();
+              - label:
                   align: center
                   x: 0
-                  width: 470
-                  text: "返回"
+                  width: 140
+                  text: "下一条 ›"
                   text_align: CENTER
-                  text_font: ui_font_medium
-                  text_color: 0x4FD8FA
+                  text_font: ui_font_notify
+                  text_color: 0xFFFFFF
                   on_click:
-                    - lvgl.page.show: dashboard_page
+                    - lambda: |-
+                        if (ns_notify::view > 0) ns_notify::view--;
+                        id(notify_render).execute();
+              - label:
+                  align: right_mid
+                  x: -20
+                  width: 100
+                  text: "删除"
+                  text_align: CENTER
+                  text_font: ui_font_notify
+                  text_color: 0xFF5252
+                  on_click:
+                    - lambda: |-
+                        ns_notify::remove_at(ns_notify::view);
+                        id(notify_render).execute();
 
-# --- 本页数据刷新（1s） ---
+        # ============ 底部四键 TAB（四页共用，见 ui/tab_bar.yaml） ============
+        - !include ui/tab_bar.yaml
+
+# --- 渲染脚本（进页 / 切换 / 删除 / 有新消息时调用） ---
+script:
+  - id: notify_render
+    mode: restart
+    then:
+      - lambda: |-
+          const int n = ns_notify::count;
+
+          // 浏览位置纠偏：删到空、或条数变少时回到有效范围
+          if (ns_notify::view > n - 1) ns_notify::view = (n > 0) ? n - 1 : 0;
+          if (n == 0) {
+            lv_obj_add_flag(id(notify_body_obj), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(notify_switch_bar), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_clear_flag(id(notify_empty_label), LV_OBJ_FLAG_HIDDEN);
+            lv_label_set_text(id(notify_title), "通知");
+            lv_label_set_text(id(notify_time_rel), "");
+            lv_label_set_text(id(notify_body), "");
+            return;
+          }
+          lv_obj_clear_flag(id(notify_body_obj), LV_OBJ_FLAG_HIDDEN);
+          lv_obj_clear_flag(id(notify_switch_bar), LV_OBJ_FLAG_HIDDEN);
+          lv_obj_add_flag(id(notify_empty_label), LV_OBJ_FLAG_HIDDEN);
+
+          const ns_notify::Slot &s = ns_notify::at(ns_notify::view);
+          lv_label_set_text(id(notify_title), s.title.c_str());
+          lv_label_set_text(id(notify_body), s.msg.c_str());
+
+          // 相对时间：比绝对时间省字符，也更像通知中心的观感
+          char tb[24] = {0};
+          const uint32_t now = static_cast<uint32_t>(::time(nullptr));
+          if (s.ts > 0 && now > s.ts) {
+            const uint32_t d = now - s.ts;
+            if (d < 60)             snprintf(tb, sizeof(tb), "刚刚");
+            else if (d < 3600)      snprintf(tb, sizeof(tb), "%u 分钟前", (unsigned) (d / 60));
+            else if (d < 86400)     snprintf(tb, sizeof(tb), "%u 小时前", (unsigned) (d / 3600));
+            else                    snprintf(tb, sizeof(tb), "%u 天前", (unsigned) (d / 86400));
+          }
+          lv_label_set_text(id(notify_time_rel), tb);
+
+          // 阅读即已读：停在最新一条时清未读
+          if (ns_notify::view == 0) ns_notify::unread = 0;
+
+          ESP_LOGD("notify", "重绘 view=%d/%d rev=%u", ns_notify::view, n, (unsigned) ns_notify::rev);
+
+# --- 内容变化时才触发重绘（1s 巡检，无新消息直接 return） ---
 interval:
   - interval: 1s
     then:
@@ -259,40 +216,7 @@ interval:
           if (!id(lvgl_ready)) return;
           if (id(ui_screen_off)) return;
           if (id(ui_current_page) != 4) return;
-
-          const int n    = id(g_notify_count);
-          const int head = id(g_notify_head);
-
-          // 顶栏条数 + 空态提示（只在数量变化时刷新）
-          static int last_n = -1;
-          if (n != last_n) {
-            last_n = n;
-            char cb[24];
-            snprintf(cb, sizeof(cb), "共 %d 条", n);
-            lv_label_set_text(id(notify_count_label), cb);
-            if (n == 0) lv_obj_clear_flag(id(notify_empty_label), LV_OBJ_FLAG_HIDDEN);
-            else        lv_obj_add_flag(id(notify_empty_label), LV_OBJ_FLAG_HIDDEN);
-          }
-
-          lv_obj_t *titles[4] = {id(notify_t1), id(notify_t2), id(notify_t3), id(notify_t4)};
-          lv_obj_t *times[4]  = {id(notify_time1), id(notify_time2), id(notify_time3), id(notify_time4)};
-          lv_obj_t *msgs[4]   = {id(notify_m1), id(notify_m2), id(notify_m3), id(notify_m4)};
-
-          for (int i = 0; i < 4; i++) {
-            if (i < n) {
-              const int idx = ((head - 1 - i) % 8 + 8) % 8;   // newest-first，保证非负
-              lv_label_set_text(titles[i], id(g_notify_title)[idx].c_str());
-              // 时间戳：Unix 秒 → "MM-DD HH:MM"（本地时区，SNTP 已配 Asia/Shanghai）
-              char tbuf[24] = {0};
-              if (id(g_notify_ts)[idx] > 0) {
-                esphome::ESPTime tv = esphome::ESPTime::from_epoch_local(id(g_notify_ts)[idx]);
-                tv.strftime(tbuf, sizeof(tbuf), "%m-%d %H:%M");
-              }
-              lv_label_set_text(times[i], tbuf);
-              lv_label_set_text(msgs[i], id(g_notify_msg)[idx].c_str());
-            } else {
-              lv_label_set_text(titles[i], "");
-              lv_label_set_text(times[i], "");
-              lv_label_set_text(msgs[i], "");
-            }
-          }
+          static uint32_t last_rev = 0;
+          if (ns_notify::rev == last_rev) return;
+          last_rev = ns_notify::rev;
+          id(notify_render).execute();

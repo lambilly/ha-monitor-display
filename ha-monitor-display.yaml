@@ -1,8 +1,10 @@
 # ==========================================================
-# 版本：v1.1.1（2026-11-01，进行中）
-#   续航优化：WiFi power_save_mode=light（待机省约 1/3 电流）
-#             默认屏幕亮度 60%（开机点亮与熄屏恢复都走 ui_saved_brightness）
-#   上一定版：v1.1.0（2026-10-31，背景色八档，已出包）
+# 版本：v2.0 NOTIFY（2026-11-01，开发中）
+#   新增第四页「通知」：MQTT 单条全屏 + 上下切换 + 正文滚动
+#     · 字库 ui_font_notify：GB2312 一级 3755 字全量（≈310KB flash）
+#     · 数据：home/ha-monitor-display/notify → 8 槽环形缓冲（ui/notify_store.h）
+#     · 导航改四键 TAB，抽成 ui/tab_bar.yaml 四页共用
+#   上一定版：v1.1.1（2026-11-01，续航优化，已出包）
 # ==========================================================
 # 主配置：设备 / 网络 / 硬件 / HA 实体
 # 页面布局拆分到 ui/ 目录，改界面只需改对应文件：
@@ -21,10 +23,14 @@ packages:
   page_dashboard: !include ui/page_dashboard.yaml
   page_network: !include ui/page_network.yaml
   page_system: !include ui/page_system.yaml
+  page_notify: !include ui/page_notify.yaml      # v2.0 NOTIFY：第四页，不参与开机默认
   ui_common: !include ui/ui_common.yaml
 esphome:
   name: ha-monitor-display
   friendly_name: HA Monitor Display
+  # v2.0 NOTIFY：通知环形缓冲与截断逻辑（8 槽，见 ui/notify_store.h）
+  includes:
+    - ui/notify_store.h
 
 esp32:
   board: esp32-s3-devkitc-1
@@ -203,6 +209,56 @@ mqtt:
           id(ha_data_last_ms) = millis();
           ESP_LOGD("ha_data", "收到数据帧 ts=%u", (unsigned) id(hd_ts));
 
+  # ==========================================================
+  # 订阅通知消息（v2.0 NOTIFY）
+  # ----------------------------------------------------------
+  #   主题 home/ha-monitor-display/notify，QoS1，retain=false。
+  #   MQTT 主题精确匹配，上面的数据帧订阅收不到子主题，两条互不干扰。
+  #   载荷优先按 JSON {title,message,ts} 解析（Node-RED 子流程的格式）；
+  #   不是 JSON 就整段当正文，HA 原生 mqtt.publish 发纯文本也能上屏。
+  #   入库统一走 ns_notify（ui/notify_store.h）：8 槽环形 + UTF-8 安全截断 + 重复丢弃。
+  # ==========================================================
+  on_message:
+    - topic: home/ha-monitor-display/notify
+      then:
+        - lambda: |-
+            std::string nt;
+            std::string nm;
+            uint32_t nts = 0;
+            bool parsed = false;
+
+            if (!x.empty() && x[0] == '{') {
+              parsed = esphome::json::parse_json(x, [&](JsonObject root) -> bool {
+                if (root["title"].is<const char *>()) nt = root["title"].as<const char *>();
+                if (root["message"].is<const char *>()) nm = root["message"].as<const char *>();
+                if (root["ts"].is<uint32_t>()) {
+                  nts = root["ts"].as<uint32_t>();
+                } else if (root["ts"].is<const char *>()) {
+                  nts = static_cast<uint32_t>(strtoul(root["ts"].as<const char *>(), nullptr, 10));
+                }
+                return true;
+              });
+            }
+            if (!parsed || (nt.empty() && nm.empty())) {
+              nt.clear();
+              nm = x;                                  // 非 JSON 载荷：整段当正文
+            }
+            if (nt.empty() && nm.empty()) return;
+
+            if (ns_notify::is_dup(nt, nm, nts)) {
+              ESP_LOGD("notify", "重复消息，已丢弃");
+              return;
+            }
+            ns_notify::push(nt, nm, nts);
+            ESP_LOGI("notify", "入列 共%d条 未读%d条 [%s] %s",
+                     ns_notify::count, ns_notify::unread,
+                     ns_notify::at(0).title.c_str(), ns_notify::at(0).msg.c_str());
+
+            // 通知亮屏：默认关（省电），需要时在 HA 里打开开关
+            if (id(notify_wake_on_msg) && id(ui_screen_off)) {
+              id(wake_screen).execute();
+            }
+
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
@@ -326,7 +382,7 @@ time:
 lvgl:
   displays: [lcd_display]
   touchscreens: [touch_panel]
-  rotation: 90                      # 横屏 480x320
+  rotation: 270                     # 横屏 480x320（竖装倒置：由 90 翻 180°）
   buffer_size: "25%"
   draw_rounding: 8
   resume_on_input: false
@@ -374,6 +430,39 @@ lvgl:
           text_font: ui_font_small
           text_color: 0xFF5252
           hidden: true
+
+      # 未读红点（v2.0 NOTIFY）：压在 TAB「通知」键的右上角
+      #   放在 top_layer 而不是 tab_bar.yaml 里 —— 片段被四页各 include 一次，
+      #   带 id 会重复定义；这里单实例，四个页面顶部都能看到同一个点。
+      - obj:
+          id: notify_badge
+          align: TOP_LEFT
+          x: 437
+          y: 279
+          width: 6
+          height: 6
+          bg_color: 0xFF5252
+          border_width: 0
+          outline_width: 0
+          radius: 3
+          scrollable: false
+          hidden: true
+
+# ==========================================================
+# 未读红点巡检（v2.0 NOTIFY）
+#   只看 unread 变化，没变化直接 return；进通知页即视为已读
+# ==========================================================
+interval:
+  - interval: 1s
+    then:
+      - lambda: |-
+          if (!id(lvgl_ready)) return;
+          static int last_unread = -1;
+          const int u = (id(ui_current_page) == 4) ? 0 : ns_notify::unread;
+          if (u == last_unread) return;
+          last_unread = u;
+          if (u > 0) lv_obj_clear_flag(id(notify_badge), LV_OBJ_FLAG_HIDDEN);
+          else       lv_obj_add_flag(id(notify_badge), LV_OBJ_FLAG_HIDDEN);
 
 debug:
   id: dbg_comp
@@ -1063,6 +1152,10 @@ select:
       - script.execute:
           id: ui_apply_bg
           page: 0
+      # 通知页共用家居底色（v2.0），同时跟随
+      - script.execute:
+          id: ui_apply_bg
+          page: 3
 
   - platform: template
     id: sel_bg_net
@@ -1132,6 +1225,17 @@ switch:
       # 关闭自动休眠时顺便点亮，避免停在黑屏状态
       - script.execute: wake_screen
 
+  # 通知亮屏开关（v2.0 NOTIFY）
+  #   默认关：一次推送就唤醒屏幕，20mA 待机会瞬间回到 150mA+ 的亮屏功耗。
+  #   打开后，收到通知且屏幕处于熄屏态时才点亮；亮屏中收到通知不受影响。
+  - platform: template
+    id: notify_wake_on_msg
+    name: "Notify Wake Screen"
+    icon: mdi:bell-ring
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
 script:
   # ----------------------------------------------------------
   # 应用页面背景配色（v1.1.0）
@@ -1162,11 +1266,13 @@ script:
           if (!id(lvgl_ready)) return;
 
           // 注意：page 对象是 LvPageType*，底层 lv_obj_t* 在 ->obj 成员里
+          //   page: 0=家居 1=网络 2=系统 3=通知（v2.0，共用家居底色）
           lv_obj_t* scr = (page == 0) ? id(dashboard_page)->obj
-                        : ((page == 1) ? id(network_page)->obj : id(system_page)->obj);
+                        : ((page == 1) ? id(network_page)->obj
+                        : ((page == 2) ? id(system_page)->obj : id(notify_page)->obj));
           if (scr == nullptr) return;
 
-          uint32_t c = (page == 0) ? id(ui_bg_dash)
+          uint32_t c = (page == 0 || page == 3) ? id(ui_bg_dash)
                      : ((page == 1) ? id(ui_bg_net) : id(ui_bg_sys));
 
           // 亮度钳制（每通道 ≤ 0xFE）：只防纯白误填，不压色相（九轮放开）

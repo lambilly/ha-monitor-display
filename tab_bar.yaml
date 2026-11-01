@@ -1,0 +1,64 @@
+# ==========================================================
+# 底部四键 TAB 导航（v2.0）—— 四个页面共用，唯一来源
+# ----------------------------------------------------------
+# 用法：页面 widgets 列表末尾写一行
+#         - !include ui/tab_bar.yaml
+# 说明：
+#   · 这里不写任何 id：同一份片段被四个页面各 include 一次，
+#     若带 id 会重复定义导致编译报错；
+#   · 四个 label 一律先按未选中灰 757575 建出来，当前页的青色
+#     由 ui_common.yaml 的 ui_tab_highlight 在切页后按
+#     ui_current_page 上色（child 0..3 依次对应 家居/网络/系统/通知）；
+#   · 几何一旦定稿，以后调像素只改这一个文件。
+# ==========================================================
+obj:
+  x: 5
+  y: 266
+  width: 470
+  height: 49
+  bg_color: 0x1E1E1E
+  border_width: 1
+  outline_width: 1
+  radius: 10
+  scrollable: false
+  widgets:
+    - label:
+        align: left_mid
+        x: 0
+        width: 117
+        text: "家居"
+        text_align: CENTER
+        text_font: ui_font_large
+        text_color: 0x757575
+        on_click:
+          - lvgl.page.show: dashboard_page
+    - label:
+        align: left_mid
+        x: 118
+        width: 117
+        text: "网络"
+        text_align: CENTER
+        text_font: ui_font_large
+        text_color: 0x757575
+        on_click:
+          - lvgl.page.show: network_page
+    - label:
+        align: left_mid
+        x: 235
+        width: 117
+        text: "系统"
+        text_align: CENTER
+        text_font: ui_font_large
+        text_color: 0x757575
+        on_click:
+          - lvgl.page.show: system_page
+    - label:
+        align: left_mid
+        x: 353
+        width: 117
+        text: "通知"
+        text_align: CENTER
+        text_font: ui_font_large
+        text_color: 0x757575
+        on_click:
+          - lvgl.page.show: notify_page
