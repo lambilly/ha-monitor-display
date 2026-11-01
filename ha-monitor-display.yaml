@@ -1,7 +1,8 @@
 # ==========================================================
-# 版本：v1.1.0（2026-10-31）
-#   新增每页背景色 HA 下拉可调（Dashboard / Network / System Bg Color）
-#   状态：已同步到真机目录作备份，待编译烧录验证；稳定定版仍为 v1.0.1
+# 版本：v1.1.1（2026-11-01，进行中）
+#   续航优化：WiFi power_save_mode=light（待机省约 1/3 电流）
+#             默认屏幕亮度 60%（开机点亮与熄屏恢复都走 ui_saved_brightness）
+#   上一定版：v1.1.0（2026-10-31，背景色八档，已出包）
 # ==========================================================
 # 主配置：设备 / 网络 / 硬件 / HA 实体
 # 页面布局拆分到 ui/ 目录，改界面只需改对应文件：
@@ -205,6 +206,9 @@ mqtt:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
+  # modem-sleep：无流量时 WiFi 进省电态，待机电流约省 1/3。
+  # 代价仅是响应略慢（数据帧 5s 一推，感知不到），MQTT keepalive 15s 不受影响。
+  power_save_mode: light
   ap:
     ssid: HA Monitor Fallback
     password: !secret ap_password
@@ -247,7 +251,9 @@ light:
     name: "Screen Light"
     icon: mdi:monitor
     output: lcd_backlight_pwm
-    restore_mode: ALWAYS_ON
+    # ALWAYS_OFF：开机不自带满亮点亮，由 lvgl on_boot 按 ui_saved_brightness（默认 60%）点亮，
+    # 避免开机先全亮一秒再暗下来的闪变。休眠/唤醒见 script sleep_screen / wake_screen。
+    restore_mode: ALWAYS_OFF
 
 display:
   - platform: mipi_spi
@@ -331,6 +337,11 @@ lvgl:
         id(lvgl_ready) = true;
     # 开机默认进入家居页
     - lvgl.page.show: dashboard_page
+    # 开机点亮背光：亮度取 ui_saved_brightness（默认 60%，熄屏恢复同源）
+    - light.turn_on:
+        id: lcd_backlight
+        brightness: !lambda |-
+          return id(ui_saved_brightness);
   default_font: ui_font_small
   theme:
     label:
