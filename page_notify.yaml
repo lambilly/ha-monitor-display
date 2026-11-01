@@ -112,6 +112,8 @@ lvgl:
               # 正文：上 3 / 左 5（第十轮按用户「上面和左边留白太多，各减 5px」）
               #   以前是 y8 / x10 —— 卡片本身已有 1px 边框，再加上 8/10 的
               #   内边距，第一行显得离顶边太远。
+              #   第十五轮：y 改成动态 —— 内容溢出一屏（要自动滚）时是 20
+              #   （3 + 一行 17px，滚出去的行落在空白里），不溢出时仍是 3。
               #   行在入库时按 425px 切好，正文可用 450 → 右侧留 25px
               #   （x 从 10 收到 5 的同时把折行从 420 放到 425，右边留白不变）。
               #   text_align LEFT：默认居中会让短行看起来偏，通知应左对齐。
@@ -292,6 +294,25 @@ script:
           lv_label_set_text(id(notify_body), render_buf.c_str());
           lv_obj_update_layout(id(notify_body));   // 立刻算出折行后的高度（滚动要用）
 
+          // --- 左缘统一（第十五轮）---
+          //   用户反馈：内容不够一屏（不滚动）和内容超一屏（滚动）两种状态下，
+          //   正文左边缘看着不一样。二者本该同源，差异只可能来自容器自身：
+          //   · pad_left 非 0 时，「能不能滚」会影响内容区宽度 → 文字起始位会飘
+          //   · 默认 scroll_dir 是 ALL，横向也能滚，手指一划整段就左右位移
+          //   所以把容器内边距归零、只留纵向滚动，左边缘就只由 label 的 x 决定。
+          lv_obj_set_style_pad_all(id(notify_body_obj), 0, LV_PART_MAIN);
+          lv_obj_set_scroll_dir(id(notify_body_obj), LV_DIR_VER);
+
+          // --- 溢出时顶部空一行（第十五轮）---
+          //   进入自动滚动后，顶端永远有一行的空白：滚出去的那一行落在空白里，
+          //   不会出现「半截字贴着边框消失」。不溢出时仍是原来的 3px 紧贴。
+          //   17 = 正文行高（12px 字号 × 1.4），与 wrap_hard 的 LINE_H 一致。
+          const int body_h = (int) lv_obj_get_height(id(notify_body));
+          const int box_h  = (int) lv_obj_get_height(id(notify_body_obj));
+          const bool overflow = (body_h + 6 > box_h);
+          lv_obj_set_y(id(notify_body), overflow ? 20 : 3);   // 20 = 3 + 17
+          lv_obj_update_layout(id(notify_body));
+
           // 换内容 / 切条后回到顶部（自动滚动从第一行开始）
           lv_obj_scroll_to_y(id(notify_body_obj), 0, LV_ANIM_OFF);
 
@@ -322,11 +343,18 @@ script:
           //   w=450 h≈(行数×17)  → 正常
           //   w=很宽 h=17        → 宽度没锁住，文本排成一行
           //   w=450 h=17 但有换行符 → LVGL 没按 \n 断（不太可能，通常前面 h 会涨）
-          ESP_LOGI("notify", "重绘 view=%d/%d rev=%u  正文label w=%d h=%d  文本%u字节",
+          ESP_LOGI("notify", "重绘 view=%d/%d rev=%u  正文label w=%d h=%d 文本%u字节",
                    ns_notify::view, n, (unsigned) ns_notify::rev,
                    (int) lv_obj_get_width(id(notify_body)),
                    (int) lv_obj_get_height(id(notify_body)),
                    (unsigned) s.msg.size());
+          // 左缘/溢出诊断：x/y 是 label 相对正文卡片的位置，pad/scrollx 是卡片自己的，
+          //   万一「不滚动时左缘偏了」再出现，这行数字就能直接看出是谁在动。
+          ESP_LOGI("notify", "布局 x=%d y=%d pad=%d scrollx=%d 溢出=%d 卡高=%d",
+                   (int) lv_obj_get_x(id(notify_body)), (int) lv_obj_get_y(id(notify_body)),
+                   (int) lv_obj_get_style_pad_left(id(notify_body_obj), LV_PART_MAIN),
+                   (int) lv_obj_get_scroll_x(id(notify_body_obj)),
+                   (int) overflow, box_h);
 
 # --- 内容变化时才触发重绘（1s 巡检，无新消息直接 return） ---
 interval:
