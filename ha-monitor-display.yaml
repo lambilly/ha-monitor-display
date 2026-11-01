@@ -31,6 +31,8 @@ esphome:
   # v2.0 NOTIFY：通知环形缓冲与截断逻辑（8 槽，见 ui/notify_store.h）
   includes:
     - ui/notify_store.h
+    - ui/notify_charset.h      # notify_store.h 里 #include "notify_charset.h"，
+                               # 必须一并登记，否则构建目录 src/ui/ 下没有这个文件
 
 esp32:
   board: esp32-s3-devkitc-1
