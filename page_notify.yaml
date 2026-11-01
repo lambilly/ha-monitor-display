@@ -85,11 +85,12 @@ lvgl:
               # 时间：白字、固定左起点（label 宽度随文本走，右对齐不可靠）
               #   第九轮恢复相对时间：刚刚 / N 分钟前 / N 小时前 / N 天前
               #   第十轮：用户觉得「刚刚」太靠左，右移 30px（3 个汉字宽）→ x360
-              #   最长「59 分钟前」≈ 53px，右缘 413，右侧留 57px
+              #   第十三轮：仍偏左，再右移 24px（2 个汉字宽）→ x384
+              #   最长「59 分钟前」≈ 53px，右缘 437，右侧留 38px
               - label:
                   id: notify_time_rel
                   align: left_mid
-                  x: 360
+                  x: 384
                   text: ""
                   text_font: ui_font_notify
                   text_color: 0xFFFFFF

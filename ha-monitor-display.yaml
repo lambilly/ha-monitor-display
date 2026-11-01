@@ -473,14 +473,16 @@ lvgl:
       #   圆点 + 1px 深色描边（任何背景色下都能看出边界）。
       #   第十二轮（用户实测）：9px 时点儿落在「通知」两字正中间的上方，
       #   右移 18px、下移 2px 挪到两字右上角，同时放大到 11px 更好认。
+      #   第十三轮：再左 1px、下 1px（439/273→438/274）；红点改浅绿 59D98B
+      #   —— 红点在深色底上太像告警，绿点更接近「有新内容」的语义。
       - obj:
           id: notify_badge
           align: TOP_LEFT
-          x: 439
-          y: 273
+          x: 438
+          y: 274
           width: 11
           height: 11
-          bg_color: 0xFF5252
+          bg_color: 0x59D98B
           border_width: 1
           border_color: 0x1E1E1E
           outline_width: 0
