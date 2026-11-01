@@ -467,22 +467,24 @@ lvgl:
       # 未读红点（v2.0 NOTIFY）：压在 TAB「通知」键的右上角
       #   放在 top_layer 而不是 tab_bar.yaml 里 —— 片段被四页各 include 一次，
       #   带 id 会重复定义；这里单实例，四个页面顶部都能看到同一个点。
-      #   x 跟着 TAB 走：TAB 第八轮右移 7px（≈1.2mm，通知键墨迹 379~419），红点 417→424
+      #   x 跟着 TAB 走：TAB 第八轮右移 7px（≈1.2mm，通知键墨迹 379~419）
       #   第十轮：用户说「有新通知时能不能在 TAB 通知那里做个记号」——
       #   原来这个点只有 6px、还没描边，压在深色底上几乎看不见。改成 9px
-      #   圆点 + 1px 深色描边（任何背景色下都能看出边界），并压到通知键的右上角。
+      #   圆点 + 1px 深色描边（任何背景色下都能看出边界）。
+      #   第十二轮（用户实测）：9px 时点儿落在「通知」两字正中间的上方，
+      #   右移 18px、下移 2px 挪到两字右上角，同时放大到 11px 更好认。
       - obj:
           id: notify_badge
           align: TOP_LEFT
-          x: 421
-          y: 271
-          width: 9
-          height: 9
+          x: 439
+          y: 273
+          width: 11
+          height: 11
           bg_color: 0xFF5252
           border_width: 1
           border_color: 0x1E1E1E
           outline_width: 0
-          radius: 5
+          radius: 6
           scrollable: false
           hidden: true
 
