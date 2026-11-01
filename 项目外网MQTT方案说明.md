@@ -429,7 +429,7 @@ SIGQ 三档：`> -55dB` 优秀 / `> -70dB` 良好 / 其余 微弱。
 
 ### 8.3 发布端：Node-RED 子流程（推荐）
 
-导入 `NR子流程-推送屏幕通知.json`，首次使用在 mqtt out 节点里选好 Mosquitto broker。
+导入 `NR子流程-屏幕推送.json`，首次使用在 mqtt out 节点里选好 Mosquitto broker。
 之后任何节点输出接上即可：取 `msg.title` / `msg.message`（缺省回退 `msg.payload`）。
 
 ### 8.4 屏幕侧行为

@@ -36,7 +36,7 @@ ESP32-S3 桌面信息屏，跑 ESPHome + LVGL，显示 Home Assistant 的家庭�
 - 系统页行 1 加当前时间（SNTP 北京时间，前置黄色时钟图标）
 - 今日能耗四行改为 电压 / 水压 / 用气 / 用电；三页 TAB 偏移与行 1 左边界对齐
 
-已知不包含：屏幕通知页（`page_notify.yaml` 与 `NR子流程-推送屏幕通知.json` 作为 v2.0 素材暂存本仓库，主配置未引用它们）。下一版 v2.0 主题即 NOTIFY，**发布包命名 `HA Monitor Display Notify v2.0`**（v1.x 线沿用 `HA Monitor Display Mqtt vX.Y.Z`）。
+已知不包含：屏幕通知页（`page_notify.yaml` 与 `NR子流程-屏幕推送.json` 作为 v2.0 素材暂存本仓库，主配置未引用它们）。下一版 v2.0 主题即 NOTIFY，**发布包命名 `HA Monitor Display Notify v2.0`**（v1.x 线沿用 `HA Monitor Display Mqtt vX.Y.Z`）。
 
 ## 文件结构
 
@@ -54,7 +54,7 @@ fonts/                         中文字体 + MDI 图标字体
 
 # v2.0 素材，v1.0 不生效
 page_notify.yaml               通知页布局（UI 部分已完成）
-NR子流程-推送屏幕通知.json       Node-RED 侧推送子流程
+NR子流程-屏幕推送.json       Node-RED 侧推送子流程
 ```
 
 ## 数据流
@@ -78,7 +78,7 @@ HA 自动化（每 5s） ──mqtt.publish──▶  home/ha-monitor-display (r
 ## v2.0 待办
 
 - [ ] 屏幕通知页：`ui/page_notify.yaml` + 主配置 `mqtt.on_message` 段 + `ui_font_notify`（GB2312 一级 3755 字，12px bpp4，约 310KB）
-- [ ] Node-RED 子流程导入 `NR子流程-推送屏幕通知.json`，选好 broker
+- [ ] Node-RED 子流程导入 `NR子流程-屏幕推送.json`，选好 broker
 - [ ] 滚动新闻 `home/ha-monitor-display/news`
 - [ ] MQTT 1883 → 8883 + TLS
 
