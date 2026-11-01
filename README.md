@@ -20,6 +20,13 @@ ESP32-S3 桌面信息屏，跑 ESPHome + LVGL，显示 Home Assistant 的家庭�
 
 **v1.0.1 — 1.0 线的稳定定版（2026-10-31）。** 累积内容全部是观感与数据修正，未新增功能：8 个区块标题加 MDI 图标、改名（家居 / 网络运行 / NAS 运行）、字库补 19 字、第二轮配色方案落地、上证涨跌动态着色、`web_server` 认证改 digest、NAS 的 CPU/内存未载入时用基色、风扇「开 / ≤50%」改黄。已真机确认，出包 `HA Monitor Display Mqtt v1.0.1.zip`。
 
+**v1.1.1 — 续航优化定版（2026-11-01）。** 出包 `HA Monitor Display Mqtt v1.1.1.zip`，本包同时作为 v2.0 开发前的**回退基线**。仅两项改动，不动界面：
+
+- `wifi.power_save_mode: light`（modem-sleep），数据帧 5s 一推不受影响
+- 默认屏幕亮度 60%：`ui_saved_brightness` 初值 0.6 为唯一来源，开机与熄屏恢复同源；灯实体 `restore_mode` 改 `ALWAYS_OFF`，由 lvgl `on_boot` 按该值点亮（避免开机满亮闪变）
+
+**实测（真机，60% 亮度 / 5s 推送 / 熄屏待机）：约 20 mA。** 据此推算纯待机续航：500 mAh ≈ 21 h，1000 mAh ≈ 42 h，18650 3000 mAh ≈ 一周；亮屏约 150~180 mA，每亮 1 分钟约消耗 3 mAh。
+
 **v1.1.0 — 观感与功能微调定版（2026-10-31）。** 出包 `HA Monitor Display Mqtt v1.1.0.zip`。本月最后一轮大改，累积内容：
 
 - 每页背景色 HA 下拉可调：`Dashboard / Network / System Bg Color` 三个 select，8 档深色预设（石墨 / 深红 / 深黄 / 墨绿 / 浅蓝 / 深蓝 / 深紫 / 深靛），卡片色随选定色、缝隙取选定色 ×0.5
@@ -29,7 +36,7 @@ ESP32-S3 桌面信息屏，跑 ESPHome + LVGL，显示 Home Assistant 的家庭�
 - 系统页行 1 加当前时间（SNTP 北京时间，前置黄色时钟图标）
 - 今日能耗四行改为 电压 / 水压 / 用气 / 用电；三页 TAB 偏移与行 1 左边界对齐
 
-已知不包含：屏幕通知页（`page_notify.yaml` 与 `NR子流程-推送屏幕通知.json` 作为 v2.0 素材暂存本仓库，主配置未引用它们）。下一版 v2.0 主题即 NOTIFY。
+已知不包含：屏幕通知页（`page_notify.yaml` 与 `NR子流程-推送屏幕通知.json` 作为 v2.0 素材暂存本仓库，主配置未引用它们）。下一版 v2.0 主题即 NOTIFY，**发布包命名 `HA Monitor Display Notify v2.0`**（v1.x 线沿用 `HA Monitor Display Mqtt vX.Y.Z`）。
 
 ## 文件结构
 
