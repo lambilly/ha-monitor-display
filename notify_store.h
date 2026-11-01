@@ -214,6 +214,26 @@ static inline bool is_hex6(const std::string &s, size_t p) {
   return true;
 }
 
+// 把 recolor 标记整个抹掉，只留可见文字（第十九轮）
+//   用途：标题栏。标题只允许纯文字，图标由页面固定给（铃铛），
+//   上游若随标题带了 emoji → 图标标记，会和铃铛挤成「两个图标」。
+static std::string strip_marks(const std::string &s) {
+  std::string out;
+  out.reserve(s.size());
+  for (size_t i = 0; i < s.size();) {
+    if (s[i] == '#' && is_hex6(s, i + 1)) {
+      size_t g = i + 7;
+      while (g < s.size() && s[g] == ' ') g++;
+      const size_t e = s.find('#', g);
+      if (e != std::string::npos && e - g <= 4) { i = e + 1; continue; }
+      i++;
+      continue;
+    }
+    out += s[i++];
+  }
+  return out;
+}
+
 // 行尾若是孤零零一个 recolor 标记（图标），把它单独摘出来 —— 折行时
 //   连它和后面的字一起挪到下一行。否则屏幕上会出现「一行只有一个星星」
 //   （用户 18 轮报的新闻简报就是：每条新闻前的星号落单，标题跑到下一行）。
