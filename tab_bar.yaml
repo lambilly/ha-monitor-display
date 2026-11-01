@@ -10,10 +10,20 @@
 #     由 ui_common.yaml 的 ui_tab_highlight 在切页后按
 #     ui_current_page 上色（child 0..3 依次对应 家居/网络/系统/通知）；
 #   · 几何一旦定稿，以后调像素只改这一个文件。
-#   · 几何：卡片 x5 宽 470，四等分 → 0 / 118 / 235 / 353，每块 117 宽。
-#     文字在块内居中，所以「家居」墨迹左边距 = 「通知」墨迹右边距 = 38.5px
-#     （块中心 58.5，减去两字 40px 的一半）。这是四等分的必然结果：
-#     想减小外边距只能缩字号或加块数，改 x 只会破坏左右对称。
+#
+# 排版（11-01 第五轮）：为什么这次不再用「等分块 + 块内居中」
+#   前三轮一直按四等分块（每块 117）加 text_align: CENTER 推算，
+#   理论左右各留 38.5px、视觉对称；实际却始终是「左贴边、右边多出约两个字」。
+#   原因：label 不显式约束时尺寸是 SIZE_CONTENT（宽度随文本走），
+#   117 的块宽没起作用，CENTER 也就没机会生效，文字一律从块左边缘开始排。
+#   所以改成「按墨迹定位」，不再依赖宽度与对齐：
+#     · x 直接写文字左边缘的绝对位置
+#     · width 40 = 20px 字号 × 2 字（fontTools 实测 advance 1000/1000，精确 40px）
+#       CLIP 锁宽，兼容「width 生效」的环境；不生效时内容宽也是 40，结果一致
+#     · 不写 text_align，走默认 LEFT，两种情形下墨迹位置完全相同
+#   卡片内容宽 470，左右留白各 38，四块间隙 (470-38×2-40×4)/3 = 78
+#     墨迹左： 38 / 156 / 274 / 392
+#     墨迹右： 78 / 196 / 314 / 432  →  左 38 = 右 38（470-432），对称
 # ==========================================================
 obj:
   x: 5
@@ -28,40 +38,40 @@ obj:
   widgets:
     - label:
         align: left_mid
-        x: 0
-        width: 117
+        x: 38
+        width: 40
+        long_mode: CLIP
         text: "家居"
-        text_align: CENTER
         text_font: ui_font_large
         text_color: 0x757575
         on_click:
           - lvgl.page.show: dashboard_page
     - label:
         align: left_mid
-        x: 118
-        width: 117
+        x: 156
+        width: 40
+        long_mode: CLIP
         text: "网络"
-        text_align: CENTER
         text_font: ui_font_large
         text_color: 0x757575
         on_click:
           - lvgl.page.show: network_page
     - label:
         align: left_mid
-        x: 235
-        width: 117
+        x: 274
+        width: 40
+        long_mode: CLIP
         text: "系统"
-        text_align: CENTER
         text_font: ui_font_large
         text_color: 0x757575
         on_click:
           - lvgl.page.show: system_page
     - label:
         align: left_mid
-        x: 353
-        width: 117
+        x: 392
+        width: 40
+        long_mode: CLIP
         text: "通知"
-        text_align: CENTER
         text_font: ui_font_large
         text_color: 0x757575
         on_click:

@@ -233,10 +233,16 @@ mqtt:
               parsed = esphome::json::parse_json(x, [&](JsonObject root) -> bool {
                 if (root["title"].is<const char *>()) nt = root["title"].as<const char *>();
                 if (root["message"].is<const char *>()) nm = root["message"].as<const char *>();
-                if (root["ts"].is<uint32_t>()) {
-                  nts = root["ts"].as<uint32_t>();
-                } else if (root["ts"].is<const char *>()) {
-                  nts = static_cast<uint32_t>(strtoul(root["ts"].as<const char *>(), nullptr, 10));
+                // ts 统一归一成「秒」：Node-RED 里 Date.now() 给的是 13 位毫秒，
+                //   直接塞进 uint32_t 会溢出成乱七八糟的值（时间显示错乱甚至空白），
+                //   所以先按 64 位读，超过 1e11 就除 1000。
+                if (root["ts"].is<const char *>()) {
+                  const unsigned long long raw =
+                      strtoull(root["ts"].as<const char *>(), nullptr, 10);
+                  nts = static_cast<uint32_t>(raw > 100000000000ULL ? raw / 1000 : raw);
+                } else if (!root["ts"].isNull()) {
+                  const uint64_t raw = root["ts"].as<uint64_t>();
+                  nts = static_cast<uint32_t>(raw > 100000000000ULL ? raw / 1000 : raw);
                 }
                 return true;
               });
@@ -247,10 +253,7 @@ mqtt:
             }
             if (nt.empty() && nm.empty()) return;
 
-            if (ns_notify::is_dup(nt, nm, nts)) {
-              ESP_LOGD("notify", "重复消息，已丢弃");
-              return;
-            }
+            // 去重在 push 内部做（要拿归一 + 折行后的值比才准，见 notify_store.h）
             ns_notify::push(nt, nm, nts);
             ESP_LOGI("notify", "入列 共%d条 未读%d条 [%s] %s",
                      ns_notify::count, ns_notify::unread,
