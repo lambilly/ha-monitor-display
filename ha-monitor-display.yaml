@@ -257,6 +257,17 @@ mqtt:
             }
             if (nt.empty() && nm.empty()) return;
 
+            // 诊断（第九轮加）：入库前的「原始」message 有几个换行 ——
+            //   0 个 = 换行在上游（HA 模板 / NR 上游节点）就丢了，设备端无从恢复；
+            //   >0 个但入库后变少 = 设备端处理链有问题（目前没有这种迹象）。
+            {
+              int raw_nl = 0;
+              for (size_t k = 0; k < nm.size(); k++)
+                if (nm[k] == '\n') raw_nl++;
+              ESP_LOGI("notify", "原始 message %u字节/%d个换行 标题[%s]",
+                       (unsigned) nm.size(), raw_nl, nt.c_str());
+            }
+
             // 去重在 push 内部做（要拿归一 + 折行后的值比才准，见 notify_store.h）
             ns_notify::push(nt, nm, nts);
             {

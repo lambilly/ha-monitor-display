@@ -5,9 +5,9 @@
 # 数据：MQTT home/ha-monitor-display/notify
 #       → ns_notify 8 槽环形缓冲（ui/notify_store.h，单条正文上限 3.5KB）
 # 版式（480x320）—— 卡片纵向节奏 5/30 · 4 · 187 · 4 · 32 · 4 · 49
-#   y5   h30  顶栏：MDI 消息图标（黄 FFD54F）+ 标题（12px 白）｜右侧时间（12px 白，带年份）
+#   y5   h30  顶栏：MDI 响铃图标（黄 FFD54F）+ 标题（12px 白）｜右侧相对时间（12px 白）
 #   y39  h187 正文：仅纵向滚动容器，内嵌 450px 宽 label（12px 白，折行在入库时切好）
-#   y230 h32  切换条：四个独立按钮，列间 10px
+#   y230 h32  切换条：四个独立按钮（宽 100），列间 10px
 #   y266 h49  四键 TAB
 # 交互：上一条 = 往更旧翻（view+1），下一条 = 往更新翻（view-1）
 #       删除 = 删当前这条；全部删除 = 清空 8 槽
@@ -83,10 +83,8 @@ lvgl:
                   text_font: ui_font_notify
                   text_color: 0xFFFFFF
               # 时间：白字、固定左起点（label 宽度随文本走，右对齐不可靠）
-              #   格式 2026-11-01 18:07 —— 4 位年份 + 月日 + 时分，16 字符 ≈ 99px
-              #   第七轮：用户要求左移两个数字宽（12px 下 ASCII 7px × 2 = 14）
-              #           344 → 330，右缘 330+99 = 429，右侧留 41px
-              #   标题上限 24 字（288px）到 311，中间 19px 空隙
+              #   第九轮恢复相对时间：刚刚 / N 分钟前 / N 小时前 / N 天前
+              #   最长「59 分钟前」≈ 55px，x330 起，右缘 385，右侧留 85px
               - label:
                   id: notify_time_rel
                   align: left_mid
@@ -140,14 +138,16 @@ lvgl:
         #   所以撤掉外层容器，四个 obj 直接做页面顶层对象，沿用家居页那套视觉：
         #     bg 同页面色（ui_apply_bg 会统一刷，换底色时自动跟） +
         #     1px 描边拉出格子轮廓 + radius 10
-        #   470 内容宽：4×110 + 3×10 = 470 → x 5 / 125 / 245 / 365
-        #   左缘 5、右缘 365+110 = 475，左右各 5，严格对称。
+        #   470 内容宽：4×100 + 3×10 = 430 → x 10 / 130 / 250 / 370
+        #   第九轮每格再减 10px（中心点不动、两边各收 5）：
+        #     中心 60 / 180 / 300 / 420 与 110 宽时完全一致
+        #     左缘 10、右缘 370+100 = 470，左右各 10，严格对称
         # ① 上一条（往更旧翻）
         - obj:
             id: notify_btn_prev
-            x: 5
+            x: 10
             y: 230
-            width: 110
+            width: 100
             height: 32
             bg_color: 0x1E1E1E
             border_width: 1
@@ -168,9 +168,9 @@ lvgl:
         # ② 下一条（往更新翻）
         - obj:
             id: notify_btn_next
-            x: 125
+            x: 130
             y: 230
-            width: 110
+            width: 100
             height: 32
             bg_color: 0x1E1E1E
             border_width: 1
@@ -191,9 +191,9 @@ lvgl:
         # ③ 删除当前条：橙 FFB74D（只删一条，误触代价小）
         - obj:
             id: notify_btn_del
-            x: 245
+            x: 250
             y: 230
-            width: 110
+            width: 100
             height: 32
             bg_color: 0x1E1E1E
             border_width: 1
@@ -214,9 +214,9 @@ lvgl:
         # ④ 全部删除：红 FF5252（一次清空 8 槽，放最右最不易误触）
         - obj:
             id: notify_btn_clear
-            x: 365
+            x: 370
             y: 230
-            width: 110
+            width: 100
             height: 32
             bg_color: 0x1E1E1E
             border_width: 1
@@ -290,20 +290,21 @@ script:
           // 换内容 / 切条后回到顶部（自动滚动从第一行开始）
           lv_obj_scroll_to_y(id(notify_body_obj), 0, LV_ANIM_OFF);
 
-          // 时间：绝对时间 2026-11-01 18:07（用户 11-01 要求带 4 位年份）
+          // 时间：相对时间（第九轮恢复，用户指定）：刚刚 / N 分钟前 / N 小时前 / N 天前
+          //   （带年份的绝对时间用了一轮就撤——不如相对时间直观）
           //   兜底链：
-          //     1) ts 缺失（上游没带）→ 用设备当前时间；
-          //     2) 设备时钟没走（now < 2020）→ 显示「刚刚」，绝不留空白。
+          //     1) ts 缺失（上游没带）→ 按设备当前时间算，也就是「刚刚」；
+          //     2) 设备时钟没走（now < 2020）→ 算不出差值，也显示「刚刚」，绝不留空白。
           //   ts 单位在主配置 on_message 里已归一成秒。
           char tb[24] = {0};
           const uint32_t now = static_cast<uint32_t>(::time(nullptr));
           const uint32_t ts = (s.ts != 0) ? s.ts : now;
-          if (ts > 1600000000UL) {                      // 2020 之后才认为是有效时间戳
-            const time_t t = static_cast<time_t>(ts);
-            struct tm v;
-            localtime_r(&t, &v);
-            snprintf(tb, sizeof(tb), "%d-%02d-%02d %02d:%02d",
-                     v.tm_year + 1900, v.tm_mon + 1, v.tm_mday, v.tm_hour, v.tm_min);
+          if (now > 1600000000UL && ts > 1600000000UL && now > ts) {
+            const uint32_t d = now - ts;
+            if (d < 60)          snprintf(tb, sizeof(tb), "刚刚");
+            else if (d < 3600)   snprintf(tb, sizeof(tb), "%u 分钟前", (unsigned) (d / 60));
+            else if (d < 86400)  snprintf(tb, sizeof(tb), "%u 小时前", (unsigned) (d / 3600));
+            else                 snprintf(tb, sizeof(tb), "%u 天前", (unsigned) (d / 86400));
           } else {
             snprintf(tb, sizeof(tb), "刚刚");
           }
