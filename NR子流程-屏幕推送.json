@@ -16,7 +16,9 @@
         ]
       }
     ],
-    "out": []
+    "out": [],
+    "color": "#4FD8FA",
+    "icon": "font-awesome/fa-bell"
   },
   {
     "id": "hd_notify_fn",
