@@ -166,7 +166,7 @@ font:
     size: 10
     bpp: 4
     glyphs:
-      - "刚刚分钟前小时天"
+      - "刚分钟前小时天"
       - "0123456789 +-"
 
   - file: "fonts/materialdesignicons-webfont.ttf"
