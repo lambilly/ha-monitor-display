@@ -7,7 +7,7 @@
 # 版式（480x320）—— 卡片纵向节奏 5/30 · 4 · 187 · 4 · 32 · 4 · 49
 #   y5   h30  顶栏：MDI 响铃图标（黄 FFD54F）+ 标题（12px 白）｜中间时钟 HH:MM
 #              （第十七轮从系统页搬来，图标黄 + 时间白）｜右侧相对时间（12px 白）
-#   y39  h187 正文：仅纵向滚动容器，内嵌 450px 宽 label（12px 白，上3/左5，折行入库时切好）
+#   y39  h187 正文：仅纵向滚动容器，内嵌 440px 宽 label（12px 白，上20/左21，折行入库时切好）
 #   y230 h32  切换条：四个独立按钮（宽 100），列间 10px
 #   y266 h49  四键 TAB
 # 交互：上一条 = 往更旧翻（view+1），下一条 = 往更新翻（view-1）
@@ -40,7 +40,7 @@ lvgl:
             // 正文容器只允许纵向滚动（用户反馈原来会左右滑）
             lv_obj_set_scroll_dir(id(notify_body_obj), LV_DIR_VER);
             // 顺序要点：先定宽与折行策略，再设文本（见 notify_render 注释）
-            lv_obj_set_width(id(notify_body), 450);
+            lv_obj_set_width(id(notify_body), 440);
             lv_label_set_long_mode(id(notify_body), LV_LABEL_LONG_WRAP);
             lv_obj_scroll_to_y(id(notify_body_obj), 0, LV_ANIM_OFF);
         - script.execute: notify_render
@@ -61,22 +61,14 @@ lvgl:
             radius: 10
             scrollable: false
             widgets:
-              # 标题图标：mdi:bell-ring-outline（U+F009F），黄 FFD54F
-              #   用户点名要这只「响铃描边」—— 描边版线条细，20px 下比实心铃更透气，
-              #   也比普通铃多一道「正在响」的动势，更贴通知语义。
-              #   颜色从青改成黄，与 TAB 当前页的青区分开，也提示「有内容等你读」。
-              - label:
-                  id: notify_title_icon
-                  align: left_mid
-                  x: 1
-                  text: "\U000F009F"
-                  text_font: mdi_icons_20
-                  height: 18
-                  text_color: 0xFFD54F
+              # 标题：18 轮起**不再带图标**（用户「第一行标题前的图标干脆都不要了」
+              #   「尤萨洗衣标题有图标，不要了，标题图标都不要了」）
+              #   原来这里是 🔔 bell-ring-outline + x23 的标题，现在铃铛删掉，
+              #   标题左移到 x8（≈1px 边框 + 7px 留白），与正文左缘同一节奏。
               - label:
                   id: notify_title
                   align: left_mid
-                  x: 23
+                  x: 8
                   width: 320
                   long_mode: DOT
                   recolor: true
@@ -123,19 +115,18 @@ lvgl:
             scrollable: true
             scrollbar_mode: "OFF"
             widgets:
-              # 正文：上 3 / 左 5（第十轮按用户「上面和左边留白太多，各减 5px」）
-              #   以前是 y8 / x10 —— 卡片本身已有 1px 边框，再加上 8/10 的
-              #   内边距，第一行显得离顶边太远。
-              #   第十五轮：y 改成动态 —— 内容溢出一屏（要自动滚）时是 20
-              #   （3 + 一行 17px，滚出去的行落在空白里），不溢出时仍是 3。
-              #   行在入库时按 425px 切好，正文可用 450 → 右侧留 25px
-              #   （x 从 10 收到 5 的同时把折行从 420 放到 425，右边留白不变）。
+              # 正文位置（第十八轮，用户重新给了明确数值）：
+              #   左 x21（= 原 5 + 16，「至少右移 16px」）、上 y20（= 原 3 + 一行 17，
+              #   「内容太靠上面，下移一行」）。**滚动与不滚动两种状态统一**，
+              #   不再按溢出与否改 y —— 之前那样两种状态左/上缘不一致，反而更乱。
+              #   宽 440：折行仍是 425（入库时切好），右缘最远 21+425 = 446，
+              #   卡片内右边界 474，右侧留 28px。
               #   text_align LEFT：默认居中会让短行看起来偏，通知应左对齐。
               - label:
                   id: notify_body
-                  x: 5
-                  y: 3
-                  width: 450
+                  x: 21
+                  y: 20
+                  width: 440
                   long_mode: WRAP
                   text_align: LEFT
                   recolor: true
@@ -291,11 +282,11 @@ script:
           //   以前是 set_text 之后才 set_width + update_layout —— 但 set_text
           //   那一刻文本就已经按旧尺寸排好了，之后改宽度通常只影响外框，
           //   行不会重排，于是「不换行」反复出现。顺序反过来才稳：
-          //     ① set_width(450)  让 label 有明确行宽
+          //     ① set_width(440)  让 label 有明确行宽
           //     ② set_long_mode(WRAP)
-          //     ③ set_text        此时才排版，按 450 折
+          //     ③ set_text        此时才排版，按 440 折
           //   兜底：入库时 wrap_hard() 已插好真换行符，即使 ①② 都不生效也照断。
-          lv_obj_set_width(id(notify_body), 450);
+          lv_obj_set_width(id(notify_body), 440);
           lv_label_set_long_mode(id(notify_body), LV_LABEL_LONG_WRAP);
 
           // 第三重保险（第七轮加）：渲染时再折一次，幂等
@@ -317,14 +308,13 @@ script:
           lv_obj_set_style_pad_all(id(notify_body_obj), 0, LV_PART_MAIN);
           lv_obj_set_scroll_dir(id(notify_body_obj), LV_DIR_VER);
 
-          // --- 溢出时顶部空一行（第十五轮）---
-          //   进入自动滚动后，顶端永远有一行的空白：滚出去的那一行落在空白里，
-          //   不会出现「半截字贴着边框消失」。不溢出时仍是原来的 3px 紧贴。
-          //   17 = 正文行高（12px 字号 × 1.4），与 wrap_hard 的 LINE_H 一致。
+          // --- 顶部留一行：两种状态一致（第十八轮）---
+          //   用户「内容太靠上面，下移一行」：不再按是否溢出改 y，
+          //   滚动与不滚动都从 y=20 开始（20 = 3 + 一行 17px）。
+          //   溢出时滚出去的那一行正好落在顶部这行空白里。
           const int body_h = (int) lv_obj_get_height(id(notify_body));
           const int box_h  = (int) lv_obj_get_height(id(notify_body_obj));
           const bool overflow = (body_h + 6 > box_h);
-          lv_obj_set_y(id(notify_body), overflow ? 20 : 3);   // 20 = 3 + 17
           lv_obj_update_layout(id(notify_body));
 
           // 换内容 / 切条后回到顶部（自动滚动从第一行开始）
@@ -354,9 +344,9 @@ script:
           if (ns_notify::view == 0) ns_notify::unread = 0;
 
           // 渲染后测一下真实几何 —— 抓串口就能判断折行到底卡在哪一层：
-          //   w=450 h≈(行数×17)  → 正常
+          //   w=440 h≈(行数×17)  → 正常
           //   w=很宽 h=17        → 宽度没锁住，文本排成一行
-          //   w=450 h=17 但有换行符 → LVGL 没按 \n 断（不太可能，通常前面 h 会涨）
+          //   w=440 h=17 但有换行符 → LVGL 没按 \n 断（不太可能，通常前面 h 会涨）
           ESP_LOGI("notify", "重绘 view=%d/%d rev=%u  正文label w=%d h=%d 文本%u字节",
                    ns_notify::view, n, (unsigned) ns_notify::rev,
                    (int) lv_obj_get_width(id(notify_body)),

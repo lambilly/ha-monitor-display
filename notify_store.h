@@ -214,6 +214,35 @@ static inline bool is_hex6(const std::string &s, size_t p) {
   return true;
 }
 
+// 行尾若是孤零零一个 recolor 标记（图标），把它单独摘出来 —— 折行时
+//   连它和后面的字一起挪到下一行。否则屏幕上会出现「一行只有一个星星」
+//   （用户 18 轮报的新闻简报就是：每条新闻前的星号落单，标题跑到下一行）。
+//   返回摘出的标记（含 #RRGGBB 与收尾 #），mw 回填它的可视宽度；没有则返回空。
+static std::string pop_tail_mark(std::string &out, int &mw) {
+  const size_t end = out.size();
+  if (end < 10 || out[end - 1] != '#') return "";
+  for (size_t back = 1; back <= 12 && back < end; back++) {
+    const size_t p = end - 1 - back;
+    if (out[p] != '#') continue;
+    if (!is_hex6(out, p + 1)) continue;
+    size_t g = p + 7;
+    while (g < end && out[g] == ' ') g++;
+    const size_t len = (end - 1) - g;
+    if (len < 1 || len > 4) continue;
+    bool has_text = false;                    // 行里还得有别的字，否则整行就一个图标
+    for (size_t k = 0; k < p; k++) {
+      if (out[k] != ' ' && out[k] != '\n') { has_text = true; break; }
+    }
+    if (!has_text) return "";
+    mw = (static_cast<unsigned char>(out[g]) < 0x80)
+             ? ch_px(static_cast<unsigned char>(out[g])) : 12;
+    std::string m = out.substr(p);
+    out.erase(p);
+    return m;
+  }
+  return "";
+}
+
 static std::string wrap_hard(const std::string &s) {
   std::string out;
   out.reserve(s.size() + s.size() / 24);
@@ -305,7 +334,13 @@ static std::string wrap_hard(const std::string &s) {
           j = i + n;
         }
         if (ww > 0) {
-          if (w > 0 && w + ww > WRAP_PX) { out += '\n'; w = 0; }
+          if (w > 0 && w + ww > WRAP_PX) {
+            int tmw = 0;
+            std::string tm = pop_tail_mark(out, tmw);
+            out += '\n';
+            w = 0;
+            if (!tm.empty()) { out += tm; w = tmw; }
+          }
           out.append(s, i, j - i);
           w += ww;
           i = j;
@@ -318,8 +353,11 @@ static std::string wrap_hard(const std::string &s) {
     // 放不下就断行；但禁则标点宁可挤在本行末尾，也不放到下一行行首
     if (w > 0 && w + pw > WRAP_PX && !no_line_head(cp)) {
       if (cp == ' ') { i += n; continue; }   // 折行处的空格吞掉，别留在行首
+      int tmw = 0;
+      std::string tm = pop_tail_mark(out, tmw);
       out += '\n';
       w = 0;
+      if (!tm.empty()) { out += tm; w = tmw; }
     }
     out.append(s, i, n);
     w += pw;
