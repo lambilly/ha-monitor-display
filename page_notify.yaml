@@ -60,14 +60,15 @@ lvgl:
             radius: 10
             scrollable: false
             widgets:
-              # 标题图标：mdi:message-text（U+F0369），黄 FFD54F
-              #   第七轮由铃铛换过来 —— 气泡形状在小尺寸下比铃铛更好认；
+              # 标题图标：mdi:bell-ring-outline（U+F009F），黄 FFD54F
+              #   用户点名要这只「响铃描边」—— 描边版线条细，20px 下比实心铃更透气，
+              #   也比普通铃多一道「正在响」的动势，更贴通知语义。
               #   颜色从青改成黄，与 TAB 当前页的青区分开，也提示「有内容等你读」。
               - label:
                   id: notify_title_icon
                   align: left_mid
                   x: 1
-                  text: "\U000F0369"
+                  text: "\U000F009F"
                   text_font: mdi_icons_20
                   height: 18
                   text_color: 0xFFD54F
