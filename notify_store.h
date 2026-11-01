@@ -107,6 +107,57 @@ static std::string normalize(const std::string &in) {
 }
 
 // ----------------------------------------------------------
+// 条目断行（11-01 第八轮）
+//   上游的通知正文是一段到底的流水文字，条目之间只用两个空格加序号分隔：
+//     "…0Klx  1.【天气】…  2.【室内】…  3.【室外】…"
+//   硬折行只会按像素切，序号很可能落在行中间，读起来还是一堵墙。
+//   这里先把「空格 + 1~2 位数字 + . 或 、」认成条目序号，在它前面断成新行。
+//   排除项（避免误伤）：
+//     · "PM2.5" 前面不是空格  → 不匹配
+//     · "3.33km/h" 的 '.' 后面是数字 → 不匹配
+//     · "2026年" 没有点 → 不匹配
+//   幂等：已经断过的地方前面是 '\n' 不是空格，再跑一遍不会重复断。
+// ----------------------------------------------------------
+static std::string split_items(const std::string &s) {
+  std::string out;
+  out.reserve(s.size() + 64);
+  bool has_text = false;      // 前面是否已有正文（避免开头就断）
+
+  size_t i = 0;
+  while (i < s.size()) {
+    if (s[i] == ' ' && i + 3 < s.size() && s[i + 1] >= '0' && s[i + 1] <= '9') {
+      size_t j = i + 1;
+      while (j < s.size() && s[j] >= '0' && s[j] <= '9' && j - (i + 1) < 2) j++;
+
+      size_t after = 0;
+      bool ok = false;
+      if (j < s.size() && s[j] == '.') {
+        after = j + 1;
+        // '.' 后面不能是数字（3.33 不是序号）
+        ok = !(after < s.size() && s[after] >= '0' && s[after] <= '9');
+      } else if (j + 2 < s.size() && (unsigned char) s[j] == 0xE3 &&
+                 (unsigned char) s[j + 1] == 0x80 && (unsigned char) s[j + 2] == 0x81) {
+        after = j + 3;                        // 、
+        ok = true;
+      }
+      if (ok && after < s.size() && has_text) {
+        // 行尾的空格要清干净，否则会留下一个「只有空格的行」
+        while (!out.empty() && out.back() == ' ') out.pop_back();
+        out += '\n';
+        while (i < after && s[i] == ' ') i++;   // 跳过序号前的所有空格
+        out.append(s, i, after - i);            // 序号连点一起抄："1." / "12、"
+        i = after;
+        has_text = true;
+        continue;
+      }
+    }
+    if (s[i] != ' ' && s[i] != '\n') has_text = true;
+    out += s[i++];
+  }
+  return out;
+}
+
+// ----------------------------------------------------------
 // 硬折行（11-01 第三轮，用户「内容仍然没有换行、右边没有留白」后新增）
 //   为什么不能只靠 LVGL 的 LV_LABEL_LONG_WRAP：
 //     正文 label 的宽度在 set_text 之后会被文本重算覆盖（退成内容宽），
@@ -128,6 +179,15 @@ static inline int ch_px(uint32_t cp) {
   if (cp == ' ') return 3;
   if (cp < 0x80) return 7;
   return 12;
+}
+
+// 可连写的「词内」字符：ASCII 字母数字 + . % / - : _ 以及 °（U+00B0）
+//   用于把 "PM2.5" "1006hPa" "3.33km/h" "27°C" 当成一个整体、不被行宽劈开
+static inline bool is_word_ch(uint32_t cp) {
+  if ((cp >= '0' && cp <= '9') || (cp >= 'a' && cp <= 'z') || (cp >= 'A' && cp <= 'Z')) return true;
+  if (cp == '.' || cp == '%' || cp == '/' || cp == '-' || cp == ':' || cp == '_') return true;
+  if (cp == 0xB0) return true;   // °
+  return false;
 }
 
 // 行首禁则标点（出现在行首会让版面难看）
@@ -196,9 +256,52 @@ static std::string wrap_hard(const std::string &s) {
       continue;
     }
 
+    // ASCII / 度数符号串整段不断（11-01 第八轮）：
+    //   按字符切会把 "PM2.5值16g/m³" 断成 "PM2.5值1|6g/m³"、
+    //   "CO2值854ppm" 断成 "CO|2值854ppm"，数字被劈开很难读。
+    //   这里先把整段可连写字符测出宽度，放不下就整段挪到下一行。
+    if (is_word_ch(cp)) {
+      size_t j = i;
+      int ww = 0;
+      while (j < s.size()) {
+        const unsigned char b2 = static_cast<unsigned char>(s[j]);
+        uint32_t c2 = 0;
+        size_t n2 = 1;
+        if (b2 < 0x80)                { c2 = b2;        n2 = 1; }
+        else if ((b2 & 0xE0) == 0xC0) { c2 = b2 & 0x1F; n2 = 2; }
+        else if ((b2 & 0xF0) == 0xE0) { c2 = b2 & 0x0F; n2 = 3; }
+        else if ((b2 & 0xF8) == 0xF0) { c2 = b2 & 0x07; n2 = 4; }
+        else break;
+        if (j + n2 > s.size()) break;
+        for (size_t k = 1; k < n2; k++) {
+          const unsigned char c = static_cast<unsigned char>(s[j + k]);
+          if ((c & 0xC0) != 0x80) { c2 = 0; break; }
+          c2 = (c2 << 6) | (c & 0x3F);
+        }
+        if (!is_word_ch(c2)) break;
+        ww += ch_px(c2);
+        j += n2;
+      }
+      if (ww > 0) {
+        // 整段比一行还长（罕见）：按原逻辑逐字符断，别硬挪
+        if (ww > WRAP_PX) {
+          ww = 0;
+          j = i + n;
+        }
+        if (ww > 0) {
+          if (w > 0 && w + ww > WRAP_PX) { out += '\n'; w = 0; }
+          out.append(s, i, j - i);
+          w += ww;
+          i = j;
+          continue;
+        }
+      }
+    }
+
     const int pw = ch_px(cp);
     // 放不下就断行；但禁则标点宁可挤在本行末尾，也不放到下一行行首
     if (w > 0 && w + pw > WRAP_PX && !no_line_head(cp)) {
+      if (cp == ' ') { i += n; continue; }   // 折行处的空格吞掉，别留在行首
       out += '\n';
       w = 0;
     }
@@ -218,6 +321,7 @@ static void push(const std::string &title, const std::string &msg, uint32_t ts) 
   std::string t = clip(filter_known(normalize(title.empty() ? std::string("通知") : title)), TITLE_MAX);
   std::string body = filter_known(normalize(msg));
   if (body.size() > 3300) body = clip(body, 3300);   // 先给折行留出 \n 的余量
+  body = split_items(body);                          // 序号前断行（条目各自成段）
   std::string b = clip(wrap_hard(body), MSG_MAX);
   const uint32_t tt = (ts != 0) ? ts : static_cast<uint32_t>(::time(nullptr));
 

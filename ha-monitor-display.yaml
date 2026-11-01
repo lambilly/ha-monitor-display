@@ -456,11 +456,11 @@ lvgl:
       # 未读红点（v2.0 NOTIFY）：压在 TAB「通知」键的右上角
       #   放在 top_layer 而不是 tab_bar.yaml 里 —— 片段被四页各 include 一次，
       #   带 id 会重复定义；这里单实例，四个页面顶部都能看到同一个点。
-      #   x 跟着 TAB 走：TAB 第七轮再左移 10px（通知键墨迹 372~412），红点 427→417
+      #   x 跟着 TAB 走：TAB 第八轮右移 7px（≈1.2mm，通知键墨迹 379~419），红点 417→424
       - obj:
           id: notify_badge
           align: TOP_LEFT
-          x: 417
+          x: 424
           y: 279
           width: 6
           height: 6

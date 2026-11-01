@@ -134,16 +134,20 @@ lvgl:
             text_font: ui_font_medium
             text_color: 0x757575
 
-        # ============ 切换条 (y230 h32)：四个独立按钮，列间 10px ============
-        #   470 内容宽，左右各 10 内边距 → 450 可分；4 块 + 3×10 间隙
-        #   → 每块 105，左边缘 10 / 125 / 240 / 355（355+105 = 460，右边距 10，对称）
-        #   第七轮：四个 obj 一直都在，但底色 2A2A2A 与卡片底 1E1E1E 太接近，
-        #   暗屏上看着像一条整条 —— 提亮到 333333 并加 1px 边 424242，分块就清楚了。
+        # ============ 切换条 (y230 h32)：四个独立卡片，列间 10px ============
+        #   第八轮按用户意见改：要像家居页「在家 / 客人 / 手机 / 语音」那样
+        #   **每格一个独立的框**，而不是一个大框里塞四个。
+        #   所以撤掉外层容器，四个 obj 直接做页面顶层对象，沿用家居页那套视觉：
+        #     bg 同页面色（ui_apply_bg 会统一刷，换底色时自动跟） +
+        #     1px 描边拉出格子轮廓 + radius 10
+        #   470 内容宽：4×110 + 3×10 = 470 → x 5 / 125 / 245 / 365
+        #   左缘 5、右缘 365+110 = 475，左右各 5，严格对称。
+        # ① 上一条（往更旧翻）
         - obj:
-            id: notify_switch_bar
+            id: notify_btn_prev
             x: 5
             y: 230
-            width: 470
+            width: 110
             height: 32
             bg_color: 0x1E1E1E
             border_width: 1
@@ -151,94 +155,84 @@ lvgl:
             radius: 10
             scrollable: false
             widgets:
-              # ① 上一条（往更旧翻）
-              - obj:
-                  align: left_mid
-                  x: 10
-                  width: 105
-                  height: 24
-                  bg_color: 0x333333
-                  border_width: 1
-                  border_color: 0x424242
-                  outline_width: 0
-                  radius: 6
-                  scrollable: false
-                  widgets:
-                    - label:
-                        align: center
-                        text: "‹ 上一条"
-                        text_font: ui_font_notify
-                        text_color: 0xFFFFFF
-                  on_click:
-                    - lambda: |-
-                        if (ns_notify::view < ns_notify::count - 1) ns_notify::view++;
-                        id(notify_render).execute();
-              # ② 下一条（往更新翻）
-              - obj:
-                  align: left_mid
-                  x: 125
-                  width: 105
-                  height: 24
-                  bg_color: 0x333333
-                  border_width: 1
-                  border_color: 0x424242
-                  outline_width: 0
-                  radius: 6
-                  scrollable: false
-                  widgets:
-                    - label:
-                        align: center
-                        text: "下一条 ›"
-                        text_font: ui_font_notify
-                        text_color: 0xFFFFFF
-                  on_click:
-                    - lambda: |-
-                        if (ns_notify::view > 0) ns_notify::view--;
-                        id(notify_render).execute();
-              # ③ 删除当前条：橙 FFB74D（只删一条，误触代价小）
-              - obj:
-                  align: left_mid
-                  x: 240
-                  width: 105
-                  height: 24
-                  bg_color: 0x333333
-                  border_width: 1
-                  border_color: 0x424242
-                  outline_width: 0
-                  radius: 6
-                  scrollable: false
-                  widgets:
-                    - label:
-                        align: center
-                        text: "删除"
-                        text_font: ui_font_notify
-                        text_color: 0xFFB74D
-                  on_click:
-                    - lambda: |-
-                        ns_notify::remove_at(ns_notify::view);
-                        id(notify_render).execute();
-              # ④ 全部删除：红 FF5252（一次清空 8 槽，放最右最不易误触）
-              - obj:
-                  align: left_mid
-                  x: 355
-                  width: 105
-                  height: 24
-                  bg_color: 0x333333
-                  border_width: 1
-                  border_color: 0x424242
-                  outline_width: 0
-                  radius: 6
-                  scrollable: false
-                  widgets:
-                    - label:
-                        align: center
-                        text: "全部删除"
-                        text_font: ui_font_notify
-                        text_color: 0xFF5252
-                  on_click:
-                    - lambda: |-
-                        ns_notify::clear_all();
-                        id(notify_render).execute();
+              - label:
+                  align: center
+                  text: "‹ 上一条"
+                  text_font: ui_font_notify
+                  text_color: 0xFFFFFF
+            on_click:
+              - lambda: |-
+                  if (ns_notify::view < ns_notify::count - 1) ns_notify::view++;
+                  id(notify_render).execute();
+
+        # ② 下一条（往更新翻）
+        - obj:
+            id: notify_btn_next
+            x: 125
+            y: 230
+            width: 110
+            height: 32
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  align: center
+                  text: "下一条 ›"
+                  text_font: ui_font_notify
+                  text_color: 0xFFFFFF
+            on_click:
+              - lambda: |-
+                  if (ns_notify::view > 0) ns_notify::view--;
+                  id(notify_render).execute();
+
+        # ③ 删除当前条：橙 FFB74D（只删一条，误触代价小）
+        - obj:
+            id: notify_btn_del
+            x: 245
+            y: 230
+            width: 110
+            height: 32
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  align: center
+                  text: "删除"
+                  text_font: ui_font_notify
+                  text_color: 0xFFB74D
+            on_click:
+              - lambda: |-
+                  ns_notify::remove_at(ns_notify::view);
+                  id(notify_render).execute();
+
+        # ④ 全部删除：红 FF5252（一次清空 8 槽，放最右最不易误触）
+        - obj:
+            id: notify_btn_clear
+            x: 365
+            y: 230
+            width: 110
+            height: 32
+            bg_color: 0x1E1E1E
+            border_width: 1
+            outline_width: 0
+            radius: 10
+            scrollable: false
+            widgets:
+              - label:
+                  align: center
+                  text: "全部删除"
+                  text_font: ui_font_notify
+                  text_color: 0xFF5252
+            on_click:
+              - lambda: |-
+                  ns_notify::clear_all();
+                  id(notify_render).execute();
 
         # ============ 底部四键 TAB（四页共用，见 ui/tab_bar.yaml） ============
         - !include tab_bar.yaml
@@ -253,9 +247,12 @@ script:
 
           // 浏览位置纠偏：删到空、或条数变少时回到有效范围
           if (ns_notify::view > n - 1) ns_notify::view = (n > 0) ? n - 1 : 0;
+          // 切换条现在是四个独立顶层卡片（没有外层容器），逐块显隐
+          lv_obj_t *btns[4] = {id(notify_btn_prev), id(notify_btn_next),
+                               id(notify_btn_del),  id(notify_btn_clear)};
           if (n == 0) {
             lv_obj_add_flag(id(notify_body_obj), LV_OBJ_FLAG_HIDDEN);
-            lv_obj_add_flag(id(notify_switch_bar), LV_OBJ_FLAG_HIDDEN);
+            for (int i = 0; i < 4; i++) lv_obj_add_flag(btns[i], LV_OBJ_FLAG_HIDDEN);
             lv_obj_clear_flag(id(notify_empty_label), LV_OBJ_FLAG_HIDDEN);
             lv_label_set_text(id(notify_title), "通知");
             lv_label_set_text(id(notify_time_rel), "");
@@ -263,7 +260,7 @@ script:
             return;
           }
           lv_obj_clear_flag(id(notify_body_obj), LV_OBJ_FLAG_HIDDEN);
-          lv_obj_clear_flag(id(notify_switch_bar), LV_OBJ_FLAG_HIDDEN);
+          for (int i = 0; i < 4; i++) lv_obj_clear_flag(btns[i], LV_OBJ_FLAG_HIDDEN);
           lv_obj_add_flag(id(notify_empty_label), LV_OBJ_FLAG_HIDDEN);
 
           const ns_notify::Slot &s = ns_notify::at(ns_notify::view);
