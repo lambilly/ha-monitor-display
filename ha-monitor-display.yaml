@@ -255,7 +255,8 @@ mqtt:
                      ns_notify::at(0).title.c_str(), ns_notify::at(0).msg.c_str());
 
             // 通知亮屏：默认关（省电），需要时在 HA 里打开开关
-            if (id(notify_wake_on_msg) && id(ui_screen_off)) {
+            // 注意：id(switch) 是对象指针（永不为空），开关状态要读 .state
+            if (id(notify_wake_on_msg).state && id(ui_screen_off)) {
               id(wake_screen).execute();
             }
 
