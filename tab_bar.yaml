@@ -10,6 +10,8 @@
 #     由 ui_common.yaml 的 ui_tab_highlight 在切页后按
 #     ui_current_page 上色（child 0..3 依次对应 家居/网络/系统/通知）；
 #   · 几何一旦定稿，以后调像素只改这一个文件。
+#   · 11-01 用户反馈偏右：四键整体左移 20px（一个字宽 @20px 字号），
+#     原 0/118/235/353 → -20/98/215/333，右侧留白从 38.5 增到 58.5。
 # ==========================================================
 obj:
   x: 5
@@ -24,7 +26,7 @@ obj:
   widgets:
     - label:
         align: left_mid
-        x: 0
+        x: -20
         width: 117
         text: "家居"
         text_align: CENTER
@@ -34,7 +36,7 @@ obj:
           - lvgl.page.show: dashboard_page
     - label:
         align: left_mid
-        x: 118
+        x: 98
         width: 117
         text: "网络"
         text_align: CENTER
@@ -44,7 +46,7 @@ obj:
           - lvgl.page.show: network_page
     - label:
         align: left_mid
-        x: 235
+        x: 215
         width: 117
         text: "系统"
         text_align: CENTER
@@ -54,7 +56,7 @@ obj:
           - lvgl.page.show: system_page
     - label:
         align: left_mid
-        x: 353
+        x: 333
         width: 117
         text: "通知"
         text_align: CENTER
