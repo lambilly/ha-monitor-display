@@ -223,8 +223,24 @@ static std::string wrap_hard(const std::string &s) {
   while (i < s.size()) {
     const unsigned char b = static_cast<unsigned char>(s[i]);
 
-    // LVGL recolor 标记 #RRGGBB：原样抄，不占宽度（● 的色由它决定）
+    // LVGL recolor 标记「#RRGGBB 字形#」整段当一个不可拆的原子（16 轮）：
+    //   只抄 #RRGGBB 会把折行断在和字形之间 —— 上一行末尾留一串 #B39DFF、
+    //   下一行图标没颜色，屏幕上看就是「图标丢了」。
+    //   宽度只算字形本身（hex 和两侧 # 都不上屏）。
     if (b == '#' && is_hex6(s, i + 1)) {
+      size_t j = i + 7;
+      while (j < s.size() && s[j] == ' ') j++;
+      size_t k = j;
+      while (k < s.size() && (k - j) < 8 && s[k] != '#') k++;
+      if (k > j && k < s.size() && s[k] == '#') {
+        const unsigned char mb = static_cast<unsigned char>(s[j]);
+        const int mw = (mb < 0x80) ? ch_px(mb) : 12;
+        if (w > 0 && w + mw > WRAP_PX) { out += '\n'; w = 0; }
+        out.append(s, i, k + 1 - i);
+        w += mw;
+        i = k + 1;
+        continue;
+      }
       out.append(s, i, 7);
       i += 7;
       continue;

@@ -5,7 +5,8 @@
 # 数据：MQTT home/ha-monitor-display/notify
 #       → ns_notify 8 槽环形缓冲（ui/notify_store.h，单条正文上限 3.5KB）
 # 版式（480x320）—— 卡片纵向节奏 5/30 · 4 · 187 · 4 · 32 · 4 · 49
-#   y5   h30  顶栏：MDI 响铃图标（黄 FFD54F）+ 标题（12px 白）｜右侧相对时间（12px 白）
+#   y5   h30  顶栏：MDI 响铃图标（黄 FFD54F）+ 标题（12px 白）｜中间时钟 HH:MM
+#              （第十七轮从系统页搬来，图标黄 + 时间白）｜右侧相对时间（12px 白）
 #   y39  h187 正文：仅纵向滚动容器，内嵌 450px 宽 label（12px 白，上3/左5，折行入库时切好）
 #   y230 h32  切换条：四个独立按钮（宽 100），列间 10px
 #   y266 h49  四键 TAB
@@ -94,6 +95,19 @@ lvgl:
                   text: ""
                   text_font: ui_font_notify
                   text_color: 0xFFFFFF
+              # 当前时间（HH:MM）：从系统页行 1 搬过来，居中放顶栏
+              #   第十七轮用户要求「把系统页那个时间移到通知页第一行中间」。
+              #   图标与时间放进同一个 label（ui_font_notify 里已并入 MDI 时钟
+              #   U+F0150），align: center 一次性把「图标+时间」当成一组居中，
+              #   比两个 label 各算偏移稳（label 的墨迹偏移历来不好对）。
+              #   灰 --:-- 是 SNTP 未同步时的占位，同步后由 1s interval 刷成白。
+              - label:
+                  id: notify_clock
+                  align: center
+                  text: "#757575 \U000F0150# --:--"
+                  text_font: ui_font_notify
+                  text_color: 0xFFFFFF
+                  recolor: true
 
         # ============ 正文：仅纵向滚动 (y39 h187) ============
         - obj:
@@ -356,8 +370,24 @@ script:
                    (int) lv_obj_get_scroll_x(id(notify_body_obj)),
                    (int) overflow, box_h);
 
-# --- 内容变化时才触发重绘（1s 巡检，无新消息直接 return） ---
+# --- 顶栏时钟：1 秒一次，24 小时制 HH:MM（从系统页搬来，第十七轮） ---
+#   只在本页刷；熄屏不刷（唤醒后下一秒自动补上）
 interval:
+  - interval: 1s
+    then:
+      - lambda: |-
+          if (!id(lvgl_ready)) return;
+          if (id(ui_screen_off)) return;
+          if (id(ui_current_page) != 4) return;
+
+          auto now = id(system_time).now();
+          if (!now.is_valid()) return;       // 未同步：保持灰 --:--
+          char tbuf[24];
+          snprintf(tbuf, sizeof(tbuf), "#FFD54F \U000F0150# %02d:%02d",
+                   now.hour, now.minute);
+          lv_label_set_text(id(notify_clock), tbuf);
+
+  # --- 内容变化时才触发重绘（1s 巡检，无新消息直接 return） ---
   - interval: 1s
     then:
       - lambda: |-

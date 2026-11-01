@@ -65,24 +65,9 @@ lvgl:
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
                   recolor: true
-              # 当前时间：24 小时制 HH:MM，卡片水平居中，白色
-              #   SNTP 未同步前显示灰 --:--（内联写法），同步后由 interval 刷为白
-              - label:
-                  id: sys_time_label
-                  align: center
-                  text: "#757575 --:--#"
-                  text_font: ui_font_medium
-                  text_color: 0xFFFFFF
-                  recolor: true
-              # 时钟图标（黄 FFD54F）：紧跟时间左侧、与时间构成一组
-              #   "21:50" 宽 42.1px、图标 20px、间距 4px → 图标中心相对卡片中心 -35px
-              - label:
-                  align: center
-                  x: -35
-                  text: "\U000F0150"
-                  text_font: mdi_icons_20
-                  height: 18
-                  text_color: 0xFFD54F
+              # 注：行 1 中间的「时钟 + HH:MM」已于第十七轮搬到通知页顶栏
+              #   （用户要求「把系统页那个时间移到通知页第一行中间」）。
+              #   这里不再保留任何时钟元素，本页行 1 只剩「系统状态」和「运行」。
 
         # ============ 行2：两个框 (y58 h49) ============
         # 470 - 3 = 467 → 宽 [233, 234]，x = 5 / 241
@@ -577,19 +562,6 @@ interval:
           }
 
   # ----------------------------------------------------------
-  # 当前时间（行1 居中）：1 秒一次，24 小时制 HH:MM
-  #   数据源 system_time（SNTP，Asia/Shanghai）；未同步时保持灰 --:--
+  # 当前时间：第十七轮搬到通知页顶栏（page_notify.yaml 的 notify_clock），
+  #   本页不再刷新时钟，原来的 1s interval 一并删除。
   # ----------------------------------------------------------
-  - interval: 1s
-    then:
-      - lambda: |-
-          if (!id(lvgl_ready)) return;
-          if (id(ui_screen_off)) return;      // 熄屏时不刷，唤醒后下一秒自动补上
-          if (id(ui_current_page) != 3) return;
-
-          auto now = id(system_time).now();
-          if (now.is_valid()) {
-            char tbuf[8];
-            snprintf(tbuf, sizeof(tbuf), "%02d:%02d", now.hour, now.minute);
-            lv_label_set_text(id(sys_time_label), tbuf);
-          }
