@@ -4,11 +4,10 @@
 # 入口：底部四键 TAB 的「通知」（四页共用同一套 TAB）
 # 数据：MQTT home/ha-monitor-display/notify
 #       → ns_notify 8 槽环形缓冲（ui/notify_store.h，单条正文上限 3.5KB）
-# 版式（480x320）—— 顶栏回到 30 高（12px 标题撑不起 50 高，显得空），省下的
-#   高度全给正文，卡片纵向节奏 5/30 · 4 · 187 · 4 · 32 · 4 · 49
-#   y5   h30  顶栏：MDI 铃铛（4FD8FA）+ 标题（12px 白）｜右侧时间（12px 白，带 4 位年份）
+# 版式（480x320）—— 卡片纵向节奏 5/30 · 4 · 187 · 4 · 32 · 4 · 49
+#   y5   h30  顶栏：MDI 消息图标（黄 FFD54F）+ 标题（12px 白）｜右侧时间（12px 白，带年份）
 #   y39  h187 正文：仅纵向滚动容器，内嵌 450px 宽 label（12px 白，折行在入库时切好）
-#   y230 h32  切换条：四个等宽按钮，列间 10px
+#   y230 h32  切换条：四个独立按钮，列间 10px
 #   y266 h49  四键 TAB
 # 交互：上一条 = 往更旧翻（view+1），下一条 = 往更新翻（view-1）
 #       删除 = 删当前这条；全部删除 = 清空 8 槽
@@ -16,11 +15,12 @@
 # 刷新：只在 ns_notify::rev 变化时重绘；进页强制刷一次
 # 字体：正文/标题/按钮/时间统一 ui_font_notify（12px，GB2312 一级 3755 字全量）
 #       TAB 用白名单 ui_font_large（不为大字表多付三份体积）
-# 折行：不依赖 LVGL 的 WRAP（它的行宽会被文本重算覆盖，两轮都没稳住），
-#       改由 notify_store.h 的 wrap_hard() 在入库时按 420px 硬切行；
-#       Node-RED 侧也做了同样的折行，两头双保险。
-# 配色：静态文字纯白；灰色 757575 只留给空态/占位；青色只留给 TAB 当前页与标题图标；
-#       按钮底 2A2A2A；删除橙 FFB74D、全部删除红 FF5252（只有文字变色）
+# 折行：不依赖 LVGL 的 WRAP，改由 notify_store.h 的 wrap_hard() 在入库时
+#       按 420px 硬切行；Node-RED 侧也做了同样的折行，两头双保险。
+#       渲染时把「定宽 + 定 long_mode」放到 set_text **之前**（第七轮改），
+#       因为 set_text 之后再改宽度，文本已经按旧宽度排好了。
+# 配色：静态文字纯白；灰 757575 只留给空态；黄色 FFD54F 只留给标题图标；
+#       按钮底 333333 + 1px 边 424242（分块要看得见）；删除橙 FFB74D、全部删除红 FF5252
 # ==========================================================
 
 lvgl:
@@ -36,10 +36,9 @@ lvgl:
             id(ui_current_page) = 4;   // 0 家居 / 2 网络 / 3 系统 / 4 通知（1 弃用）
             ns_notify::unread = 0;     // 进页即清未读
 
-            // 正文容器只允许纵向滚动（用户反馈原来会左右滑）：
-            //   scroll_dir 收窄成 LV_DIR_VER；宽度与 long_mode 在每次渲染里
-            //   set_text 之后重设（见 notify_render），这里只兜第一次进页。
+            // 正文容器只允许纵向滚动（用户反馈原来会左右滑）
             lv_obj_set_scroll_dir(id(notify_body_obj), LV_DIR_VER);
+            // 顺序要点：先定宽与折行策略，再设文本（见 notify_render 注释）
             lv_obj_set_width(id(notify_body), 450);
             lv_label_set_long_mode(id(notify_body), LV_LABEL_LONG_WRAP);
             lv_obj_scroll_to_y(id(notify_body_obj), 0, LV_ANIM_OFF);
@@ -49,7 +48,7 @@ lvgl:
             id: ui_apply_bg
             page: 3
       widgets:
-        # ============ 顶栏：铃铛 + 标题 ｜ 时间 (y5 h30) ============
+        # ============ 顶栏：消息图标 + 标题 ｜ 时间 (y5 h30) ============
         - obj:
             x: 5
             y: 5
@@ -61,14 +60,17 @@ lvgl:
             radius: 10
             scrollable: false
             widgets:
-              # 固定 MDI 铃铛：mdicons.mdi-bell（U+F009A），青色＝标题标识色
+              # 标题图标：mdi:message-text（U+F0369），黄 FFD54F
+              #   第七轮由铃铛换过来 —— 气泡形状在小尺寸下比铃铛更好认；
+              #   颜色从青改成黄，与 TAB 当前页的青区分开，也提示「有内容等你读」。
               - label:
+                  id: notify_title_icon
                   align: left_mid
                   x: 1
-                  text: "\U000F009A"
+                  text: "\U000F0369"
                   text_font: mdi_icons_20
                   height: 18
-                  text_color: 0x4FD8FA
+                  text_color: 0xFFD54F
               - label:
                   id: notify_title
                   align: left_mid
@@ -81,12 +83,13 @@ lvgl:
                   text_color: 0xFFFFFF
               # 时间：白字、固定左起点（label 宽度随文本走，右对齐不可靠）
               #   格式 2026-11-01 18:07 —— 4 位年份 + 月日 + 时分，16 字符 ≈ 99px
-              #   344 + 99 = 443，卡片右侧仍留 27px；标题上限 24 字（288px）到 311，
-              #   中间 33px 空隙，长标题也压不到时间。
+              #   第七轮：用户要求左移两个数字宽（12px 下 ASCII 7px × 2 = 14）
+              #           344 → 330，右缘 330+99 = 429，右侧留 41px
+              #   标题上限 24 字（288px）到 311，中间 19px 空隙
               - label:
                   id: notify_time_rel
                   align: left_mid
-                  x: 344
+                  x: 330
                   text: ""
                   text_font: ui_font_notify
                   text_color: 0xFFFFFF
@@ -130,9 +133,11 @@ lvgl:
             text_font: ui_font_medium
             text_color: 0x757575
 
-        # ============ 切换条 (y230 h32)：四个等宽按钮，列间 10px ============
+        # ============ 切换条 (y230 h32)：四个独立按钮，列间 10px ============
         #   470 内容宽，左右各 10 内边距 → 450 可分；4 块 + 3×10 间隙
-        #   → 每块 105，位置 10 / 125 / 240 / 355（355+105 = 460，右边距 10，对称）
+        #   → 每块 105，左边缘 10 / 125 / 240 / 355（355+105 = 460，右边距 10，对称）
+        #   第七轮：四个 obj 一直都在，但底色 2A2A2A 与卡片底 1E1E1E 太接近，
+        #   暗屏上看着像一条整条 —— 提亮到 333333 并加 1px 边 424242，分块就清楚了。
         - obj:
             id: notify_switch_bar
             x: 5
@@ -145,14 +150,15 @@ lvgl:
             radius: 10
             scrollable: false
             widgets:
-              # 上一条（往更旧翻）
+              # ① 上一条（往更旧翻）
               - obj:
                   align: left_mid
                   x: 10
                   width: 105
                   height: 24
-                  bg_color: 0x2A2A2A
-                  border_width: 0
+                  bg_color: 0x333333
+                  border_width: 1
+                  border_color: 0x424242
                   outline_width: 0
                   radius: 6
                   scrollable: false
@@ -166,14 +172,15 @@ lvgl:
                     - lambda: |-
                         if (ns_notify::view < ns_notify::count - 1) ns_notify::view++;
                         id(notify_render).execute();
-              # 下一条（往更新翻）
+              # ② 下一条（往更新翻）
               - obj:
                   align: left_mid
                   x: 125
                   width: 105
                   height: 24
-                  bg_color: 0x2A2A2A
-                  border_width: 0
+                  bg_color: 0x333333
+                  border_width: 1
+                  border_color: 0x424242
                   outline_width: 0
                   radius: 6
                   scrollable: false
@@ -187,14 +194,15 @@ lvgl:
                     - lambda: |-
                         if (ns_notify::view > 0) ns_notify::view--;
                         id(notify_render).execute();
-              # 删除当前条：橙 FFB74D（只删一条，误触代价小）
+              # ③ 删除当前条：橙 FFB74D（只删一条，误触代价小）
               - obj:
                   align: left_mid
                   x: 240
                   width: 105
                   height: 24
-                  bg_color: 0x2A2A2A
-                  border_width: 0
+                  bg_color: 0x333333
+                  border_width: 1
+                  border_color: 0x424242
                   outline_width: 0
                   radius: 6
                   scrollable: false
@@ -208,14 +216,15 @@ lvgl:
                     - lambda: |-
                         ns_notify::remove_at(ns_notify::view);
                         id(notify_render).execute();
-              # 全部删除：红 FF5252（一次清空 8 槽，不可撤销，放最右最不易误触）
+              # ④ 全部删除：红 FF5252（一次清空 8 槽，放最右最不易误触）
               - obj:
                   align: left_mid
                   x: 355
                   width: 105
                   height: 24
-                  bg_color: 0x2A2A2A
-                  border_width: 0
+                  bg_color: 0x333333
+                  border_width: 1
+                  border_color: 0x424242
                   outline_width: 0
                   radius: 6
                   scrollable: false
@@ -258,16 +267,27 @@ script:
 
           const ns_notify::Slot &s = ns_notify::at(ns_notify::view);
           lv_label_set_text(id(notify_title), s.title.c_str());
-          lv_label_set_text(id(notify_body), s.msg.c_str());
 
-          // 宽度/long_mode 每次 set_text 后重设一次（兜底）：
-          //   LVGL 会在设文本时重算尺寸，即使 YAML 里写了 width: 450，
-          //   运行期仍可能退回内容宽。不过现在真正的折行由 notify_store.h
-          //   的 wrap_hard() 在入库时用真换行符切好，这里只保证滚动容器
-          //   不会横向跑偏。set_text 之后再调，顺序不能反。
+          // 正文：先把宽度与折行策略定死，再塞文本（第七轮调了顺序）
+          //   以前是 set_text 之后才 set_width + update_layout —— 但 set_text
+          //   那一刻文本就已经按旧尺寸排好了，之后改宽度通常只影响外框，
+          //   行不会重排，于是「不换行」反复出现。顺序反过来才稳：
+          //     ① set_width(450)  让 label 有明确行宽
+          //     ② set_long_mode(WRAP)
+          //     ③ set_text        此时才排版，按 450 折
+          //   兜底：入库时 wrap_hard() 已插好真换行符，即使 ①② 都不生效也照断。
           lv_obj_set_width(id(notify_body), 450);
           lv_label_set_long_mode(id(notify_body), LV_LABEL_LONG_WRAP);
-          lv_obj_update_layout(id(notify_body));   // 立刻算出折行后的高度
+
+          // 第三重保险（第七轮加）：渲染时再折一次，幂等
+          //   已经折好的文本再跑一遍 wrap_hard 不会多断（每行本就 ≤420px），
+          //   但缓冲里「入库时还没折行」的老消息会被这一遍救回来——
+          //   用户不重启设备时，8 个槽里很可能还留着旧排版的内容。
+          //   复用静态缓冲，避免每次重绘都分配 3.5KB。
+          static std::string render_buf;
+          render_buf = ns_notify::wrap_hard(s.msg);
+          lv_label_set_text(id(notify_body), render_buf.c_str());
+          lv_obj_update_layout(id(notify_body));   // 立刻算出折行后的高度（滚动要用）
 
           // 换内容 / 切条后回到顶部（自动滚动从第一行开始）
           lv_obj_scroll_to_y(id(notify_body_obj), 0, LV_ANIM_OFF);
@@ -294,7 +314,15 @@ script:
           // 阅读即已读：停在最新一条时清未读
           if (ns_notify::view == 0) ns_notify::unread = 0;
 
-          ESP_LOGD("notify", "重绘 view=%d/%d rev=%u", ns_notify::view, n, (unsigned) ns_notify::rev);
+          // 渲染后测一下真实几何 —— 抓串口就能判断折行到底卡在哪一层：
+          //   w=450 h≈(行数×17)  → 正常
+          //   w=很宽 h=17        → 宽度没锁住，文本排成一行
+          //   w=450 h=17 但有换行符 → LVGL 没按 \n 断（不太可能，通常前面 h 会涨）
+          ESP_LOGD("notify", "重绘 view=%d/%d rev=%u  正文label w=%d h=%d  文本%u字节",
+                   ns_notify::view, n, (unsigned) ns_notify::rev,
+                   (int) lv_obj_get_width(id(notify_body)),
+                   (int) lv_obj_get_height(id(notify_body)),
+                   (unsigned) s.msg.size());
 
 # --- 内容变化时才触发重绘（1s 巡检，无新消息直接 return） ---
 interval:

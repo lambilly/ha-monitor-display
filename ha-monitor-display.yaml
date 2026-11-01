@@ -49,6 +49,10 @@ logger:
   level: INFO
   logs:
     lvgl: WARN
+    # 通知链路：调试折行问题时把 ESP_LOGD 也打出来（用户 11-01 要求抓串口）
+    #   默认全局 INFO 会吞掉 D 级日志，这里单独给 notify 这个 tag 放开。
+    #   只在「有新消息 / 重绘」时打，量很小，平时留着不影响。
+    notify: DEBUG
 
 api:
   encryption:
@@ -255,9 +259,21 @@ mqtt:
 
             // 去重在 push 内部做（要拿归一 + 折行后的值比才准，见 notify_store.h）
             ns_notify::push(nt, nm, nts);
-            ESP_LOGI("notify", "入列 共%d条 未读%d条 [%s] %s",
-                     ns_notify::count, ns_notify::unread,
-                     ns_notify::at(0).title.c_str(), ns_notify::at(0).msg.c_str());
+            {
+              // 诊断日志（用户 11-01 要求抓串口）：一行看完入库结果
+              //   正文 N 字节 / M 行 —— 行数是数 '\n' 得来的
+              //   若 行数=1 而字节数很大，说明 wrap_hard 没跑到（折行没生效）
+              //   再往下一条「全文」把正文原样吐出来，串口里会真的断成多行
+              const std::string &mm = ns_notify::at(0).msg;
+              int nl = 0;
+              for (size_t k = 0; k < mm.size(); k++)
+                if (mm[k] == '\n') nl++;
+              ESP_LOGI("notify", "入列 共%d条 未读%d条 [%s] 正文%u字节/%d行 首行:%.46s",
+                       ns_notify::count, ns_notify::unread,
+                       ns_notify::at(0).title.c_str(),
+                       (unsigned) mm.size(), nl + 1, mm.c_str());
+              ESP_LOGI("notify", "全文:\n%s", mm.c_str());
+            }
 
             // 通知亮屏：默认关（省电），需要时在 HA 里打开开关
             // 注意：id(switch) 是对象指针（永不为空），开关状态要读 .state
@@ -440,11 +456,11 @@ lvgl:
       # 未读红点（v2.0 NOTIFY）：压在 TAB「通知」键的右上角
       #   放在 top_layer 而不是 tab_bar.yaml 里 —— 片段被四页各 include 一次，
       #   带 id 会重复定义；这里单实例，四个页面顶部都能看到同一个点。
-      #   x 跟着 TAB 走：TAB 第六轮整体左移 10px（通知键墨迹 382~422），红点 437→427
+      #   x 跟着 TAB 走：TAB 第七轮再左移 10px（通知键墨迹 372~412），红点 427→417
       - obj:
           id: notify_badge
           align: TOP_LEFT
-          x: 427
+          x: 417
           y: 279
           width: 6
           height: 6

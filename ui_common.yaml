@@ -218,7 +218,7 @@ font:
       - "\U000F029A"   # mdi:gauge 系统负载（系统页中列标题）
       - "\U000F062E"   # mdi:tune 网络参数（系统页右列标题）
       # --- 通知页（v2.0 NOTIFY）---
-      - "\U000F009A"   # mdi:bell 通知（通知页顶栏标题图标）
+      - "\U000F0369"   # mdi:message-text 通知（通知页顶栏标题图标，第七轮换）
 
   # 图标 12px 版：与 mdi_icons(16px) 共用同一份字形表
   #   用途：文字用 ui_font_small(12px) 的行，图标也用 12px 才与文字等宽

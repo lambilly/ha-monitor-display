@@ -22,8 +22,11 @@
 #       CLIP 锁宽，兼容「width 生效」的环境；不生效时内容宽也是 40，结果一致
 #     · 不写 text_align，走默认 LEFT，两种情形下墨迹位置完全相同
 #   第五轮先按左右各 38 对称排（38/156/274/392），用户实测仍偏右，
-#   第六轮直接整体左移 10px → 墨迹左 28 / 146 / 264 / 382（间隙不变，仍 78）
-#     墨迹右： 68 / 186 / 304 / 422  →  左 28 / 右 48
+#   第六轮整体左移 10px → 28/146/264/382，用户实测仍偏右，
+#   第七轮再左移 10px → 墨迹左 18 / 136 / 254 / 372（间隙不变，仍 78）
+#     墨迹右： 58 / 176 / 294 / 412  →  左 18 / 右 58
+#   说明：这几轮「偏右」的体感来自 LVGL 行盒左侧还有一点内边距，
+#   实际墨迹比 x 再右 1~2px；用户按视觉调，就按用户眼睛来。
 # ==========================================================
 obj:
   x: 5
@@ -38,7 +41,7 @@ obj:
   widgets:
     - label:
         align: left_mid
-        x: 28
+        x: 18
         width: 40
         long_mode: CLIP
         text: "家居"
@@ -48,7 +51,7 @@ obj:
           - lvgl.page.show: dashboard_page
     - label:
         align: left_mid
-        x: 146
+        x: 136
         width: 40
         long_mode: CLIP
         text: "网络"
@@ -58,7 +61,7 @@ obj:
           - lvgl.page.show: network_page
     - label:
         align: left_mid
-        x: 264
+        x: 254
         width: 40
         long_mode: CLIP
         text: "系统"
@@ -68,7 +71,7 @@ obj:
           - lvgl.page.show: system_page
     - label:
         align: left_mid
-        x: 382
+        x: 372
         width: 40
         long_mode: CLIP
         text: "通知"
