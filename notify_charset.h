@@ -2,7 +2,7 @@
 // notify_charset.h —— 自动生成，勿手改
 //   由 .workbuddy/gen_charset_h.py 从 ui_common.yaml 的 ui_font_notify
 //   字形表导出。改了通知字表后重跑该脚本。
-//   共 3945 个码位（≈ 7.7KB flash），二分查找。
+//   BMP 码位 3945 个（uint16 ≈ 7.7KB flash）+ 图标码位 53 个（uint32）。
 // ==========================================================
 #pragma once
 
@@ -345,9 +345,26 @@ static const uint16_t CHARSET_CODES[] = {
 };
 static const size_t CHARSET_COUNT = sizeof(CHARSET_CODES) / sizeof(CHARSET_CODES[0]);
 
+// >0xFFFF 的内联图标码位（MDI 并进正文用字体，见 add_mdi_to_notify_font.py）
+static const uint32_t ICON_CODES[] = {
+  0xF0004, 0xF000E, 0xF001B, 0xF0026, 0xF0079, 0xF009A, 0xF00B5, 0xF00ED,
+  0xF010B, 0xF0114, 0xF011C, 0xF0150, 0xF0159, 0xF0176, 0xF0210, 0xF0238,
+  0xF0241, 0xF0290, 0xF029A, 0xF02D1, 0xF02DC, 0xF02E3, 0xF0335, 0xF034E,
+  0xF0369, 0xF0438, 0xF04B9, 0xF04C3, 0xF04CE, 0xF04DC, 0xF050F, 0xF0584,
+  0xF058C, 0xF058E, 0xF0590, 0xF0594, 0xF0595, 0xF0597, 0xF0599, 0xF059D,
+  0xF05A8, 0xF05A9, 0xF05E0, 0xF070D, 0xF072A, 0xF07E4, 0xF0928, 0xF09A0,
+  0xF0A72, 0xF0D43, 0xF0F54, 0xF0F92, 0xF0FEF,
+};
+static const size_t ICON_COUNT = sizeof(ICON_CODES) / sizeof(ICON_CODES[0]);
+
 // 该码位在屏幕字库里有没有字形
 static inline bool in_charset(uint32_t cp) {
-  if (cp < 0x20 || cp > 0xFFFF) return false;
+  if (cp < 0x20) return false;
+  if (cp > 0xFFFF) {                     // 图标走小表（几十个，线性够快）
+    for (size_t i = 0; i < ICON_COUNT; i++)
+      if (ICON_CODES[i] == cp) return true;
+    return false;
+  }
   size_t lo = 0, hi = CHARSET_COUNT;
   while (lo < hi) {
     const size_t mid = (lo + hi) / 2;

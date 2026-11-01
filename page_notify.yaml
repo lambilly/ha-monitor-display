@@ -6,7 +6,7 @@
 #       → ns_notify 8 槽环形缓冲（ui/notify_store.h，单条正文上限 3.5KB）
 # 版式（480x320）—— 卡片纵向节奏 5/30 · 4 · 187 · 4 · 32 · 4 · 49
 #   y5   h30  顶栏：MDI 响铃图标（黄 FFD54F）+ 标题（12px 白）｜右侧相对时间（12px 白）
-#   y39  h187 正文：仅纵向滚动容器，内嵌 450px 宽 label（12px 白，折行在入库时切好）
+#   y39  h187 正文：仅纵向滚动容器，内嵌 450px 宽 label（12px 白，上3/左5，折行入库时切好）
 #   y230 h32  切换条：四个独立按钮（宽 100），列间 10px
 #   y266 h49  四键 TAB
 # 交互：上一条 = 往更旧翻（view+1），下一条 = 往更新翻（view-1）
@@ -16,7 +16,7 @@
 # 字体：正文/标题/按钮/时间统一 ui_font_notify（12px，GB2312 一级 3755 字全量）
 #       TAB 用白名单 ui_font_large（不为大字表多付三份体积）
 # 折行：不依赖 LVGL 的 WRAP，改由 notify_store.h 的 wrap_hard() 在入库时
-#       按 420px 硬切行；Node-RED 侧也做了同样的折行，两头双保险。
+#       按 425px 硬切行；Node-RED 侧也做了同样的折行，两头双保险。
 #       渲染时把「定宽 + 定 long_mode」放到 set_text **之前**（第七轮改），
 #       因为 set_text 之后再改宽度，文本已经按旧宽度排好了。
 # 配色：静态文字纯白；灰 757575 只留给空态；黄色 FFD54F 只留给标题图标；
@@ -84,11 +84,12 @@ lvgl:
                   text_color: 0xFFFFFF
               # 时间：白字、固定左起点（label 宽度随文本走，右对齐不可靠）
               #   第九轮恢复相对时间：刚刚 / N 分钟前 / N 小时前 / N 天前
-              #   最长「59 分钟前」≈ 55px，x330 起，右缘 385，右侧留 85px
+              #   第十轮：用户觉得「刚刚」太靠左，右移 30px（3 个汉字宽）→ x360
+              #   最长「59 分钟前」≈ 53px，右缘 413，右侧留 57px
               - label:
                   id: notify_time_rel
                   align: left_mid
-                  x: 330
+                  x: 360
                   text: ""
                   text_font: ui_font_notify
                   text_color: 0xFFFFFF
@@ -107,13 +108,16 @@ lvgl:
             scrollable: true
             scrollbar_mode: "OFF"
             widgets:
-              # 正文：左右各留 10px（470 - 10 - 450 = 10，两边等距）
-              #   行在入库时按 420px 切好，正文可用 450 → 右侧天然留 30px。
+              # 正文：上 3 / 左 5（第十轮按用户「上面和左边留白太多，各减 5px」）
+              #   以前是 y8 / x10 —— 卡片本身已有 1px 边框，再加上 8/10 的
+              #   内边距，第一行显得离顶边太远。
+              #   行在入库时按 425px 切好，正文可用 450 → 右侧留 25px
+              #   （x 从 10 收到 5 的同时把折行从 420 放到 425，右边留白不变）。
               #   text_align LEFT：默认居中会让短行看起来偏，通知应左对齐。
               - label:
                   id: notify_body
-                  x: 10
-                  y: 8
+                  x: 5
+                  y: 3
                   width: 450
                   long_mode: WRAP
                   text_align: LEFT
@@ -365,8 +369,8 @@ interval:
             hold_until = millis() + 3000;
           }
 
-          // 内容不超过一屏（上下各 8px 内边距）就不用滚
-          if (lv_obj_get_height(lb) + 16 <= lv_obj_get_height(box)) return;
+          // 内容不超过一屏（上 3 / 下 3 的内边距，见正文 label 的 y）
+          if (lv_obj_get_height(lb) + 6 <= lv_obj_get_height(box)) return;
 
           // 手指刚动过：暂停，别跟人抢
           if (lv_disp_get_inactive_time(NULL) < 4000) {

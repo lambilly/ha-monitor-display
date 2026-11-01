@@ -165,15 +165,15 @@ static std::string split_items(const std::string &s) {
 //     右端直接顶到卡片边框——连试两轮 set_width + update_layout 都没稳住。
 //   所以在入库时就把长行自己切开，插真换行符：
 //     · 换行符是硬断行，宽度策略再怎么变都照断；
-//     · 每行最多 420px（12px 字号 35 个汉字），而正文可用宽 450px，
-//       于是右侧天然留出 30px（用户 11-01 要求再宽 12px：432→420）；
+//     · 每行最多 425px，而正文可用宽 450px，于是右侧天然留出 25px
+//       （第十轮：左边距 10→5，折行同步 420→425，右侧留白保持原样）；
 //     · 行首避头点：，。！？、；：）」』】》 这类标点若正好落在行首，
 //       就跟着上一行一起收尾（允许该行超宽 12px，仍在 450px 内）。
 //   宽度口径（fontTools 实测 NotoSansSC-SemiBold，12px）：
 //     汉字/全角/符号 12px，ASCII 字母数字 7px，空格 3px
 //   LVGL 的 #RRGGBB 着色标记不计宽（两个 # 之间的六位十六进制原样透传）。
 // ----------------------------------------------------------
-static const int WRAP_PX = 420;
+static const int WRAP_PX = 425;
 
 static inline int ch_px(uint32_t cp) {
   if (cp == ' ') return 3;

@@ -155,6 +155,61 @@ font:
       - "纸志挚掷至致置帜峙制智秩稚质炙痔滞治窒中盅忠钟衷终种肿重仲众舟周州洲诌粥轴肘帚咒皱宙昼骤珠株蛛朱猪诸诛逐竹烛煮拄瞩嘱主著"
       - "柱助蛀贮铸筑住注祝驻抓爪拽专砖转撰赚篆桩庄装妆撞壮状椎锥追赘坠缀谆准捉拙卓桌琢茁酌啄着灼浊兹咨资姿滋淄孜紫仔籽滓子自渍字"
       - "鬃棕踪宗综总纵邹走奏揍租足卒族祖诅阻组钻纂嘴醉最罪尊遵昨左佐柞做作坐座"
+      # ---- 通知正文内联图标（MDI 并进 NotoSansSC，见
+      #   .workbuddy/add_mdi_to_notify_font.py；颜色由 NR 侧按类别给） ----
+      - "\U000F0599"   # mdi:weather-sunny
+      - "\U000F0594"   # mdi:weather-night
+      - "\U000F0595"   # mdi:weather-partly-cloudy
+      - "\U000F0590"   # mdi:weather-cloudy
+      - "\U000F0597"   # mdi:weather-rainy
+      - "\U000F059D"   # mdi:weather-windy
+      - "\U000F050F"   # mdi:thermometer
+      - "\U000F058E"   # mdi:water-percent
+      - "\U000F029A"   # mdi:gauge
+      - "\U000F00B5"   # mdi:blur
+      - "\U000F07E4"   # mdi:molecule-co2
+      - "\U000F0D43"   # mdi:air-filter
+      - "\U000F05A8"   # mdi:white-balance-sunny
+      - "\U000F02DC"   # mdi:home
+      - "\U000F0F54"   # mdi:home-thermometer
+      - "\U000F0335"   # mdi:lightbulb
+      - "\U000F001B"   # mdi:air-conditioner
+      - "\U000F0210"   # mdi:fan
+      - "\U000F0290"   # mdi:fridge
+      - "\U000F072A"   # mdi:washing-machine
+      - "\U000F070D"   # mdi:robot-vacuum
+      - "\U000F04C3"   # mdi:speaker
+      - "\U000F0176"   # mdi:coffee
+      - "\U000F0438"   # mdi:radiator
+      - "\U000F04B9"   # mdi:sofa
+      - "\U000F02E3"   # mdi:bed
+      - "\U000F09A0"   # mdi:shower
+      - "\U000F0A72"   # mdi:solar-power
+      - "\U000F058C"   # mdi:water
+      - "\U000F0F92"   # mdi:water-boiler
+      - "\U000F0238"   # mdi:fire
+      - "\U000F0241"   # mdi:flash
+      - "\U000F0079"   # mdi:battery
+      - "\U000F05A9"   # mdi:wifi
+      - "\U000F0928"   # mdi:wifi-strength-4
+      - "\U000F011C"   # mdi:cellphone
+      - "\U000F0004"   # mdi:account
+      - "\U000F000E"   # mdi:account-multiple
+      - "\U000F0150"   # mdi:clock-outline
+      - "\U000F00ED"   # mdi:calendar
+      - "\U000F034E"   # mdi:map-marker
+      - "\U000F0114"   # mdi:cash
+      - "\U000F0584"   # mdi:wallet
+      - "\U000F0FEF"   # mdi:credit-card
+      - "\U000F04DC"   # mdi:store
+      - "\U000F010B"   # mdi:car
+      - "\U000F04CE"   # mdi:star
+      - "\U000F05E0"   # mdi:check-circle
+      - "\U000F0159"   # mdi:close-circle
+      - "\U000F0026"   # mdi:alert
+      - "\U000F02D1"   # mdi:heart
+      - "\U000F009A"   # mdi:bell
+      - "\U000F0369"   # mdi:message-text
 
   - file: "fonts/materialdesignicons-webfont.ttf"
     id: mdi_icons
