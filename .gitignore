@@ -1,0 +1,20 @@
+# 发布包与二进制产物（用 git tag 代替）
+*.zip
+
+# 工具与缓存
+.workbuddy/
+
+# 对话全文（含内网地址与设备细节，不入库）
+*对话*记录*.md
+
+# 冗余字体：配置只引用 SemiBold 与 MDI，Regular 本地留存不入库
+fonts/NotoSansSC-Regular.ttf
+/NotoSansSC-Regular.ttf
+/materialdesignicons-webfont.ttf
+fonts/*.ttc
+
+# 临时文件
+*.tmp
+
+# 本地 ui/ 镜像目录（真机结构，main 采用根目录平铺；内容与根目录文件同源）
+ui/

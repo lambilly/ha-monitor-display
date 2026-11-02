@@ -1,0 +1,595 @@
+# ==========================================================
+# 主配置：设备 / 网络 / 硬件 / HA 实体
+# 页面布局拆分到 ui/ 目录，改界面只需改对应文件：
+#   ui/ui_common.yaml     公共资源（字体、全局变量、时钟刷新）
+#   ui/page_dashboard.yaml       页面1 概览
+#   ui/page_network.yaml         页面2 网络
+#   ui/page_system.yaml          页面3 系统
+#
+# 接入方式（方案C，双通道并存）：
+#   api  : 本地局域网走 ESPHome Native API（连 Home Assistant，低延迟）
+#   mqtt : 外网走 MQTT/TLS（8883），脱离 HA 也能远程读取/控制
+# ==========================================================
+
+packages:
+  # 页面顺序 = LVGL 页面列表顺序，第一个为开机默认页（概览）
+  page_dashboard: !include ui/page_dashboard.yaml
+  page_network: !include ui/page_network.yaml
+  page_system: !include ui/page_system.yaml
+  ui_common: !include ui/ui_common.yaml
+esphome:
+  name: ha-monitor-display
+  friendly_name: HA Monitor Display
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: ESP32S3
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+logger:
+  level: INFO
+  logs:
+    lvgl: WARN
+
+api:
+  encryption:
+    key: !secret api_key
+  # API 重连参数：网络抖动时自动恢复，不必改
+  reboot_timeout: 15min
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+# ==========================================================
+# MQTT（方案C：外网远程通道）
+# ==========================================================
+# 使用步骤：
+#   1. 在 secrets.yaml 里补两行：
+#        mqtt_host: your-broker.example.com   # 外网可达的 broker 域名
+#        mqtt_password: your-strong-password
+#   2. broker 端（推荐 Mosquitto / EMQX）启用 8883 TLS + 用户名密码，
+#      路由器只映射 8883 端口，绝不要暴露 1883 明文
+#   3. 若 broker 用自签证书，把 CA 证书 PEM 存为
+#        fonts/../mqtt_ca.pem（本项目根目录）并解开 tls 下两行注释
+# ==========================================================
+mqtt:
+  broker: !secret mqtt_host
+  port: 8883
+  username: ha-monitor
+  password: !secret mqtt_password
+  topic_prefix: esphome/ha-monitor-display
+  discovery: true            # HA 若订阅同一 broker 会自动发现实体
+  discovery_retain: true
+  keepalive: 30s
+  reboot_timeout: 15min      # 连不上 MQTT 15 分钟才重启（不要设太短）
+  # --- TLS（外网必须开启）---
+  skip_cert_cn_check: false
+  # 自签证书时：把 CA 放到项目根目录 mqtt_ca.pem 并取消下面两行注释
+  # ca_certificate: file://mqtt_ca.pem
+  # skip_cert_cn_check: true   # 仅自签且域名不匹配时才允许
+  # --- 主题规划 ---
+  log_topic:
+    topic: esphome/ha-monitor-display/logs
+    level: INFO
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: Fan Monitor Fallback
+    password: !secret ap_password
+
+captive_portal:
+web_server:
+  port: 80
+  version: 3
+  auth:
+    username: admin
+    password: !secret web_password
+    type: digest
+
+# --- 屏幕硬件配置 ---
+spi:
+  id: display_spi
+  clk_pin: GPIO12
+  mosi_pin: GPIO11
+  miso_pin: GPIO13
+
+i2c:
+  id: touch_i2c
+  scl: GPIO6
+  sda: GPIO7
+  frequency: 100kHz
+
+output:
+  - platform: ledc
+    pin:
+      number: GPIO15
+    id: lcd_backlight_pwm
+    frequency: 20kHz
+
+light:
+  - platform: monochromatic
+    id: lcd_backlight
+    name: "Screen Light"
+    icon: mdi:monitor
+    output: lcd_backlight_pwm
+    restore_mode: ALWAYS_ON
+
+display:
+  - platform: mipi_spi
+    id: lcd_display
+    model: CUSTOM
+    dimensions: 320x480
+    spi_id: display_spi
+    cs_pin: GPIO10
+    dc_pin: GPIO9
+    reset_pin: GPIO8
+    data_rate: 40MHz
+    transform:
+      mirror_x: true
+      mirror_y: false
+      swap_xy: false
+    rotation: 0
+    color_order: bgr
+    invert_colors: true
+    auto_clear_enabled: false
+    update_interval: never
+    init_sequence:
+      - [0xF0, 0xC3]
+      - [0xF0, 0x96]
+      - [0xB4, 0x02]
+      - [0xB7, 0xC6]
+      - [0xC0, 0xC0, 0x00]
+      - [0xC1, 0x13]
+      - [0xC2, 0xA7]
+      - [0xC5, 0x21]
+      - [0xE8, 0x40, 0x8A, 0x1B, 0x1B, 0x23, 0x0A, 0xAC, 0x33]
+      - [0xE0, 0xD2, 0x05, 0x08, 0x06, 0x05, 0x02, 0x2A, 0x44, 0x46, 0x39, 0x15, 0x15, 0x2D, 0x32]
+      - [0xE1, 0x96, 0x08, 0x0C, 0x09, 0x09, 0x25, 0x2E, 0x43, 0x42, 0x35, 0x11, 0x11, 0x28, 0x2E]
+      - [0xF0, 0x3C]
+      - [0xF0, 0x69]
+
+touchscreen:
+  - platform: ft63x6
+    id: touch_panel
+    i2c_id: touch_i2c
+    address: 0x38
+    display: lcd_display
+    reset_pin: GPIO5
+    update_interval: 20ms
+    on_touch:
+      - lambda: id(ui_touch_active) = true;
+      # 熄屏状态下任意触摸立即点亮
+      - if:
+          condition:
+            lambda: return id(ui_screen_off);
+          then:
+            - script.execute: wake_screen
+    on_release:
+      - lambda: id(ui_touch_active) = false;
+
+# --- 时间 ---
+time:
+  - platform: sntp
+    id: system_time
+    timezone: Asia/Shanghai
+  - platform: homeassistant
+    id: ha_time
+    timezone: Asia/Shanghai
+
+# ==========================================================
+# LVGL 主体（仅保留全局设置，页面在 ui/page_*.yaml）
+# ==========================================================
+lvgl:
+  displays: [lcd_display]
+  touchscreens: [touch_panel]
+  rotation: 90                      # 横屏 480x320
+  buffer_size: "25%"
+  draw_rounding: 8
+  resume_on_input: false
+  on_boot:
+    - delay: 800ms
+    - lambda:
+        ESP_LOGI("custom", "LVGL is ready!");
+        id(lvgl_ready) = true;
+    # 开机默认进入概览页
+    - lvgl.page.show: dashboard_page
+  default_font: ui_font_small
+  theme:
+    label:
+      pressed:
+        text_color: 0xFFFFFF
+
+# ==========================================================
+# 调试组件（ESPHome 2026.x 新结构，缺一不可）
+#   ① 顶层 debug:   —— 只声明 id，作为数据的“宿主组件”
+#   ② sensor: 下    —— platform: debug + loop_time / free 才是具体传感器
+#   只写②不写① → "Component sensor.debug requires component debug"
+#   只写①不写② → "The 'loop_time' option has been moved to the
+#                  'debug' sensor component"
+# ==========================================================
+debug:
+  id: dbg_comp
+  update_interval: 10s      # 数据刷新周期（loop_time / free 共用）
+
+# ==========================================================
+# HA 数据源
+# ==========================================================
+sensor:
+  # --- 网络页数据源 ---
+  - platform: homeassistant
+    id: ha_fan1_rpm
+    entity_id: sensor.fan_pwm_controller_fan_1_speed
+    internal: true
+  - platform: homeassistant
+    id: ha_fan2_rpm
+    entity_id: sensor.fan_pwm_controller_fan_2_speed
+    internal: true
+  - platform: homeassistant
+    id: ha_fan1_speed
+    entity_id: fan.fan_pwm_controller_fan_1
+    attribute: percentage
+    internal: true
+  - platform: homeassistant
+    id: ha_fan2_speed
+    entity_id: fan.fan_pwm_controller_fan_2
+    attribute: percentage
+    internal: true
+
+  # --- 网络页行3 右列：四路风扇温度 ---
+  # 前扇 = 机柜前扇控制器自带温度；后/进/出扇 = 三个米家温湿度计（t2）
+  - platform: homeassistant
+    id: ha_temp_front
+    entity_id: sensor.fan_pwm_controller_temperature
+    internal: true
+  - platform: homeassistant
+    id: ha_temp_back
+    entity_id: sensor.miaomiaoc_cn_blt_3_1f33gjhbc4k00_t2_temperature_p_2_1
+    internal: true
+  - platform: homeassistant
+    id: ha_temp_in
+    entity_id: sensor.miaomiaoc_cn_blt_3_1f308atcc4o01_t2_temperature_p_2_1
+    internal: true
+  - platform: homeassistant
+    id: ha_temp_out
+    entity_id: sensor.miaomiaoc_cn_blt_3_1fpsendsc4g01_t2_temperature_p_2_1
+    internal: true
+
+  # --- 本机状态 ---
+  - platform: wifi_signal
+    id: wifi_rssi
+    name: "WiFi RSSI"
+    icon: mdi:wifi
+    update_interval: 15s
+  - platform: uptime
+    id: uptime_sensor
+    icon: mdi:clock-start
+    name: "Uptime"
+
+  # --- 系统页：调试类数据 ---
+  # loop_time / free 只能写在 platform: debug 下（由顶层 debug: 组件接管）。
+  # 主循环耗时（毫秒），越大说明 LVGL 刷新越吃 CPU
+  - platform: debug
+    loop_time:
+      id: loop_time_sensor
+      name: "Loop Time"
+  # 可用堆内存（字节），系统页里除以 1024 显示为 K
+  - platform: debug
+    free:
+      id: free_heap_sensor
+      name: "Free Heap"
+
+  # --- 概览页数据源 ---
+  # 概览页行2 四格：在家人数 / 客人数 / 总功率 / 电器数
+  - platform: homeassistant
+    id: ha_family_home
+    entity_id: sensor.family_home_count
+    internal: true
+  - platform: homeassistant
+    id: ha_guest_visit
+    entity_id: sensor.guest_visit_count
+    internal: true
+  # 在线手机数（台）
+  - platform: homeassistant
+    id: ha_phone_online
+    entity_id: sensor.phone_online_count
+    internal: true
+
+  # --- 以下四格已不再使用（保留定义，方便需要时切回）---
+  - platform: homeassistant
+    id: ha_server_count
+    entity_id: sensor.server_online_count
+    internal: true
+  - platform: homeassistant
+    id: ha_gateway_count
+    entity_id: sensor.gateway_online_count
+    internal: true
+  - platform: homeassistant
+    id: ha_ap_count
+    entity_id: sensor.ap_online_count
+    internal: true
+  - platform: homeassistant
+    id: ha_monitor_count
+    entity_id: sensor.device_monitor_count
+    internal: true
+  # 设备计数
+  - platform: homeassistant
+    id: ha_light_on
+    entity_id: sensor.light_on_count
+    internal: true
+  - platform: homeassistant
+    id: ha_curtain_closed
+    entity_id: sensor.curtain_closed_count
+    internal: true
+  - platform: homeassistant
+    id: ha_climate_on
+    entity_id: sensor.climate_on_count
+    internal: true
+  - platform: homeassistant
+    id: ha_equipment_on
+    entity_id: sensor.equipment_on_count
+    internal: true
+
+  # --- 室外温度（概览页行1 天气后面的 ℃）---
+  # 优先取天气实体 weather.tian_qi 的 temperature 属性（必须是 sensor 域才会被解析成数值）
+  - platform: homeassistant
+    id: ha_weather_temperature
+    entity_id: weather.tian_qi
+    attribute: temperature
+    internal: true
+  # 备用：独立室外温度传感器；若你的 HA 实体名不同，改这一行的 entity_id 即可
+  - platform: homeassistant
+    id: outdoor_temperature
+    entity_id: sensor.outdoor_temperature
+    internal: true
+
+  # --- 概览页中列：今日能耗四项 ---
+  # 今日用电量（kWh）
+  - platform: homeassistant
+    id: ha_energy_today
+    entity_id: sensor.tasmota_energy_today
+    internal: true
+  # 今日用气量
+  - platform: homeassistant
+    id: ha_gas_today
+    entity_id: sensor.ri_yong_qi_liang
+    internal: true
+  # 电压（V）
+  - platform: homeassistant
+    id: ha_voltage
+    entity_id: sensor.tasmota_energy_voltage
+    internal: true
+  # 水压
+  - platform: homeassistant
+    id: ha_water_pressure
+    entity_id: sensor.maze_wateronev3_tp_f8e644
+    internal: true
+
+  # ==========================================================
+  # 网络页（page_network.yaml）数据源
+  # ==========================================================
+  # --- 行1：外网 IP / WAN 连接时长 ---
+  # 外网 IP 在 HA 里类型可能是 sensor 也可能是 text_sensor：
+  #   若你的 HA 中为 text_sensor 域，把下面这段整段移到 text_sensor: 段即可
+  #   （数值型 interval 会读不到字符串实体，反之亦然）
+  - platform: homeassistant
+    id: net_wan_uptime
+    entity_id: sensor.tp_link_smb_tl_r498gpm_ac_uptime
+    internal: true
+
+  # --- 行2：ASR 在线数（前四列复用上面的 ha_server/gateway/ap/monitor_count）---
+  - platform: homeassistant
+    id: ha_asr_count
+    entity_id: sensor.asr_online_count
+    internal: true
+
+  # --- 行3 左列：网络总览 ---
+  - platform: homeassistant
+    id: ha_router_count
+    entity_id: sensor.router_online_count
+    internal: true
+  - platform: homeassistant
+    id: ha_device_ctrl
+    entity_id: sensor.device_control_count
+    internal: true
+  - platform: homeassistant
+    id: ha_terminal_count
+    entity_id: sensor.terminal_online_count
+    internal: true
+  # 低电量终端数：原需求给的也是 terminal_online_count，会与上一行重复，这里按语义
+  # 预填 sensor.low_battery_count；若你的实体名不同，改这一行 entity_id 即可
+  - platform: homeassistant
+    id: ha_low_battery
+    entity_id: sensor.low_battery_count
+    internal: true
+
+  # --- 行3 中列：NAS 状态（CPU / 内存 / 上传 / 下载）---
+  - platform: homeassistant
+    id: ha_nas_cpu
+    entity_id: sensor.lamnas_ws_cpu_utilization_total
+    internal: true
+  - platform: homeassistant
+    id: ha_nas_mem
+    entity_id: sensor.lamnas_ws_memory_usage_real
+    internal: true
+  # 上传速度：单位通常为 B/s，页面会自动换算 KB/s、MB/s
+  # --- 系统页行3 中列：屏幕亮度 ---
+  # 读 light.fan_monitor_display_screen_light 的 brightness 属性（0~255）
+  #   platform: homeassistant + attribute 是 ESPHome 读取实体属性的标准写法
+  - platform: homeassistant
+    id: ha_screen_brightness
+    entity_id: light.fan_monitor_display_screen_light
+    attribute: brightness
+    internal: true
+
+  - platform: homeassistant
+    id: ha_nas_download
+    entity_id: sensor.lamnas_ws_download_throughput
+    internal: true
+  - platform: homeassistant
+    id: ha_nas_upload
+    entity_id: sensor.lamnas_ws_upload_throughput
+    internal: true
+
+# ==========================================================
+# 屏幕休眠控制（HA 可见可调，电池续航优化）
+#   逻辑：每秒巡检 LVGL 的"无输入时长"，超过阈值就关背光；
+#        触摸立刻唤醒并恢复熄屏前的亮度。
+#   注意：只关背光，不暂停 LVGL，所以唤醒是瞬时的。
+# ==========================================================
+number:
+  # 熄屏超时（秒），默认 60s，HA 可调，重启后保留
+  - platform: template
+    id: sleep_timeout_number
+    name: "Sleep Timeout"
+    icon: mdi:timer-outline
+    entity_category: config
+    unit_of_measurement: "s"
+    mode: box
+    min_value: 15
+    max_value: 900
+    step: 5
+    optimistic: true
+    restore_value: true
+    initial_value: 60
+
+switch:
+  # 自动休眠总开关（关掉后常亮，适合调试/演示）
+  - platform: template
+    id: auto_sleep_switch
+    name: "Auto Screen Sleep"
+    icon: mdi:sleep
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    lambda: |-
+      return id(ui_auto_sleep_enabled);
+    turn_on_action:
+      - lambda: id(ui_auto_sleep_enabled) = true;
+    turn_off_action:
+      - lambda: id(ui_auto_sleep_enabled) = false;
+      # 关闭自动休眠时顺便点亮，避免停在黑屏状态
+      - script.execute: wake_screen
+
+script:
+  # 熄屏：先记住当前亮度，再关背光
+  - id: sleep_screen
+    mode: single
+    then:
+      - lambda: |-
+          float b = id(lcd_backlight).remote_values.get_brightness();
+          if (b <= 0.01f) b = 1.0f;   // 已接近 0 时按满亮度恢复，防锁死
+          id(ui_saved_brightness) = b;
+          id(ui_screen_off) = true;
+          ESP_LOGI("sleep", "screen off, saved brightness=%.2f", b);
+      - light.turn_off: lcd_backlight
+
+  # 唤醒：恢复熄屏前的亮度（不是写死 100%）
+  - id: wake_screen
+    mode: single
+    then:
+      - lambda: id(ui_screen_off) = false;
+      - light.turn_on:
+          id: lcd_backlight
+          brightness: !lambda |-
+            return id(ui_saved_brightness);
+      - logger.log: "screen on"
+
+binary_sensor:
+  # --- 手机在位状态 ---
+  - platform: homeassistant
+    id: ha_nova13
+    entity_id: binary_sensor.lam_nova13
+    internal: true
+  - platform: homeassistant
+    id: ha_nova12
+    entity_id: binary_sensor.su_nova12
+    internal: true
+  # --- 网络页行1：WAN 连接状态（true=已连接）---
+  - platform: homeassistant
+    id: net_wan_status
+    entity_id: binary_sensor.tp_link_smb_tl_r498gpm_ac_wan_status
+    internal: true
+
+  # --- 概览页行2 第4格：语音广播开关 ---
+  # switch 域实体只能用 binary_sensor 平台读取（true=开 / false=关）
+  - platform: homeassistant
+    id: ha_voice_broadcast
+    entity_id: switch.voice_broadcast
+    internal: true
+  # --- 网络页行3 右列：弱电间风扇开关状态 ---
+  # switch 域实体必须用 binary_sensor 平台读取（true=开 / false=关）
+  - platform: homeassistant
+    id: ha_fan_in_switch
+    entity_id: switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1
+    internal: true
+  - platform: homeassistant
+    id: ha_fan_out_switch
+    entity_id: switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2
+    internal: true
+  # 机柜前/后扇（fan_pwm_controller）保持用 sensor: 段的
+  # ha_fan1_rpm / ha_fan2_rpm / ha_fan1_speed / ha_fan2_speed，不在此重复定义。
+
+text_sensor:
+  # --- 系统页信息 ---
+  - platform: wifi_info
+    ip_address:
+      id: wifi_ip_address
+      name: "IP Address"
+      icon: mdi:ip-network
+    ssid:
+      id: wifi_ssid_sensor
+      name: "WiFi SSID"
+      icon: mdi:router-wireless
+    mac_address:
+      id: wifi_mac_sensor
+      name: "MAC Address"
+      icon: mdi:wifi-marker
+  - platform: wifi_info
+    bssid:
+      id: wifi_bssid_sensor
+      name: "WiFi BSSID"
+      icon: mdi:access-point-network
+
+  # --- 概览页文本实体 ---
+  # 中文时间（如：2026年10月26日 星期一）
+  - platform: homeassistant
+    id: ha_time_text
+    entity_id: sensor.zhong_wen_shi_jian
+    internal: true
+  # 网络页行1：外网 IP（若是数值型 sensor，请移到上面的 sensor: 段）
+  - platform: homeassistant
+    id: net_external_ip
+    entity_id: sensor.tp_link_smb_tl_r498gpm_ac_external_ip
+    internal: true
+  # 天气状态（weather 实体的 state，如 sunny / cloudy）
+  - platform: homeassistant
+    id: ha_weather
+    entity_id: weather.tian_qi
+    internal: true
+  # 每日股值（上证指数）
+  - platform: homeassistant
+    id: ha_stock
+    entity_id: sensor.mei_ri_gu_zhi
+    internal: true
+  - platform: homeassistant
+    id: ha_home_mode
+    entity_id: sensor.ju_jia_mo_shi
+    internal: true
+  # 活动轨迹（概览页行3 左列，跟在居家模式后面显示）
+  - platform: homeassistant
+    id: ha_activity_log
+    entity_id: sensor.huo_dong_gui_ji
+    internal: true
+  - platform: homeassistant
+    id: ha_parking_status
+    entity_id: sensor.parking_status
+    internal: true
