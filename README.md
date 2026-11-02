@@ -1,84 +1,140 @@
 # HA Monitor Display
 
-ESP32-S3 桌面信息屏，跑 ESPHome + LVGL，显示 Home Assistant 的家庭概览 / 网络 / 系统三页数据。
+ESP32-S3 电池供电的家庭信息屏：4.0" 触摸屏跑 ESPHome + LVGL，显示 Home Assistant 的家庭概览 / 网络 / 系统三页数据。本仓库提供两条数据通道的版本——**Native API 拉取（v0.9.0）** 与 **MQTT 推送（v1.x，推荐）**；屏幕通知页（Notify v2.0）开发中。
+
+## 功能一览
+
+- **三页信息 + 底部 TAB 触摸导航**（家庭 → 网络 → 系统）
+  - 家庭页：电器 / 能耗 / 天气 / 居家模式（含音量、活动轨迹）/ 车位（状态 + 两辆车距离）
+  - 网络页：网络总览 / NAS 运行 / 四路风扇（转速、温度、分档着色）/ 低电量
+  - 系统页：CPU / 内存 / 存储三列指标、网络参数（RSSI / SIGQ / MQTT / WiFi）、SSID 与 IP、当前时间
+- **熄屏休眠**：可调超时（15~900 s），触摸即醒；亮度滑块 + 断电记忆
+- **每页背景色 8 档可调**（v1.1.0 起，HA 下拉选择，石墨 / 深红 / 深黄 / 墨绿 / 浅蓝 / 深蓝 / 深紫 / 深靛）
+- 白字 + 图标承担配色的统一视觉规则；动态语义色（涨跌 / 居家模式 / 车位 / 风扇分档 / 信号分档 / 告警）保留
 
 ## 硬件
 
-| 项目 | 规格                                           |
-| -- | -------------------------------------------- |
+| 项目 | 规格 |
+| -- | -- |
 | 主控 | ESP32-S3 N16R8（16MB Flash + 8MB octal PSRAM） |
-| 屏幕 | 4.0" ST7796S 320×480，SPI                     |
-| 触摸 | FT6336U 电容触摸，I2C 地址 0x38                     |
-| 供电 | 电池                                           |
+| 屏幕 | 4.0" ST7796S 320×480，SPI（横屏 480×320） |
+| 触摸 | FT6336U 电容触摸，I2C 地址 0x38 |
+| 供电 | 锂电池（实测熄屏待机约 20 mA） |
 
-引脚：SPI `clk=12 / mosi=11 / miso=13`，`cs=10 / dc=9 / rst=8`，背光 PWM `15`，触摸 I2C `scl=6 / sda=7 / rst=5`。GPIO35/36/37 被 PSRAM 占用，不可用。  
-详细接线见 `硬件焊接接线指南.md`。
+关键引脚：SPI `clk=12 / mosi=11 / miso=13`，屏幕 `cs=10 / dc=9 / rst=8`，背光 PWM `15`，触摸 I2C `scl=6 / sda=7 / rst=5`。
+⚠️ GPIO35/36/37 被 octal PSRAM 占用不可用；GPIO26~32 接 Flash。详细接线（含 TF 卡槽预留、CTP_INT 说明）见 `硬件焊接接线指南.md`。
 
-## 版本说明
+## 版本线
 
-**v1.0 — 硬件与外壳阶段的冻结基线。** 功能已定型，此后这条线只接受参数微调（默认亮度、休眠超时、触摸响应、配色观感），发 `v1.0.x`；新增功能一律进 `v2.0`，不混进来。
+| 版本 | 发布包 | 数据通道 | 说明 |
+| -- | -- | -- | -- |
+| **API v0.9.0** | `HA Monitor Display API v0.9.0.zip` | ESPHome Native API 拉取 + MQTT/TLS 8883 远程（双通道） | 2026-10-29 快照，前身版本 |
+| **Mqtt v1.0** | `HA Monitor Display Mqtt v1.0.zip` | HA 每 5 s `mqtt.publish` 推送 JSON | MQTT 线首个定版 |
+| **Mqtt v1.0.1** | `HA Monitor Display Mqtt v1.0.1.zip` | 同上 | 观感与数据修正累积 |
+| **Mqtt v1.1.0** | `HA Monitor Display Mqtt v1.1.0.zip` | 同上 | 背景色 8 档 + 白字规则等大改 |
+| **Mqtt v1.1.1** | `HA Monitor Display Mqtt v1.1.1.zip` | 同上 | 续航优化，**当前推荐**，v2.0 前回退基线 |
+| Notify v2.0 | 开发中 | MQTT + Node-RED 清洗链 | 屏幕通知页，发布名 `HA Monitor Display Notify v2.0` |
 
-**v1.0.1 — 1.0 线的稳定定版（2026-10-31）。** 累积内容全部是观感与数据修正，未新增功能：8 个区块标题加 MDI 图标、改名（家居 / 网络运行 / NAS 运行）、字库补 19 字、第二轮配色方案落地、上证涨跌动态着色、`web_server` 认证改 digest、NAS 的 CPU/内存未载入时用基色、风扇「开 / ≤50%」改黄。已真机确认，出包 `HA Monitor Display Mqtt v1.0.1.zip`。
+各版本详细变更见 [CHANGELOG.md](CHANGELOG.md)。
 
-**v1.1.1 — 续航优化定版（2026-11-01）。** 出包 `HA Monitor Display Mqtt v1.1.1.zip`，本包同时作为 v2.0 开发前的**回退基线**。仅两项改动，不动界面：
+## 快速开始（MQTT 版 v1.1.1，推荐）
 
-- `wifi.power_save_mode: light`（modem-sleep），数据帧 5s 一推不受影响
-- 默认屏幕亮度 60%：`ui_saved_brightness` 初值 0.6 为唯一来源，开机与熄屏恢复同源；灯实体 `restore_mode` 改 `ALWAYS_OFF`，由 lvgl `on_boot` 按该值点亮（避免开机满亮闪变）
+### 1. 准备 MQTT broker
 
-**实测（真机，60% 亮度 / 5s 推送 / 熄屏待机）：约 20 mA。** 据此推算纯待机续航：500 mAh ≈ 21 h，1000 mAh ≈ 42 h，18650 3000 mAh ≈ 一周；亮屏约 150~180 mA，每亮 1 分钟约消耗 3 mAh。
-
-**v1.1.0 — 观感与功能微调定版（2026-10-31）。** 出包 `HA Monitor Display Mqtt v1.1.0.zip`。本月最后一轮大改，累积内容：
-
-- 每页背景色 HA 下拉可调：`Dashboard / Network / System Bg Color` 三个 select，8 档深色预设（石墨 / 深红 / 深黄 / 墨绿 / 浅蓝 / 深蓝 / 深紫 / 深靛），卡片色随选定色、缝隙取选定色 ×0.5
-- 白字规则统一：静态文字一律纯白，配色改由图标承担（TAB 当前页与区块标题图标统一青 `4FD8FA`）；动态语义色保留（涨跌 / 居家模式 / 车位 / 风扇分档 / SIGQ / 告警 / 低电量数字）
-- 车位卡改左右分栏：左列图标 + 车位状态，右栏两行车辆距离（轩逸黄 / 比亚迪粉，12px）
-- 居家模式加音量百分比（随模式色，位于模式与轨迹之间）
-- 系统页行 1 加当前时间（SNTP 北京时间，前置黄色时钟图标）
-- 今日能耗四行改为 电压 / 水压 / 用气 / 用电；三页 TAB 偏移与行 1 左边界对齐
-
-已知不包含：屏幕通知页（`page_notify.yaml` 与 `NR子流程-屏幕推送.json` 作为 v2.0 素材暂存本仓库，主配置未引用它们）。下一版 v2.0 主题即 NOTIFY，**发布包命名 `HA Monitor Display Notify v2.0`**（v1.x 线沿用 `HA Monitor Display Mqtt vX.Y.Z`）。
-
-## 文件结构
-
-> 本仓库里 YAML 平铺在根目录；部署到 ESPHome 时把 `ui_*` / `page_*` 放进 `/config/esphome/ui/`，  
-> 主配置 `ha-monitor-display.yaml` 留在 `/config/esphome/` 根下。
+任选 Mosquitto / EMQX。局域网 1883 即可跑通；走外网务必上 8883 + TLS（方案见 `项目外网MQTT方案说明.md`）。主题约定：
 
 ```
-ha-monitor-display.yaml        主配置（含 esp32/wifi/mqtt/spi/屏/触摸/休眠）
-ui_common.yaml                 字体、globals、公共控件        → ui/
-page_dashboard.yaml            家庭页（电器、能耗、天气、居家模式、车位） → ui/
-page_network.yaml              网络页（总览、NAS、风扇、低电量）  → ui/
-page_system.yaml               系统页（三列指标、网络参数、SSID/IP） → ui/
-monitor_display_push.yaml      HA 侧推送自动化（放到 /config/packages/）
-fonts/                         中文字体 + MDI 图标字体
-
-# v2.0 素材，v1.0 不生效
-page_notify.yaml               通知页布局（UI 部分已完成）
-NR子流程-屏幕推送.json       Node-RED 侧推送子流程
+home/ha-monitor-display          数据帧（retain, QoS1，HA → 屏幕）
+esphome/ha-monitor-display/...   设备侧前缀（日志等）
 ```
 
-## 数据流
+### 2. 写 `secrets.yaml`（与主配置同目录）
+
+```yaml
+wifi_ssid: your-wifi
+wifi_password: your-wifi-password
+ap_password: your-fallback-ap-password
+ota_password: your-ota-password
+api_key: "运行 esphome 时自动生成，或自填 32 字节 base64"
+mqtt_password: your-mqtt-password
+web_password: your-web-password
+```
+
+> broker 地址与用户名当前直接写在主配置 `mqtt:` 段（`home.example.top` / `mosquitto`），上传/复用时请改成你自己的。
+
+### 3. 部署文件
 
 ```
-HA 自动化（每 5s） ──mqtt.publish──▶  home/ha-monitor-display (retain, QoS1)
-                                          │
-                              ESP32 mqtt.on_json_message 解析
-                                          │
-                                  hd_* globals  ──▶  LVGL 三页刷新
+/config/esphome/
+├── ha-monitor-display.yaml      主配置
+├── ui/                          page_dashboard / page_network / page_system / ui_common
+└── fonts/                       NotoSansSC-SemiBold.ttf + materialdesignicons-webfont.ttf
+/config/packages/
+└── monitor_display_push.yaml    HA 侧 5 秒推送自动化
 ```
 
-主题约定：数据帧 `home/ha-monitor-display`，通知 `.../notify`（retain=false），滚动新闻预留 `.../news`。broker 走外网，方案见 `外网MQTT方案说明.md`。
+### 4. 编译烧录 + 启用自动化
 
-## 部署
+ESPHome 里 Install（USB 首次，之后可 OTA）；在 HA 里重载自动化，确认 `packages` 已在 `configuration.yaml` 启用。设备上线后即可看到三页数据（5 s 一刷）。
 
-1. `ha-monitor-display.yaml`、`ui/`、`fonts/` 放进 ESPHome 的 `/config/esphome/`
-2. `ha/monitor_display_push.yaml` 放进 HA 的 `/config/packages/`，并在 `configuration.yaml` 里确认 `packages` 已启用
-3. 编译烧录后，在 HA 里重载自动化；确认实体 `light.ha_monitor_display_screen_light` 存在（推送里的屏幕亮度取自它）
+## 快速开始（API 版 v0.9.0）
 
-## v2.0 待办
+适合完全跑在局域网内、不想配 broker 的场景：数据由 ESPHome 通过 Native API 从 HA **主动拉取**（`platform: homeassistant` 传感器，51 处 entity_id），MQTT/TLS 8883 仅作远程备用通道。
 
-- [ ] 屏幕通知页：`ui/page_notify.yaml` + 主配置 `mqtt.on_message` 段 + `ui_font_notify`（GB2312 一级 3755 字，12px bpp4，约 310KB）
-- [ ] Node-RED 子流程导入 `NR子流程-屏幕推送.json`，选好 broker
-- [ ] 滚动新闻 `home/ha-monitor-display/news`
-- [ ] MQTT 1883 → 8883 + TLS
+1. 发布包解压后，`ha-monitor-display.yaml` 放 `/config/esphome/`，4 个 `page_*/ui_*` 放 `ui/`，`fonts/` 同级
+2. `secrets.yaml` 模板同上（`mqtt_host` / `mqtt_password` 不用 broker 时可留占位）
+3. **把主配置里的 `entity_id` 改成你家 HA 的实际实体**——这 51 处是按我家设备命名的（如 `sensor.lamnas_ws_cpu_utilization_total`）
+4. 编译烧录后数据即拉即显（刷新率由各 sensor 的 `update_interval` 决定）
 
+## 目录结构
+
+```
+ha-monitor-display.yaml     主配置（板型 / WiFi / MQTT / API / 屏 / 触摸 / 休眠 / LVGL 全局）
+ui_common.yaml              字体、globals、公共控件              → ui/
+page_dashboard.yaml         家庭页                              → ui/
+page_network.yaml           网络页                              → ui/
+page_system.yaml            系统页                              → ui/
+monitor_display_push.yaml   HA 推送自动化（MQTT 版专用）          → /config/packages/
+fonts/                      中文字体 + MDI 图标字体
+项目外网MQTT方案说明.md      外网 MQTT/TLS 方案与踩坑
+硬件焊接接线指南.md          接线 / 排针 / 焊接注意事项
+CHANGELOG.md                更新日志
+```
+
+> 仓库内 YAML 平铺在根目录；发布包（zip）里已按 `ui/` 子目录组织，解压即用。
+
+## 数据流（MQTT 版）
+
+```
+HA 自动化（每 5s，Jinja 组装 50 实体 JSON）
+        │ mqtt.publish  →  home/ha-monitor-display (retain, QoS1)
+        ▼
+ESP32 mqtt.on_json_message ─▶ hd_* globals ─▶ LVGL 三页刷新
+```
+
+- 屏幕判"HA 离线"用数据新鲜度（>15 s 无新帧），不依赖 WiFi 状态
+- 设备侧全局变量统一 `hd_*` 前缀；开关三态（null 显示 `--`）
+
+## 功耗实测（真机，v1.1.1）
+
+| 状态 | 电流 |
+| -- | -- |
+| 熄屏待机（60% 亮度 / 5s 推送 / modem-sleep） | **≈ 20 mA** |
+| 亮屏 | ≈ 150~180 mA（每亮 1 分钟 ≈ 3 mAh） |
+
+续航推算：500 mAh ≈ 21 h，1000 mAh ≈ 42 h，18650 3000 mAh ≈ 一周。
+
+## 开发注意事项（踩过的坑）
+
+- **中文字库是白名单制**：所有 `text:` 与 lambda 字符串里出现的汉字必须在字体 `glyphs` 里，改文案后要补字（有配套缺字扫描脚本）
+- 字号三档 12 / 16 / 20（NotoSansSC-SemiBold），配 16px 文字的 MDI 图标用 20px 字体 + label 高 18，否则偏小偏上
+- LVGL v9 的 label 未显式给宽度时是 `SIZE_CONTENT`（宽度随文本），依赖固定宽度的布局必须显式 `width`
+- ESPHome `logs:` 的 tag 级别不能比全局 `level` 更细；`!include` 相对包含文件所在目录
+- broker 走 1883 明文仅限局域网调试，外网务必 8883 + TLS
+
+## 文档索引
+
+- [CHANGELOG.md](CHANGELOG.md) — 各版本更新日志
+- `硬件焊接接线指南.md` — 接线、排针定义、焊接顺序
+- `项目外网MQTT方案说明.md` — 外网 MQTT/TLS 方案（DDNS / 端口映射 / 证书）
+- `v2.0-NOTIFY方案.md` — 通知页设计稿（开发中）
