@@ -215,10 +215,9 @@ lvgl:
                   text_font: mdi_icons_20
                   height: 18
                   text_color: 0xFFFFFF
-              # 居家模式（在家绿/离家红/其他白）+ 空格 + 活动轨迹（黄色）
-              # 用 recolor 单 label 实现双色：开启 recolor 后，文本里的
-              # "#59D98B 在家# #FFD54F 客厅#" 会分段着色。这样无需测量文字
-              # 宽度、也不涉及任何版本敏感的 LVGL API。
+              # 居家模式 + 音量 + 活动轨迹，用 recolor 单 label 实现分段着色：
+              #   "#59D98B 在家# #5AA9FF 90%# #FFD54F 客厅#"
+              # 具体配色规则见下方 lambda 注释（11-02 起：模式四色动态 / 音量固定蓝 / 轨迹白）。
               - label:
                   id: home_mode_label
                   align: left_mid
@@ -353,14 +352,14 @@ lvgl:
                   text_font: ui_font_small
                   text_color: 0xFFFFFF
                   recolor: true
-              # 第3行：空调
+              # 第3行：空调（绿 59D98B，11-02 与网络页行序统一：黄紫绿蓝）
               - label:
                   align: left_mid
                   x: 6
                   y: 18
                   text: "\U000F001B"
                   text_font: mdi_icons
-                  text_color: 0x5AA9FF
+                  text_color: 0x59D98B
               - label:
                   id: home_climate_label
                   align: left_mid
@@ -370,14 +369,14 @@ lvgl:
                   text_font: ui_font_small
                   text_color: 0xFFFFFF
                   recolor: true
-              # 第4行：电器
+              # 第4行：电器（蓝 5AA9FF，11-02 与网络页行序统一）
               - label:
                   align: left_mid
                   x: 6
                   y: 38
                   text: "\U000F06A5"
                   text_font: mdi_icons
-                  text_color: 0x59D98B
+                  text_color: 0x5AA9FF
               - label:
                   id: home_equipment_label
                   align: left_mid
@@ -431,7 +430,7 @@ lvgl:
                   scrollable: false
                   clickable: false
               # 行序（10-31 十九轮，用户定）：电压 / 水压 / 用气 / 用电
-              # 行位配色不变，仍是黄 FFB74D / 紫 B39DFF / 蓝 5AA9FF / 绿 59D98B
+              # 11-02 行位配色与网络页统一：黄 FFB74D / 紫 B39DFF / 绿 59D98B / 蓝 5AA9FF
               # 第1行：电压（黄）
               - label:
                   align: left_mid
@@ -466,14 +465,14 @@ lvgl:
                   text_font: ui_font_small
                   text_color: 0xFFFFFF
                   recolor: true
-              # 第3行：用气（蓝）
+              # 第3行：用气（绿 59D98B，11-02 与网络页行序统一）
               - label:
                   align: left_mid
                   x: 6
                   y: 18
                   text: "\U000F0238"
                   text_font: mdi_icons
-                  text_color: 0x5AA9FF
+                  text_color: 0x59D98B
               - label:
                   id: home_gas_label
                   align: left_mid
@@ -483,14 +482,14 @@ lvgl:
                   text_font: ui_font_small
                   text_color: 0xFFFFFF
                   recolor: true
-              # 第4行：用电（绿）
+              # 第4行：用电（蓝 5AA9FF，11-02 与网络页行序统一）
               - label:
                   align: left_mid
                   x: 6
                   y: 38
                   text: "\U000F0241"
                   text_font: mdi_icons
-                  text_color: 0x59D98B
+                  text_color: 0x5AA9FF
               - label:
                   id: home_energy_today_label
                   align: left_mid
@@ -727,11 +726,12 @@ interval:
                                         lv_color_hex((uint32_t) strtoul(mcol, nullptr, 16)), 0);
 
             // 音量百分比（10-31 二十轮改位）：sensor.ju_jia_mo_shi 的 volume_percent 属性
-            //   位置在**模式之后、活动轨迹之前**，颜色与模式字同色；
+            //   位置在**模式之后、活动轨迹之前**；11-02 用户定：改为固定色 蓝 5AA9FF
+            //   （语音/声音语义色，与四种模式色均不撞），不再随模式字变色；
             //   属性缺失时不显示（不占位、也不出 --）
             char vseg[32] = "";
             if (std::isfinite(id(ha_mode_volume).state))
-              snprintf(vseg, sizeof(vseg), " #%s %.0f%%#", mcol, id(ha_mode_volume).state);
+              snprintf(vseg, sizeof(vseg), " #5AA9FF %.0f%%#", id(ha_mode_volume).state);
 
             if (has_act && has_mode) {
               snprintf(mbuf, sizeof(mbuf), "#%s %s#%s #FFFFFF %s#", mcol, m.c_str(), vseg, a.c_str());
