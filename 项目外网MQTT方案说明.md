@@ -94,10 +94,13 @@ cp monitor_display_push.yaml /config/packages/monitor_display_push.yaml
 在主配置同目录的 `secrets.yaml` 里确认有：
 
 ```yaml
-mqtt_password: "your-mqtt-password"
+mqtt_broker: home.example.top
+mqtt_username: your-mqtt-username
+mqtt_password: "你的MQTT密码"
 ```
 
-> broker 地址和用户名已经直接写在主配置里（`home.example.top` / `mosquitto`），不用再放 secrets。
+> 仓库上传版已把 broker 地址与用户名一并收进 `secrets.yaml`（`mqtt_broker` / `mqtt_username`），
+> 自用时填你自己的值即可。
 
 ### 4.2 编译上传
 
@@ -158,7 +161,7 @@ esphome run ha-monitor-display.yaml
 
 你选择了先用 1883 明文跑通。这里提醒一句现状：
 
-> 公网暴露 1883 + 明文密码 = 任何人扫到你的端口就能拿到 `mosquitto / your-mqtt-password`，进而控制你**全屋** MQTT 设备（包括门锁、开关）。
+> 公网暴露 1883 + 明文密码 = 任何人扫到你的端口就能拿到 broker 的用户名和密码，进而控制你**全屋** MQTT 设备（包括门锁、开关）。
 
 跑通之后**强烈建议**升级到 8883 + TLS，成本很低：
 1. Mosquitto 加载项里放证书（Let's Encrypt 或自签）

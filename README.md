@@ -56,11 +56,14 @@ wifi_password: your-wifi-password
 ap_password: your-fallback-ap-password
 ota_password: your-ota-password
 api_key: "运行 esphome 时自动生成，或自填 32 字节 base64"
+mqtt_broker: your-mqtt-broker-address   # 例如 home.example.top
+mqtt_username: your-mqtt-username
 mqtt_password: your-mqtt-password
 web_password: your-web-password
 ```
 
-> broker 地址与用户名当前直接写在主配置 `mqtt:` 段（`home.example.top` / `mosquitto`），上传/复用时请改成你自己的。
+> Mqtt 版主配置的 broker 地址与用户名同样走 `!secret`（`mqtt_broker` / `mqtt_username`），
+> 上面模板已含全部 9 项。
 
 ### 3. 部署文件
 

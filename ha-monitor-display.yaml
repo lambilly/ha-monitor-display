@@ -68,9 +68,9 @@ ota:
 # MQTT（外网远程通道）
 # ==========================================================
 mqtt:
-  broker: home.example.top          # 阿里云 DDNS 解析到你家公网 IP
+  broker: !secret mqtt_broker      # 阿里云 DDNS 解析到你家公网 IP（地址放 secrets.yaml）
   port: 1883
-  username: your-mqtt-username
+  username: !secret mqtt_username
   password: !secret mqtt_password
   # topic_prefix 只影响本机"对外发布"的主题前缀。
   # 注意：本机不再向 HA 暴露任何实体（全部 internal: true），
