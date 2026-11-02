@@ -1,6 +1,6 @@
 # HA Monitor Display
 
-ESP32-S3 电池供电的家庭信息屏：4.0" 触摸屏跑 ESPHome + LVGL，显示 Home Assistant 的家庭概览 / 网络 / 系统三页数据。本仓库提供两条数据通道的版本——**Native API 拉取（v0.9.0）** 与 **MQTT 推送（v1.x，推荐）**；屏幕通知页（Notify v2.0）开发中。
+ESP32-S3 电池供电的家庭信息屏：3.5" 触摸屏跑 ESPHome + LVGL，显示 Home Assistant 的家庭概览 / 网络 / 系统三页数据。本仓库提供两条数据通道的版本——**Native API 拉取（v0.9.0）** 与 **MQTT 推送（v1.x，推荐）**；屏幕通知页（Notify v2.0）开发中。
 
 ## 功能一览
 
@@ -17,7 +17,7 @@ ESP32-S3 电池供电的家庭信息屏：4.0" 触摸屏跑 ESPHome + LVGL，显
 | 项目 | 规格 |
 | -- | -- |
 | 主控 | ESP32-S3 N16R8（16MB Flash + 8MB octal PSRAM） |
-| 屏幕 | 4.0" ST7796S 320×480，SPI（横屏 480×320） |
+| 屏幕 | 3.5" ST7796S 320×480，SPI（物理横屏 480×320，固件按竖装 320×480 + rotation 270） |
 | 触摸 | FT6336U 电容触摸，I2C 地址 0x38 |
 | 供电 | 锂电池（实测熄屏待机约 20 mA） |
 
