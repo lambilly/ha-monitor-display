@@ -34,6 +34,15 @@ esphome:
     - ui/notify_charset.h      # notify_store.h 里 #include "notify_charset.h"，
                                # 必须一并登记，否则构建目录 src/ui/ 下没有这个文件
 
+  # v2.1 远程控制通道：开机等 WiFi/MQTT 连上后回发一次状态帧，
+  #   让 HA 里 5 个 mqtt 实体一上线就有值，不必等下一次操作。
+  #   priority: -100 = 最后执行（其他 on_boot 都跑完）。
+  on_boot:
+    priority: -100
+    then:
+      - delay: 20s
+      - script.execute: mqtt_pub_state
+
 esp32:
   board: esp32-s3-devkitc-1
   variant: ESP32S3
@@ -291,6 +300,93 @@ mqtt:
             if (id(notify_wake_on_msg).state && id(ui_screen_off)) {
               id(wake_screen).execute();
             }
+
+    # ==========================================================
+    # v2.1 远程控制通道（屏幕带出门后仍可控制）
+    # ----------------------------------------------------------
+    #   痛点：亮度/亮屏时间/两个开关原先只走 Native API，要求 HA 能
+    #     主动连到屏幕。屏幕一出门（无公网 IP、穿过 NAT）这条线就断，
+    #     而 MQTT 是设备主动往外连，所以数据一直好、控制全废。
+    #   做法：把这 5 项也挂到 MQTT 上，payload 就是简单值，
+    #     应用后立刻回发状态帧（retain），HA 面板实时跟随。
+    #   主题（全部 retain，QoS1）：
+    #     .../cmd/light     ON | OFF                屏幕开关（开=唤醒到上次亮度）
+    #     .../cmd/bright    10~100                  亮度百分比
+    #     .../cmd/sleep     15~900                  熄屏超时（秒）
+    #     .../cmd/autosleep ON | OFF                自动休眠总开关
+    #     .../cmd/wake      ON | OFF                收到通知时亮屏
+    #   注：cmd 主题 retain，所以设备重连/重启会重放 HA 最后一次下发的值，
+    #     即「重启后以 HA 侧为准」，比本机 restore_value 更可预期。
+    # ==========================================================
+    - topic: home/ha-monitor-display/cmd/light
+      qos: 1
+      then:
+        - lambda: |-
+            const bool on = (x == "ON" || x == "on" || x == "1");
+            ESP_LOGI("cmd", "remote light -> %s", on ? "ON" : "OFF");
+            if (on) {
+              if (id(ui_screen_off)) {
+                id(wake_screen).execute();
+              } else {
+                auto call = id(lcd_backlight).turn_on();
+                call.set_brightness(id(ui_saved_brightness));
+                call.perform();
+              }
+            } else {
+              id(sleep_screen).execute();
+            }
+        - script.execute: mqtt_pub_state
+
+    - topic: home/ha-monitor-display/cmd/bright
+      qos: 1
+      then:
+        - lambda: |-
+            auto v = esphome::parse_number<float>(x);
+            if (!v.has_value()) return;
+            float pct = *v;
+            if (pct < 10.0f) pct = 10.0f;      // 与滑块实体 min 一致，防调到看不见
+            if (pct > 100.0f) pct = 100.0f;
+            ESP_LOGI("cmd", "remote brightness -> %.0f%%", pct);
+            // 直接走滑块实体的 set_action：ui_saved_brightness 与灯实体一次到位
+            auto call = id(screen_brightness_number).make_call();
+            call.set_value(pct);
+            call.perform();
+        - script.execute: mqtt_pub_state
+
+    - topic: home/ha-monitor-display/cmd/sleep
+      qos: 1
+      then:
+        - lambda: |-
+            auto v = esphome::parse_number<float>(x);
+            if (!v.has_value()) return;
+            float s = *v;
+            if (s < 15.0f) s = 15.0f;
+            if (s > 900.0f) s = 900.0f;
+            ESP_LOGI("cmd", "remote sleep timeout -> %.0fs", s);
+            auto call = id(sleep_timeout_number).make_call();
+            call.set_value(s);
+            call.perform();
+        - script.execute: mqtt_pub_state
+
+    - topic: home/ha-monitor-display/cmd/autosleep
+      qos: 1
+      then:
+        - lambda: |-
+            const bool on = (x == "ON" || x == "on" || x == "1");
+            ESP_LOGI("cmd", "remote auto sleep -> %s", on ? "ON" : "OFF");
+            if (on) id(auto_sleep_switch).turn_on();
+            else id(auto_sleep_switch).turn_off();
+        - script.execute: mqtt_pub_state
+
+    - topic: home/ha-monitor-display/cmd/wake
+      qos: 1
+      then:
+        - lambda: |-
+            const bool on = (x == "ON" || x == "on" || x == "1");
+            ESP_LOGI("cmd", "remote notify wake -> %s", on ? "ON" : "OFF");
+            if (on) id(notify_wake_on_msg).turn_on();
+            else id(notify_wake_on_msg).turn_off();
+        - script.execute: mqtt_pub_state
 
 wifi:
   ssid: !secret wifi_ssid
@@ -1361,6 +1457,31 @@ script:
           brightness: !lambda |-
             return id(ui_saved_brightness);
       - logger.log: "screen on"
+
+  # ----------------------------------------------------------
+  # MQTT 状态回发（v2.1 远程控制通道）
+  #   5 个受控量的当前值拼成一帧 JSON，retain 发到
+  #   esphome/ha-monitor-display/state，HA 侧 mqtt 实体据此显示。
+  #   light = 屏幕是否点亮（!ui_screen_off）。
+  #   bright 取 ui_saved_brightness（熄屏时滑块实体返回空值，不能拿它）。
+  # ----------------------------------------------------------
+  - id: mqtt_pub_state
+    mode: restart
+    then:
+      - mqtt.publish:
+          topic: esphome/ha-monitor-display/state
+          retain: true
+          payload: !lambda |-
+            char buf[192];
+            snprintf(buf, sizeof(buf),
+                     "{\"light\":%s,\"bright\":%d,\"sleep\":%d,"
+                     "\"autosleep\":%s,\"wake\":%s}",
+                     id(ui_screen_off) ? "false" : "true",
+                     (int) (id(ui_saved_brightness) * 100.0f + 0.5f),
+                     (int) id(sleep_timeout_number).state,
+                     id(ui_auto_sleep_enabled) ? "true" : "false",
+                     id(notify_wake_on_msg).state ? "true" : "false");
+            return std::string(buf);
 
 # ==========================================================
 # 开关类实体（MQTT 数据帧落地）

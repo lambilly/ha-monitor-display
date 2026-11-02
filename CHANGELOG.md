@@ -6,6 +6,36 @@
 - **API 线**：`HA Monitor Display API v0.9.0`（ESPHome Native API 拉取，前身版本）
 - **通知线**：`HA Monitor Display Notify v2.0`（开发中）
 
+## [未发布] — 2026-11-02（v2.1 远程控制通道，基于 v2.0 通知线）
+
+**背景**：亮度 / 亮屏时间 / 两个开关原先只走 ESPHome Native API，要求 HA 能主动连到屏幕。
+屏幕带出门（无公网 IP、穿过 NAT）后这条控制线必断；而 MQTT 是设备主动往外连，不受影响。
+于是数据一直好、控制全废。本版把控制也搬到 MQTT。
+
+### Added
+
+- **设备端 5 个控制主题**（`mqtt.on_message`，QoS1，全部 retain）：
+  `cmd/light`（ON/OFF）、`cmd/bright`（10~100）、`cmd/sleep`（15~900）、
+  `cmd/autosleep`（ON/OFF）、`cmd/wake`（ON/OFF）
+- **状态回发**：`esphome/ha-monitor-display/state`（retain）一帧 JSON
+  `{"light":...,"bright":...,"sleep":...,"autosleep":...,"wake":...}`，
+  每次控制量变化 + 开机 20 s 后各发一次，HA 面板实时跟随
+- **HA 侧新包** `ha/monitor_display_control.yaml`：5 个 `mqtt` 实体
+  （1 灯 + 2 数值 + 2 开关），归到一个「HA Monitor Display 远程控制」设备下
+
+### Changed
+
+- 控制动作全部复用现有实体逻辑（滑块 `set_action` / `switch.turn_on` / 休眠脚本），
+  不新增状态变量，本机触摸操作与远程下发走同一条路径
+
+### 注意
+
+- `cmd` 主题 retain → 设备重连/重启会重放 HA 最后一次下发的值，
+  即「重启后以 HA 侧为准」（比本机 `restore_value` 更可预期）
+- 局域网内原生 API 那 5 个实体与远程这 5 个并存，出门后只剩远程这套可用
+
+---
+
 ## [v1.1.1] — 2026-11-01（MQTT 线，当前推荐 / v2.0 前回退基线）
 
 本版只做续航优化，**不动任何界面与数据协议**，可从 v1.1.0 直接 OTA 升级。

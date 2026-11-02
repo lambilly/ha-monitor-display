@@ -70,10 +70,12 @@ web_password: your-web-password
 ```
 /config/esphome/
 ├── ha-monitor-display.yaml      主配置
-├── ui/                          page_dashboard / page_network / page_system / ui_common
+├── ui/                          page_dashboard / page_network / page_system / page_notify
+│                                tab_bar / ui_common / notify_store.h / notify_charset.h
 └── fonts/                       NotoSansSC-SemiBold.ttf + materialdesignicons-webfont.ttf
 /config/packages/
-└── monitor_display_push.yaml    HA 侧 5 秒推送自动化
+├── monitor_display_push.yaml    HA 侧 5 秒推送自动化
+└── monitor_display_control.yaml 远程控制（屏幕带出门也能调亮度/熄屏/开关）
 ```
 
 ### 4. 编译烧录 + 启用自动化
@@ -97,7 +99,12 @@ ui_common.yaml              字体、globals、公共控件              → ui/
 page_dashboard.yaml         家庭页                              → ui/
 page_network.yaml           网络页                              → ui/
 page_system.yaml            系统页                              → ui/
-monitor_display_push.yaml   HA 推送自动化（MQTT 版专用）          → /config/packages/
+page_notify.yaml            通知页（v2.0）                      → ui/
+tab_bar.yaml                四键底部导航（v2.0）                → ui/
+notify_store.h              通知环形缓冲 / 折行 / 清洗（v2.0）  → ui/
+notify_charset.h            通知字库表（GB2312 一级，v2.0）     → ui/
+ha/monitor_display_push.yaml    HA 推送自动化（MQTT 版专用）      → /config/packages/
+ha/monitor_display_control.yaml HA 远程控制（v2.1）              → /config/packages/
 fonts/                      中文字体 + MDI 图标字体
 项目外网MQTT方案说明.md      外网 MQTT/TLS 方案与踩坑
 硬件焊接接线指南.md          接线 / 排针 / 焊接注意事项
@@ -117,6 +124,28 @@ ESP32 mqtt.on_json_message ─▶ hd_* globals ─▶ LVGL 三页刷新
 
 - 屏幕判"HA 离线"用数据新鲜度（>15 s 无新帧），不依赖 WiFi 状态
 - 设备侧全局变量统一 `hd_*` 前缀；开关三态（null 显示 `--`）
+
+## 远程控制（v2.1）
+
+屏幕被带到公司/酒店时，**Native API 那条控制线会断**（HA 连不到设备，设备没有公网 IP），
+而 MQTT 是设备主动往外连，所以数据一直好、控制全废。v2.1 把这 5 项也挂到 MQTT 上：
+
+| HA 实体（`ha/monitor_display_control.yaml`） | 下发主题 | 取值 |
+| -- | -- | -- |
+| 屏幕-远程开关 | `.../cmd/light` | `ON` / `OFF`（开=唤醒到上次亮度） |
+| 屏幕-远程亮度 | `.../cmd/bright` | 10 ~ 100 (%) |
+| 屏幕-远程熄屏超时 | `.../cmd/sleep` | 15 ~ 900 (s) |
+| 屏幕-远程自动休眠 | `.../cmd/autosleep` | `ON` / `OFF` |
+| 屏幕-远程通知亮屏 | `.../cmd/wake` | `ON` / `OFF` |
+
+设备把当前值 retain 回发到 `esphome/ha-monitor-display/state`：
+
+```json
+{"light":true,"bright":60,"sleep":300,"autosleep":true,"wake":false}
+```
+
+- 主题全 retain + QoS1：设备重连/重启会重放 HA 最后一次下发的值，**重启后以 HA 侧为准**
+- 局域网时原生 API 那套和这套并存（名字带「远程」前缀），出门后只剩这套能用
 
 ## 功耗实测（真机，v1.1.1）
 

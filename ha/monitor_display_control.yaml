@@ -1,0 +1,110 @@
+# ==========================================================
+# HA Monitor Display —— 远程控制包（v2.1）
+# ----------------------------------------------------------
+# 放到 /config/packages/ 下，并在 configuration.yaml 里确认有：
+#   homeassistant:
+#     packages: !include_dir_named packages
+#
+# 解决什么问题：
+#   屏幕带出门后，Native API 那条控制线会断（HA 连不到设备），
+#   只有 MQTT（设备主动往外连）还活着。本包把这 5 项也挂到 MQTT 上：
+#     屏幕开关 / 亮度 / 熄屏超时 / 自动休眠 / 通知亮屏
+#   主题约定（与设备端 ha-monitor-display.yaml 一一对应）：
+#     下发  home/ha-monitor-display/cmd/<key>     retain + QoS1
+#     回读  esphome/ha-monitor-display/state      retain + QoS1
+#
+# 注意：
+#   · 这 5 个实体和设备原生 API 出来的那 5 个是**两套**。在局域网时
+#     两套都能用；出门后只有这套能用。名字带「远程」前缀便于区分。
+#   · cmd 主题 retain，所以设备重启/重连会重放最后一次下发的值，
+#     即「重启后以 HA 侧为准」。
+# ==========================================================
+
+mqtt:
+  light:
+    # 屏幕开关：开 = 唤醒到上次亮度（不是满亮）；关 = 熄屏（记住当前亮度）
+    - name: "屏幕-远程开关"
+      unique_id: hmd_remote_light
+      icon: mdi:monitor
+      command_topic: home/ha-monitor-display/cmd/light
+      state_topic: esphome/ha-monitor-display/state
+      value_template: "{{ 'ON' if value_json.light else 'OFF' }}"
+      payload_on: "ON"
+      payload_off: "OFF"
+      retain: true
+      qos: 1
+      device:
+        identifiers: [ha_monitor_display_remote]
+        name: "HA Monitor Display 远程控制"
+
+  number:
+    # 亮度百分比（设备端限制 10~100，低于 10 会被钳到 10）
+    - name: "屏幕-远程亮度"
+      unique_id: hmd_remote_brightness
+      icon: mdi:brightness-percent
+      command_topic: home/ha-monitor-display/cmd/bright
+      state_topic: esphome/ha-monitor-display/state
+      value_template: "{{ value_json.bright }}"
+      min: 10
+      max: 100
+      step: 5
+      mode: slider
+      unit_of_measurement: "%"
+      entity_category: config
+      retain: true
+      qos: 1
+      device:
+        identifiers: [ha_monitor_display_remote]
+        name: "HA Monitor Display 远程控制"
+
+    # 熄屏超时（秒），设备端范围 15~900
+    - name: "屏幕-远程熄屏超时"
+      unique_id: hmd_remote_sleep
+      icon: mdi:timer-outline
+      command_topic: home/ha-monitor-display/cmd/sleep
+      state_topic: esphome/ha-monitor-display/state
+      value_template: "{{ value_json.sleep }}"
+      min: 15
+      max: 900
+      step: 5
+      mode: box
+      unit_of_measurement: "s"
+      entity_category: config
+      retain: true
+      qos: 1
+      device:
+        identifiers: [ha_monitor_display_remote]
+        name: "HA Monitor Display 远程控制"
+
+  switch:
+    # 自动休眠总开关（关掉 = 常亮，适合演示/调试）
+    - name: "屏幕-远程自动休眠"
+      unique_id: hmd_remote_autosleep
+      icon: mdi:sleep
+      command_topic: home/ha-monitor-display/cmd/autosleep
+      state_topic: esphome/ha-monitor-display/state
+      value_template: "{{ 'ON' if value_json.autosleep else 'OFF' }}"
+      payload_on: "ON"
+      payload_off: "OFF"
+      entity_category: config
+      retain: true
+      qos: 1
+      device:
+        identifiers: [ha_monitor_display_remote]
+        name: "HA Monitor Display 远程控制"
+
+    # 收到通知时是否点亮屏幕（默认关，省电优先）
+    - name: "屏幕-远程通知亮屏"
+      unique_id: hmd_remote_notify_wake
+      icon: mdi:bell-ring
+      command_topic: home/ha-monitor-display/cmd/wake
+      state_topic: esphome/ha-monitor-display/state
+      value_template: "{{ 'ON' if value_json.wake else 'OFF' }}"
+      payload_on: "ON"
+      payload_off: "OFF"
+      entity_category: config
+      retain: true
+      qos: 1
+      device:
+        identifiers: [ha_monitor_display_remote]
+        name: "HA Monitor Display 远程控制"
