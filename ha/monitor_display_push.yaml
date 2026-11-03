@@ -105,6 +105,7 @@ automation:
           retain: true
           qos: 1
           payload: >-
+            {%- set SLOT = SLOT | default({}) -%} {#- 兜底：HA 装载期预校验时 SLOT 可能未定义，给空字典让模板可渲染，所有字段优雅落为 -- -#}
             {#- 开关类字段：先在 {% %} 里算成真正的数字，再放进字典。
                   · 实体不存在 / 不可用  -> none（JSON null，屏幕显示 "--"）
                   · on                   -> 1
@@ -120,76 +121,76 @@ automation:
                   fan_in_switch   = none,
                   fan_out_switch  = none,
                   stock_chg       = none) -%}
-            {%- set ns.nova13          = none if states(SLOT.nova13) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.nova13, 'on') else 0) -%}
-            {%- set ns.nova12          = none if states(SLOT.nova12) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.nova12, 'on') else 0) -%}
-            {%- set ns.wan_status      = none if states(SLOT.wan_status) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.wan_status, 'on') else 0) -%}
-            {%- set ns.voice_broadcast = none if states(SLOT.voice_broadcast) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.voice_broadcast, 'on') else 0) -%}
-            {%- set ns.fan_in_switch   = none if states(SLOT.fan_in_switch) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.fan_in_switch, 'on') else 0) -%}
-            {%- set ns.fan_out_switch  = none if states(SLOT.fan_out_switch) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.fan_out_switch, 'on') else 0) -%}
+            {%- set ns.nova13          = none if states(SLOT.nova13 | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.nova13 | default(''), 'on') else 0) -%}
+            {%- set ns.nova12          = none if states(SLOT.nova12 | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.nova12 | default(''), 'on') else 0) -%}
+            {%- set ns.wan_status      = none if states(SLOT.wan_status | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.wan_status | default(''), 'on') else 0) -%}
+            {%- set ns.voice_broadcast = none if states(SLOT.voice_broadcast | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.voice_broadcast | default(''), 'on') else 0) -%}
+            {%- set ns.fan_in_switch   = none if states(SLOT.fan_in_switch | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.fan_in_switch | default(''), 'on') else 0) -%}
+            {%- set ns.fan_out_switch  = none if states(SLOT.fan_out_switch | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.fan_out_switch | default(''), 'on') else 0) -%}
             {#- 居家模式音量百分比：属性名依次尝试 volume_percent / volume / volume_level / percentage；
                  值可能是 65、"65%"、65.0，统一去除百分号后转数字；全取不到则为 none（屏幕不显示）。 -#}
             {%- set ns.vol_raw = none -%}
             {%- for _a in ['volume_percent', 'volume', 'volume_level', 'percentage'] -%}
               {%- if ns.vol_raw is none -%}
-                {%- set ns.vol_raw = state_attr(SLOT.home_mode, _a) -%}
+                {%- set ns.vol_raw = state_attr(SLOT.home_mode | default(''), _a) -%}
               {%- endif -%}
             {%- endfor -%}
             {#- 上证涨跌幅：股票实体的属性键是 sh000001（全小写），
                  里面 changeRatio 就是涨跌幅（涨为正、跌为负）。
                  兼容 Sh000001 写法；属性缺失/不是字典/没有该键 -> none（屏幕显灰）。 -#}
-            {%- set stk = state_attr(SLOT.stock, 'sh000001')
-                          or state_attr(SLOT.stock, 'Sh000001') -%}
+            {%- set stk = state_attr(SLOT.stock | default(''), 'sh000001')
+                          or state_attr(SLOT.stock | default(''), 'Sh000001') -%}
             {%- set ns.stock_chg = stk.get('changeRatio') if stk is mapping and 'changeRatio' in stk else none -%}
             {#- 车辆距离（km）：车位状态卡片下方两行（轩逸黄 / 比亚迪粉）。
                 注意：注释只能用这种花括号注释放在表达式外，
-                表达式内部出现井号会直接语法报错。 -#}
+                表达式内部出现井号会直接语法报错。
+                screen_bright：屏幕自己的背光，由控制包创建，不开放槽位。 -#}
             {{
               {
                 "ts": now().timestamp() | int,
 
-                "fan1_rpm":         states(SLOT.fan1_rpm) | float(none),
-                "fan2_rpm":         states(SLOT.fan2_rpm) | float(none),
-                "fan1_speed":       state_attr(SLOT.fan1_speed, 'percentage') | float(none),
-                "fan2_speed":       state_attr(SLOT.fan2_speed, 'percentage') | float(none),
-                "temp_front":       states(SLOT.temp_front) | float(none),
-                "temp_back":        states(SLOT.temp_back) | float(none),
-                "temp_in":          states(SLOT.temp_in) | float(none),
-                "temp_out":         states(SLOT.temp_out) | float(none),
+                "fan1_rpm":         states(SLOT.fan1_rpm | default('')) | float(none),
+                "fan2_rpm":         states(SLOT.fan2_rpm | default('')) | float(none),
+                "fan1_speed":       state_attr(SLOT.fan1_speed | default(''), 'percentage') | float(none),
+                "fan2_speed":       state_attr(SLOT.fan2_speed | default(''), 'percentage') | float(none),
+                "temp_front":       states(SLOT.temp_front | default('')) | float(none),
+                "temp_back":        states(SLOT.temp_back | default('')) | float(none),
+                "temp_in":          states(SLOT.temp_in | default('')) | float(none),
+                "temp_out":         states(SLOT.temp_out | default('')) | float(none),
 
-                "family_home":      states(SLOT.family_home) | float(none),
-                "guest_visit":      states(SLOT.guest_visit) | float(none),
-                "phone_online":     states(SLOT.phone_online) | float(none),
-                "server_count":     states(SLOT.server_count) | float(none),
-                "gateway_count":    states(SLOT.gateway_count) | float(none),
-                "ap_count":         states(SLOT.ap_count) | float(none),
-                "monitor_count":    states(SLOT.monitor_count) | float(none),
-                "light_on":         states(SLOT.light_on) | float(none),
-                "curtain_closed":   states(SLOT.curtain_closed) | float(none),
-                "climate_on":       states(SLOT.climate_on) | float(none),
-                "equipment_on":     states(SLOT.equipment_on) | float(none),
+                "family_home":      states(SLOT.family_home | default('')) | float(none),
+                "guest_visit":      states(SLOT.guest_visit | default('')) | float(none),
+                "phone_online":     states(SLOT.phone_online | default('')) | float(none),
+                "server_count":     states(SLOT.server_count | default('')) | float(none),
+                "gateway_count":    states(SLOT.gateway_count | default('')) | float(none),
+                "ap_count":         states(SLOT.ap_count | default('')) | float(none),
+                "monitor_count":    states(SLOT.monitor_count | default('')) | float(none),
+                "light_on":         states(SLOT.light_on | default('')) | float(none),
+                "curtain_closed":   states(SLOT.curtain_closed | default('')) | float(none),
+                "climate_on":       states(SLOT.climate_on | default('')) | float(none),
+                "equipment_on":     states(SLOT.equipment_on | default('')) | float(none),
 
-                "weather_temp":     state_attr(SLOT.weather, 'temperature') | float(none),
-                "outdoor_temp":     states(SLOT.outdoor_temp) | float(none),
-                "energy_today":     states(SLOT.energy_today) | float(none),
-                "gas_today":        states(SLOT.gas_today) | float(none),
-                "voltage":          states(SLOT.voltage) | float(none),
-                "water_pressure":   states(SLOT.water_pressure) | float(none),
+                "weather_temp":     state_attr(SLOT.weather | default(''), 'temperature') | float(none),
+                "outdoor_temp":     states(SLOT.outdoor_temp | default('')) | float(none),
+                "energy_today":     states(SLOT.energy_today | default('')) | float(none),
+                "gas_today":        states(SLOT.gas_today | default('')) | float(none),
+                "voltage":          states(SLOT.voltage | default('')) | float(none),
+                "water_pressure":   states(SLOT.water_pressure | default('')) | float(none),
 
-                "xuanyi_dist":      states(SLOT.xuanyi_dist) | float(none),
-                "byd_dist":         states(SLOT.byd_dist) | float(none),
+                "xuanyi_dist":      states(SLOT.xuanyi_dist | default('')) | float(none),
+                "byd_dist":         states(SLOT.byd_dist | default('')) | float(none),
 
-                "wan_uptime":       states(SLOT.wan_uptime) | float(none),
-                "asr_count":        states(SLOT.asr_count) | float(none),
-                "router_count":     states(SLOT.router_count) | float(none),
-                "device_ctrl":      states(SLOT.device_ctrl) | float(none),
-                "terminal_count":   states(SLOT.terminal_count) | float(none),
-                "low_battery":      states(SLOT.low_battery) | float(none),
-                "nas_cpu":          states(SLOT.nas_cpu) | float(none),
-                "nas_mem":          states(SLOT.nas_mem) | float(none),
-                {#- 屏幕自己的背光，由控制包创建，不开放槽位 -#}
+                "wan_uptime":       states(SLOT.wan_uptime | default('')) | float(none),
+                "asr_count":        states(SLOT.asr_count | default('')) | float(none),
+                "router_count":     states(SLOT.router_count | default('')) | float(none),
+                "device_ctrl":      states(SLOT.device_ctrl | default('')) | float(none),
+                "terminal_count":   states(SLOT.terminal_count | default('')) | float(none),
+                "low_battery":      states(SLOT.low_battery | default('')) | float(none),
+                "nas_cpu":          states(SLOT.nas_cpu | default('')) | float(none),
+                "nas_mem":          states(SLOT.nas_mem | default('')) | float(none),
                 "screen_bright":    state_attr('light.ha_monitor_display_screen_light', 'brightness') | float(none),
-                "nas_download":     states(SLOT.nas_download) | float(none),
-                "nas_upload":       states(SLOT.nas_upload) | float(none),
+                "nas_download":     states(SLOT.nas_download | default('')) | float(none),
+                "nas_upload":       states(SLOT.nas_upload | default('')) | float(none),
 
                 "nova13":          ns.nova13,
                 "nova12":          ns.nova12,
@@ -198,14 +199,14 @@ automation:
                 "fan_in_switch":   ns.fan_in_switch,
                 "fan_out_switch":  ns.fan_out_switch,
 
-                "time_text":       states(SLOT.time_text) | default('', true),
-                "external_ip":     states(SLOT.external_ip) | default('', true),
-                "weather":         states(SLOT.weather) | default('', true),
-                "stock":           states(SLOT.stock) | default('', true),
+                "time_text":       states(SLOT.time_text | default('')) | default('', true),
+                "external_ip":     states(SLOT.external_ip | default('')) | default('', true),
+                "weather":         states(SLOT.weather | default('')) | default('', true),
+                "stock":           states(SLOT.stock | default('')) | default('', true),
                 "stock_chg":       ns.stock_chg,
-                "home_mode":       states(SLOT.home_mode) | default('', true),
+                "home_mode":       states(SLOT.home_mode | default('')) | default('', true),
                 "mode_volume":     ns.vol_raw | string | replace('%', '') | float(none),
-                "activity_log":    states(SLOT.activity_log) | default('', true),
-                "parking_status":  states(SLOT.parking_status) | default('', true)
+                "activity_log":    states(SLOT.activity_log | default('')) | default('', true),
+                "parking_status":  states(SLOT.parking_status | default('')) | default('', true)
               } | to_json
             }}
