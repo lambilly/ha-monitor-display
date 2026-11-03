@@ -13,9 +13,10 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--txt);
        font:14px/1.55 "Microsoft YaHei","PingFang SC",system-ui,sans-serif}
-  header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:18px 24px}
-  header h1{margin:0;font-size:19px;font-weight:600}
-  header p{margin:4px 0 0;font-size:12.5px;opacity:.85}
+  header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:20px 24px;text-align:center}
+  header h1{margin:0;font-size:20px;font-weight:600;letter-spacing:.5px}
+  .subbar{background:var(--card);border-bottom:1px solid var(--line);color:var(--sub);
+          text-align:center;padding:10px 24px;font-size:12.5px;line-height:1.5}
   .wrap{display:flex;gap:16px;padding:16px 20px;max-width:1500px;margin:0 auto;align-items:flex-start}
   .col-l{flex:1 1 640px;min-width:0}
   .col-r{flex:1 1 480px;min-width:0;position:sticky;top:12px;
@@ -145,7 +146,6 @@
 <body>
 <header>
   <h1>HA Monitor Display 配置生成器 <span style="font-size:12px;opacity:.7">v3.0</span></h1>
-  <p>填 WiFi / MQTT + 选 51 个槽位实体 → 下载 secrets.yaml 与 monitor_display_push.yaml，改完即用，无需改代码。</p>
 </header>
 
 <div class="wrap">
@@ -154,7 +154,8 @@
   <!-- ⓪ 新手必读 -->
   <details class="card c0 help" open>
     <summary>📖 使用前必读：改哪里、要不要重新编译？</summary>
-    <p class="hint" style="margin-top:6px">本页面给 <b>HA Monitor Display 电子墨水屏/触摸屏</b> 的使用者生成两份配置文件。<b>设备的 51 个数据键名是固件与 HA 约定好的"信箱编号"，永远不用改</b>——你只需要决定"每个信箱收哪个 HA 实体的数据"。
+    <p class="hint" style="margin-top:6px"><b>填 WiFi / MQTT + 选 51 个槽位实体 → 下载 secrets.yaml 与 monitor_display_push.yaml，改完即用，无需改代码。</b><br>
+      本页面给 <b>HA Monitor Display 电子墨水屏/触摸屏</b> 的使用者生成两份配置文件。<b>设备的 51 个数据键名是固件与 HA 约定好的"信箱编号"，永远不用改</b>——你只需要决定"每个信箱收哪个 HA 实体的数据"。
       改动后的数据流：<code style="font-family:var(--mono)">HA 实体 → 自动化每5秒打包 JSON → MQTT → 屏幕</code>，实体 ID 不会进入固件。</p>
     <table class="howto">
       <tr><th style="width:150px">你改了什么</th><th>替换哪个文件</th><th style="width:110px">要重新编译烧录吗</th><th>如何生效</th></tr>
@@ -517,7 +518,7 @@ const SLOTS = [
   { g:"第1页 家居 · 行4~5 右列：在线设备 A / B", page:1,
     note:"两格完全通用，放任意你想盯在线状态的设备（车机、手机、电视盒…）。"
        + "<b>_online</b> 必须为 <b>binary_sensor</b>（on=在线绿字，off=离线灰字）；"
-       + "<b>_name</b> 是<b>屏幕显示的名字（纯文本，不是实体 ID）</b>，留空则显示固件默认「Nova13 / Nova12」，"
+       + "<b>_name</b> 是<b>屏幕显示的名字（纯文本，不是实体 ID）</b>，留空则显示「Nova13 / Nova12」，"
        + "名称不写进固件，改这里即可。名字过长屏幕会自动截断。",
     items:[
     ["device_a_online","A 格在线状态（屏:右上格「在线/离线」）","binary_sensor","binary_sensor.lam_nova13"],
