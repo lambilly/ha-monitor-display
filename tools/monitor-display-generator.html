@@ -651,6 +651,11 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
       onChange();
     });
   });
+  /* ---- 基础配置输入框：输入即刷新（漏绑会导致右侧输出不更新） ---- */
+  SECRET_KEYS.forEach(k=>{ $("k_"+k).addEventListener("input", onChange); });
+  $("ha_base").addEventListener("input", ()=>{
+    state.ha.base = $("ha_base").value.trim(); saveSoon();
+  });
   $("btn_clear_slots").addEventListener("click", ()=>{
     if (!confirm("清空全部 49 个槽位？")) return;
     for (const k in state.slots) state.slots[k].input.value = "";
