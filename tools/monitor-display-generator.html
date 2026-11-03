@@ -32,13 +32,16 @@
   .card.c2 h2 .n{background:#16a34a}
   .card.c3 h2 .n{background:#d97706}
   .card.c3 .grp{background:#fff}
-  /* 底部屏幕版面模拟 */
-  section.mocks{max-width:1500px;margin:0 auto 30px;padding:0 20px}
-  .mocks .card{background:#fff}
-  .mk-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:4px}
-  .mk-fig{margin:0}
-  .mk-fig figcaption{font-size:12.5px;color:var(--sub);text-align:center;margin-top:8px}
-  .mk-fig figcaption b{color:var(--txt)}
+  /* 右侧常驻屏幕版面模拟 */
+  .mk-panel{background:#fff}
+  .mk-switch{display:flex;gap:6px;margin:0 0 10px}
+  .mk-switch button{flex:1;padding:6px 4px;font-size:12.5px;display:flex;align-items:center;
+                    justify-content:center;gap:5px}
+  .mk-switch button i{font-style:normal;font-size:11px;color:var(--sub);
+                      background:#f1f5f9;border-radius:8px;padding:0 5px}
+  .mk-switch button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+  .mk-switch button.on i{background:rgba(255,255,255,.22);color:#fff}
+  .mk-stage .screen{width:100%}
   .screen{position:relative;aspect-ratio:480/320;background:#0f0f0f;border:6px solid #22262e;
           border-radius:12px;container-type:inline-size;overflow:hidden;
           box-shadow:0 6px 18px rgba(15,23,42,.22)}
@@ -59,72 +62,15 @@
   .mk-tab b.on{color:#4fd1c5}
   .mk-note{position:absolute;display:flex;align-items:center;justify-content:center;
            color:#8a94a6;font-size:2.6cqw;text-align:center;line-height:1.5;padding:0 6%}
-  .legend{font-size:12.5px;color:var(--sub);margin:0 0 12px}
+  .legend{font-size:12px;color:var(--sub);line-height:1.6}
   .legend span{display:inline-block;width:10px;height:10px;border-radius:3px;
-               border:1px dashed rgba(0,0,0,.35);margin:0 4px 0 12px;vertical-align:-1px}
+               border:1px dashed rgba(0,0,0,.35);margin:0 4px 0 10px;vertical-align:-1px}
   .legend span.hl{background:rgba(220,38,38,.55);border:1px solid #ff8f8f}
-  .card h2{margin:0 0 10px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
-  .card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
-              border-radius:50%;background:var(--acc);color:#fff;font-size:12px}
-  .hint{color:var(--sub);font-size:12.5px;margin:2px 0 10px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
-  .f{display:flex;flex-direction:column;gap:3px}
-  .f label{font-size:12.5px;color:var(--sub)}
-  .f label b{color:var(--txt);font-weight:600}
-  input[type=text],input[type=password]{border:1px solid var(--line);border-radius:6px;
-      padding:7px 9px;font:13px var(--mono);width:100%;background:#fff;color:var(--txt)}
-  input:focus{outline:2px solid var(--acc-soft);border-color:var(--acc)}
-  input.bad{border-color:var(--err);background:#fef2f2}
-  .row{display:flex;gap:8px;align-items:center}
-  button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 12px;
-         font:13px "Microsoft YaHei",sans-serif;cursor:pointer;color:var(--txt)}
-  button:hover{border-color:var(--acc);color:var(--acc)}
-  button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
-  button.pri:hover{opacity:.9;color:#fff}
-  .grp{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;overflow:hidden}
-  .grp>summary{padding:8px 12px;background:#f8fafc;font-weight:600;font-size:13px;cursor:pointer;
-               display:flex;justify-content:space-between;align-items:center;list-style:none}
-  .grp>summary::-webkit-details-marker{display:none}
-  .grp>summary .cnt{font-size:12px;color:var(--sub);font-weight:400}
-  .grp .body{padding:8px 12px 12px}
-  .slot{display:grid;grid-template-columns:1fr 1.2fr;gap:8px;align-items:center;
-        padding:5px 0;border-bottom:1px dashed #eef1f5}
-  .slot:last-child{border-bottom:none}
-  .slot .k{font:12.5px var(--mono);color:var(--txt)}
-  .slot .k .d{display:block;font:12px "Microsoft YaHei";color:var(--sub)}
-  .badge{display:inline-block;font-size:10.5px;border-radius:4px;padding:1px 5px;margin-left:6px;
-         background:var(--acc-soft);color:var(--acc);vertical-align:1px;font-family:var(--mono)}
-  .slot input{font-size:12.5px}
-  .slot input.empty{border-style:dashed}
-  .slot input.mismatch{border-color:var(--err);background:#fef2f2}
-  .slot input.filled-ok{border-color:#b7e0c3;background:#f6fcf8}
-  .out{position:relative}
-  .out pre{background:#0f172a;color:#dbe6f3;border-radius:8px;padding:12px;margin:8px 0 0;
-           font:12px/1.5 var(--mono);max-height:340px;overflow:auto;white-space:pre}
-  .out .bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
-  .out .bar .sp{flex:1}
-  .valid{font-size:12.5px;padding:8px 10px;border-radius:6px;margin-bottom:8px}
-  .valid.ok{background:#f0fdf4;color:var(--ok);border:1px solid #bbf7d0}
-  .valid.warn{background:#fffbeb;color:var(--warn);border:1px solid #fde68a}
-  details.deploy{font-size:12.5px;color:var(--sub)}
-  details.deploy summary{cursor:pointer;color:var(--acc);font-weight:600}
-  details.deploy ol{margin:6px 0 0;padding-left:20px}
-  details.deploy li{margin-bottom:4px}
-  details.deploy code{background:#eef2f7;border-radius:4px;padding:1px 5px;font-family:var(--mono);font-size:12px}
-  details.help summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--acc)}
-  details.help[open] summary{margin-bottom:8px}
-  table.howto{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0 10px}
-  table.howto th,table.howto td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
-  table.howto th{background:#f8fafc;white-space:nowrap}
-  table.howto code{background:#eef2f7;border-radius:4px;padding:1px 4px;font-family:var(--mono);font-size:11.5px}
-  .tag-no{display:inline-block;background:#f0fdf4;color:var(--ok);border:1px solid #bbf7d0;
-          border-radius:4px;padding:0 6px;font-size:11.5px;font-weight:600}
-  .tag-yes{display:inline-block;background:#fff7ed;color:var(--warn);border:1px solid #fde68a;
-           border-radius:4px;padding:0 6px;font-size:11.5px;font-weight:600}
-  .grp .note{font-size:12px;color:#4b5563;background:#f8fafc;border-radius:6px;
-             padding:6px 9px;margin:2px 0 8px;line-height:1.6}
-  .grp .note b{color:var(--txt)}
-  .grp .note .att{color:var(--warn);font-weight:600}
+  /* 底部输出区（两列） */
+  section.outputs{max-width:1500px;margin:0 auto 30px;padding:0 20px}
+  .out-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:1000px){.out-grid{grid-template-columns:1fr}}
+  .out-grid pre{max-height:420px}
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1f2733;color:#fff;
          padding:8px 18px;border-radius:20px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:9}
   .toast.show{opacity:.95}
@@ -224,63 +170,61 @@
 
 </div>
 
-<!-- 右列：输出 -->
+<!-- 右列：屏幕版面模拟（常驻可见，编辑槽位时同步高亮） -->
 <div class="col-r">
+  <div class="card mk-panel">
+    <h2>🖥 屏幕版面<span style="margin-left:auto;font-size:12px;font-weight:400;color:var(--sub)">480×320 等比 · 点方框跳到槽位</span></h2>
+    <div class="mk-switch" id="mk_switch">
+      <button data-page="1" class="on">第1页 家居<i>23</i></button>
+      <button data-page="2">第2页 网络<i>26</i></button>
+      <button data-page="3">第3页 系统<i>—</i></button>
+    </div>
+    <div class="mk-stage">
+      <div class="screen" id="mk_1"></div>
+      <div class="screen" id="mk_2" hidden></div>
+      <div class="screen" id="mk_3" hidden></div>
+    </div>
+    <p class="legend" style="margin:10px 0 0">虚线框＝可填槽位；<span class="hl"></span>红框＝正在编辑的槽位。格内灰字为已填实体，悬停看全名；留空的框显示为暗色。
+      点左侧任意槽位输入框，右侧会自动切到它所在的页面。「通知」页由消息触发、不使用槽位。</p>
+  </div>
+</div>
+</div>
+
+<!-- ================= 生成结果（下移，整幅两列） ================= -->
+<section class="outputs">
   <div class="card out">
-    <h2><span class="n">4</span>生成结果（实时）</h2>
+    <h2><span class="n">4</span>生成结果（实时）<span style="margin-left:auto;font-size:12.5px;font-weight:400;color:var(--sub)">改完直接下载替换</span></h2>
     <div class="valid" id="valid_box">—</div>
+    <div class="out-grid">
+      <div>
+        <div class="bar"><b style="font-size:13px">① secrets.yaml</b><span class="sp"></span>
+          <button data-cp="out_secrets">复制</button><button data-dl="out_secrets" data-fn="secrets.yaml">下载</button></div>
+        <p class="hint" style="margin:0 0 4px">覆盖 ESPHome 目录的 <code style="font-family:var(--mono)">secrets.yaml</code>（<code style="font-family:var(--mono)">/config/esphome/</code>）→ <b>需重新编译烧录</b>。</p>
+        <pre id="out_secrets"></pre>
+      </div>
+      <div>
+        <div class="bar"><b style="font-size:13px">② monitor_display_push.yaml</b><span class="sp"></span>
+          <button data-cp="out_push">复制</button><button data-dl="out_push" data-fn="monitor_display_push.yaml">下载</button></div>
+        <p class="hint" style="margin:0 0 4px">覆盖 <code style="font-family:var(--mono)">/config/packages/monitor_display_push.yaml</code> → <b>仅重载自动化</b>，不用烧录。</p>
+        <pre id="out_push"></pre>
+      </div>
+    </div>
 
-    <div class="bar"><b style="font-size:13px">① secrets.yaml</b><span class="sp"></span>
-      <button data-cp="out_secrets">复制</button><button data-dl="out_secrets" data-fn="secrets.yaml">下载</button></div>
-    <pre id="out_secrets"></pre>
-
-    <div class="bar" style="margin-top:14px"><b style="font-size:13px">② monitor_display_push.yaml</b><span class="sp"></span>
-      <button data-cp="out_push">复制</button><button data-dl="out_push" data-fn="monitor_display_push.yaml">下载</button></div>
-    <p class="hint" style="margin:0 0 4px">已把槽位表写进完整推送包，下载后直接替换 <code style="font-family:var(--mono)">/config/packages/monitor_display_push.yaml</code>。</p>
-    <pre id="out_push"></pre>
-
-    <details class="deploy" style="margin-top:10px">
-      <summary>部署三步（点开看）</summary>
+    <details class="deploy" style="margin-top:12px">
+      <summary>部署与生效方式（点开看）</summary>
       <ol>
-        <li><b>secrets.yaml</b> → 覆盖 ESPHome 目录的 <code>secrets.yaml</code>（HA 加载项在 <code>/config/esphome/</code>），可在 ESPHome 网页先 <code>VALIDATE</code>。</li>
-        <li><b>monitor_display_push.yaml</b> → 覆盖 <code>/config/packages/monitor_display_push.yaml</code>，然后 开发者工具 → YAML → 自动化 重新加载（改槽位以后也只需这一步，不用重新烧录）。</li>
-        <li>设备首次烧录需在 ESPHome 里 INSTALL；之后换实体只改推送包即可。</li>
+        <li><b>只换实体</b>：下载 <b>monitor_display_push.yaml</b> 覆盖 HA 的 <code>/config/packages/</code> → 开发者工具 → YAML → 「自动化」重新加载，几秒后屏幕刷新，<b>不需要重新烧录</b>。</li>
+        <li><b>改 WiFi / MQTT / 密码</b>：下载 <b>secrets.yaml</b> 覆盖 ESPHome 的 <code>/config/esphome/secrets.yaml</code> → ESPHome 里 INSTALL 重新编译烧录（可先 VALIDATE），<b>需要重新烧录</b>。</li>
+        <li><b>首次安装设备</b>：两份都要替换并烧录，之后日常调整只走第 1 条。</li>
+        <li>替换前建议把旧文件复制一份留底，填错可从本页重新生成。</li>
       </ol>
     </details>
-  </div>
 
-  <div class="card">
-    <h2>配置备份</h2>
-    <p class="hint">输入会自动保存在浏览器 localStorage。换电脑/换浏览器用导入导出。</p>
-    <div class="row">
+    <div class="row" style="margin-top:12px;flex-wrap:wrap">
+      <span class="hint" style="margin:0">配置备份：输入自动存浏览器本地</span>
       <button id="btn_export">导出配置 JSON</button>
       <button id="btn_import">导入配置 JSON</button>
       <input type="file" id="imp_file" accept=".json" style="display:none">
-    </div>
-  </div>
-</div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<section class="mocks">
-  <div class="card">
-    <h2>🖥 屏幕版面示意（等比 480×320，与实机同步）<span style="margin-left:auto;font-size:12.5px;font-weight:400;color:var(--sub)">点任意方框＝跳到对应槽位</span></h2>
-    <p class="legend">虚线框＝可填槽位的位置（「天气」与「户外」同区：天气实体不可用时温度取户外）；<span class="hl"></span>红框＝你当前正在编辑的槽位。
-      框内灰色小字是当前填入的实体（过长省略，悬停看全名）；留空的框显示为暗色。底部四页标签中「通知」页由消息触发、不使用槽位。</p>
-    <div class="mk-row">
-      <figure class="mk-fig">
-        <div class="screen" id="mk_1"></div>
-        <figcaption><b>第 1 页 · 家居</b>　23 个槽位</figcaption>
-      </figure>
-      <figure class="mk-fig">
-        <div class="screen" id="mk_2"></div>
-        <figcaption><b>第 2 页 · 网络</b>　26 个槽位</figcaption>
-      </figure>
-      <figure class="mk-fig">
-        <div class="screen" id="mk_3"></div>
-        <figcaption><b>第 3 页 · 系统</b>　设备自身信息，不使用槽位</figcaption>
-      </figure>
     </div>
   </div>
 </section>
@@ -507,7 +451,7 @@ const SLOTS = [
     ["nova13","轩逸车机在线（屏:Nova13）","binary_sensor","binary_sensor.lam_nova13"],
     ["nova12","手机在线（屏:Nova12）","binary_sensor","binary_sensor.su_nova12"],
   ]},
-  { g:"第2页 网络 · 行1：外网 IP / WAN", page:1,
+  { g:"第2页 网络 · 行1：外网 IP / WAN", page:2,
     note:"<b>wan_status</b> 必须为 <b>binary_sensor</b>（on=连接图标点亮）；<b>external_ip</b> 文本原样显示；<b>wan_uptime</b> 建议为秒数数值（路由器 uptime 传感器），屏幕自动换算为“x天x小时”。",
     items:[
     ["external_ip","外网 IP（屏:外网IP）","sensor","sensor.tp_link_smb_tl_r498gpm_ac_external_ip"],
@@ -720,7 +664,10 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
         state.slots[key] = { def, input: row.querySelector("input"), dl };
         state.slots[key].input.addEventListener("input", onChange);
         state.slots[key].input.addEventListener("focus", onSlotFocus);
-        state.slots[key].input.addEventListener("focus", ()=>markCell(key,true));
+        state.slots[key].input.addEventListener("focus", ()=>{
+          const pg = (SLOTS.find(g=>g.items.some(i=>i[0]===key))||{}).page || 1;
+          showPage(pg); markCell(key,true);
+        });
         state.slots[key].input.addEventListener("blur", ()=>markCell(key,false));
       }
       root.appendChild(d);
@@ -762,6 +709,18 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
       scr.appendChild(tb);
     }
   })();
+  /* ---- 页签切换：右侧只显示一页，聚焦槽位时自动跟随 ---- */
+  const KEY_PAGE = {};
+  SLOTS.forEach(g=>g.items.forEach(i=>KEY_PAGE[i[0]]=g.page));
+  function showPage(n){
+    document.querySelectorAll("#mk_switch button")
+      .forEach(b=>b.classList.toggle("on", b.dataset.page===String(n)));
+    [1,2,3].forEach(i=>{ const el=$("mk_"+i); if (el) el.hidden = (i!==n); });
+  }
+  $("mk_switch").addEventListener("click", e=>{
+    const b = e.target.closest("button"); if (b) showPage(+b.dataset.page);
+  });
+
   function markCell(key,on){
     document.querySelectorAll('.mk-cell[data-key="'+key+'"]')
       .forEach(c=>c.classList.toggle("hit", !!on));
