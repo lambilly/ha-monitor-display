@@ -54,29 +54,6 @@
   .card.c1 .grid{grid-template-columns:1fr 1fr}
   .card.c1 .grid>p{grid-column:1/-1}
   @media (max-width:720px){.card.c1 .grid{grid-template-columns:1fr}}
-  /* ===== 移动端适配（≤720px：槽位上下堆叠、间距收紧、触控热区加大） ===== */
-  @media (max-width:720px){
-    header{padding:14px 12px}
-    .subbar{padding:8px 12px}
-    .wrap{padding:10px;gap:12px}
-    .card{padding:12px;margin-bottom:12px}
-    .slot{grid-template-columns:1fr;gap:3px;padding:6px 0}
-    .slot input{font-size:13px;padding:9px 10px}
-    button{padding:8px 12px}
-    .out pre{font-size:11px}
-    .toast{bottom:14px;max-width:92vw;text-align:center}
-  }
-  /* 必读表格列宽固定，窄屏时横向滚动而不是挤压爆版 */
-  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  @media (max-width:720px){ table.howto{min-width:620px} }
-  /* 模拟图格内字号跟随容器宽度缩放（.screen 已设 container-type:inline-size），
-     手机上模拟图约 350px 宽，固定 12px 会挤出版 */
-  @container (max-width:400px){
-    .mk-cell{font-size:10px;line-height:1.05;padding:0}
-    .mk-cell .v{font-size:9px}
-    .mk-tab{font-size:12px}
-    .mk-note{font-size:9px}
-  }
   .f{display:flex;flex-direction:column;gap:3px}
   .f label{font-size:12.5px;color:var(--sub)}
   .f label b{color:var(--txt);font-weight:600}
@@ -180,6 +157,31 @@
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1f2733;color:#fff;
          padding:8px 18px;border-radius:20px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:9}
   .toast.show{opacity:.95}
+  /* 必读表格列宽固定，窄屏时横向滚动而不是挤压爆版 */
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  /* ===== 移动端适配（≤720px）。注意：本块必须位于所有基础规则之后——
+     同权重选择器按源顺序覆盖，放前面会被后面的基础规则顶掉（已踩坑一次） ===== */
+  @media (max-width:720px){
+    header{padding:14px 12px}
+    .subbar{padding:8px 12px}
+    .wrap{padding:10px;gap:12px}
+    .card{padding:12px;margin-bottom:12px}
+    .grid{grid-template-columns:1fr}
+    .slot{grid-template-columns:1fr;gap:3px;padding:6px 0}
+    .slot input{font-size:13px;padding:9px 10px}
+    button{padding:8px 12px}
+    .out pre{font-size:11px}
+    .toast{bottom:14px;max-width:92vw;text-align:center}
+    table.howto{min-width:620px}
+  }
+  /* 模拟图格内字号跟随容器宽度缩放（.screen 已设 container-type:inline-size），
+     手机上模拟图约 350px 宽，固定 12px 会挤出版 */
+  @container (max-width:400px){
+    .mk-cell{font-size:10px;line-height:1.05;padding:0}
+    .mk-cell .v{font-size:9px}
+    .mk-tab{font-size:12px}
+    .mk-note{font-size:9px}
+  }
 </style>
 </head>
 <body>
