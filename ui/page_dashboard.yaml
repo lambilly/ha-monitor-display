@@ -6,7 +6,7 @@
 #   行2：服务器 / 网关 / AP / 设备 四格在线数   （字号：small）
 #   行3：居家模式 | 车位状态                   （字号：medium）
 #   行4：左列「电灯/窗帘」跨两行(101) | 中列「空调/电器」跨两行(101)
-#        | 右列上下两个标准行：Nova13 / Nova12
+#        | 右列上下两个标准行：在线设备 A / 在线设备 B（通用格，名称由 HA 下发）
 #   行5：（左中列已跨行占用）右列下半，行4~行5 合成一个 101 高的视觉块
 #   行6：TAB 导航（家居 | 网络 | 系统）         （字号：medium）
 # 依赖 ui_common.yaml 里的字体与全局变量
@@ -500,8 +500,9 @@ lvgl:
                   text_color: 0xFFFFFF
                   recolor: true
 
-        # ============ 行4~行5 右侧上格：Nova13 (y162 h49) ============
-        # 图标固定天蓝；名字白色固定；状态字单独 label，在线绿/离线灰
+        # ============ 行4~行5 右侧上格：在线设备 A (y162 h49) ============
+        # 通用格：名称由 HA 下发（device_a_name），留空显示「设备1」；超长截断
+        # 图标固定天蓝；状态字单独 label，在线绿/离线灰
         - obj:
             x: 319
             y: 162
@@ -514,7 +515,7 @@ lvgl:
             scrollable: false
             widgets:
               - label:
-                  id: home_nova13_icon
+                  id: home_dev_a_icon
                   align: left_mid
                   x: 4
                   text: "\U000F0815"
@@ -522,21 +523,25 @@ lvgl:
                   height: 18
                   text_color: 0x7BC8FF
               - label:
+                  id: home_dev_a_name
                   align: left_mid
                   x: 26
-                  text: "Nova13"
+                  width: 74
+                  long_mode: DOT
+                  text: "设备1"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
               - label:
-                  id: home_nova13_label
-                  align: left_mid
-                  x: 88
+                  id: home_dev_a_state
+                  align: right_mid
+                  x: -8
                   text: "--"
                   text_font: ui_font_medium
                   text_color: 0x757575
 
-        # ============ 行4~行5 右侧下格：Nova12 (y214 h49) ============
-        # 图标固定紫色；名字白色固定；状态字单独 label，在线绿/离线灰
+        # ============ 行4~行5 右侧下格：在线设备 B (y214 h49) ============
+        # 通用格：名称由 HA 下发（device_b_name），留空显示「设备2」；超长截断
+        # 图标固定紫色；状态字单独 label，在线绿/离线灰
         - obj:
             x: 319
             y: 214
@@ -549,7 +554,7 @@ lvgl:
             scrollable: false
             widgets:
               - label:
-                  id: home_nova12_icon
+                  id: home_dev_b_icon
                   align: left_mid
                   x: 4
                   text: "\U000F0815"
@@ -557,15 +562,18 @@ lvgl:
                   height: 18
                   text_color: 0xB39DFF
               - label:
+                  id: home_dev_b_name
                   align: left_mid
                   x: 26
-                  text: "Nova12"
+                  width: 74
+                  long_mode: DOT
+                  text: "设备2"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
               - label:
-                  id: home_nova12_label
-                  align: left_mid
-                  x: 88
+                  id: home_dev_b_state
+                  align: right_mid
+                  x: -8
                   text: "--"
                   text_font: ui_font_medium
                   text_color: 0x757575
@@ -825,9 +833,9 @@ interval:
           // 水压 sensor.maze_wateronev3_tp_f8e644（bar）
           fmt_val(id(home_water_pressure_label), "水压", id(ha_water_pressure).state, "bar", 1);
 
-          // ===== 右列：手机状态（只改状态两字，在线绿 / 离线灰；图标颜色固定）=====
-          // 手机在线：有状态再判断在线/离线；实体缺失时显示 "--"
-          auto set_phone = [](lv_obj_t* state_lbl, esphome::binary_sensor::BinarySensor* bs) {
+          // ===== 右列：在线设备两格（通用槽位，名称由 HA 下发；图标颜色固定）=====
+          // 有状态才判断在线/离线；实体缺失时显示 "--"
+          auto set_dev_state = [](lv_obj_t* state_lbl, esphome::binary_sensor::BinarySensor* bs) {
             if (!bs->has_state()) {
               lv_label_set_text(state_lbl, "--");
               lv_obj_set_style_text_color(state_lbl, lv_color_hex(0x757575), 0);
@@ -836,5 +844,12 @@ interval:
             lv_label_set_text(state_lbl, bs->state ? "在线" : "离线");
             lv_obj_set_style_text_color(state_lbl, lv_color_hex(bs->state ? 0x59D98B : 0x757575), 0);
           };
-          set_phone(id(home_nova13_label), id(ha_nova13));
-          set_phone(id(home_nova12_label), id(ha_nova12));
+          set_dev_state(id(home_dev_a_state), id(ha_device_a_online));
+          set_dev_state(id(home_dev_b_state), id(ha_device_b_online));
+          // 名称：HA 下发优先（device_a_name / device_b_name），留空回退到「设备1 / 设备2」
+          if (id(home_dev_a_name))
+            lv_label_set_text(id(home_dev_a_name),
+                              id(hd_device_a_name).empty() ? "设备1" : id(hd_device_a_name).c_str());
+          if (id(home_dev_b_name))
+            lv_label_set_text(id(home_dev_b_name),
+                              id(hd_device_b_name).empty() ? "设备2" : id(hd_device_b_name).c_str());

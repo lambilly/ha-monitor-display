@@ -6,6 +6,41 @@
 - **API 线**：`HA Monitor Display API v0.9.0`（ESPHome Native API 拉取，前身版本）
 - **通知线**：`HA Monitor Display Notify v2.0`（开发中）
 
+## [未发布] — 2026-11-03（v3.1 概览页在线设备两格通用化）
+
+**背景**：概览页右列上下两格的设备名原先写死为 `Nova13` / `Nova12`——不止屏幕文字，
+连 JSON 键名（`nova13`/`nova12`）、固件全局变量（`hd_nova13`/`hd_nova12`）、模板实体
+（`ha_nova13`/`ha_nova12`）都带着具体产品名，别人拿去用只能显示这两台设备。
+本版把这两格彻底通用化：**名称不再固化在固件里，改由 HA 下发**。
+
+### Changed
+
+- JSON 键名：`nova13` / `nova12` → `device_a_online` / `device_b_online`
+  （固件 `hd_device_a_online` / `hd_device_b_online`、模板实体
+  `ha_device_a_online` / `ha_device_b_online` 同步改名）
+- 屏幕两格拆成三段：图标（固定色）+ **名称（HA 下发，可改）** + 状态（在线绿 / 离线灰）
+- 名称为空时回退到「设备1 / 设备2」；名字超过 74px 自动截断（`long_mode: DOT`），
+  状态字改为右对齐，不会再被长名字挤掉
+
+### Added
+
+- 新增两个**文本槽位** `device_a_name` / `device_b_name`：填纯文本（不是 entity_id），
+  由推送包原样带到屏幕。槽位总数 49 → **51**
+
+### 升级注意
+
+- **需要重新编译烧录**（固件改了 JSON 键名与标签），同时替换
+  `monitor_display_push.yaml`；两者都换完屏幕两格才恢复显示
+- 只换固件不换推送包：两格显示 `--` + 默认名「设备1/设备2」，**不影响其他 47 个槽位**
+
+### 验证
+
+- `esphome config`：Configuration is valid（含 `long_mode: DOT`、标签 `width`）
+- 推送包：YAML 解析 51 槽 / 渲染 56 键；jinja2 编译 + 双阶段渲染（无 SLOT 兜底 / 带 SLOT）
+  均为合法 JSON，中文名称正确转义
+- 生成器：按当前值重生成为与正式文件 **payload 一字不差**；模拟图 51 个键全覆盖
+- 顺带修复生成页样式丢失（上一版替换 CSS 时误删 60 行基础样式，导致版面错乱）
+
 ## [未发布] — 2026-11-03（v3.0 第一档：实体槽位表化）
 
 **背景**：推送包里 49 个实体 ID 硬编码在模板各处，换一个用户/换一个实体都要读懂模板。

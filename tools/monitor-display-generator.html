@@ -32,6 +32,67 @@
   .card.c2 h2 .n{background:#16a34a}
   .card.c3 h2 .n{background:#d97706}
   .card.c3 .grp{background:#fff}
+  .card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
+              border-radius:50%;background:var(--acc);color:#fff;font-size:12px}
+  .hint{color:var(--sub);font-size:12.5px;margin:2px 0 10px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+  .f{display:flex;flex-direction:column;gap:3px}
+  .f label{font-size:12.5px;color:var(--sub)}
+  .f label b{color:var(--txt);font-weight:600}
+  input[type=text],input[type=password]{border:1px solid var(--line);border-radius:6px;
+      padding:7px 9px;font:13px var(--mono);width:100%;background:#fff;color:var(--txt)}
+  input:focus{outline:2px solid var(--acc-soft);border-color:var(--acc)}
+  input.bad{border-color:var(--err);background:#fef2f2}
+  .row{display:flex;gap:8px;align-items:center}
+  button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 12px;
+         font:13px "Microsoft YaHei",sans-serif;cursor:pointer;color:var(--txt)}
+  button:hover{border-color:var(--acc);color:var(--acc)}
+  button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+  button.pri:hover{opacity:.9;color:#fff}
+  .grp{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;overflow:hidden}
+  .grp>summary{padding:8px 12px;background:#f8fafc;font-weight:600;font-size:13px;cursor:pointer;
+               display:flex;justify-content:space-between;align-items:center;list-style:none}
+  .grp>summary::-webkit-details-marker{display:none}
+  .grp>summary .cnt{font-size:12px;color:var(--sub);font-weight:400}
+  .grp .body{padding:8px 12px 12px}
+  .slot{display:grid;grid-template-columns:1fr 1.2fr;gap:8px;align-items:center;
+        padding:5px 0;border-bottom:1px dashed #eef1f5}
+  .slot:last-child{border-bottom:none}
+  .slot .k{font:12.5px var(--mono);color:var(--txt)}
+  .slot .k .d{display:block;font:12px "Microsoft YaHei";color:var(--sub)}
+  .badge{display:inline-block;font-size:10.5px;border-radius:4px;padding:1px 5px;margin-left:6px;
+         background:var(--acc-soft);color:var(--acc);vertical-align:1px;font-family:var(--mono)}
+  .slot input{font-size:12.5px}
+  .slot input.empty{border-style:dashed}
+  .slot input.mismatch{border-color:var(--err);background:#fef2f2}
+  .slot input.filled-ok{border-color:#b7e0c3;background:#f6fcf8}
+  .out{position:relative}
+  .out pre{background:#0f172a;color:#dbe6f3;border-radius:8px;padding:12px;margin:8px 0 0;
+           font:12px/1.5 var(--mono);max-height:340px;overflow:auto;white-space:pre}
+  .out .bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+  .out .bar .sp{flex:1}
+  .valid{font-size:12.5px;padding:8px 10px;border-radius:6px;margin-bottom:8px}
+  .valid.ok{background:#f0fdf4;color:var(--ok);border:1px solid #bbf7d0}
+  .valid.warn{background:#fffbeb;color:var(--warn);border:1px solid #fde68a}
+  details.deploy{font-size:12.5px;color:var(--sub)}
+  details.deploy summary{cursor:pointer;color:var(--acc);font-weight:600}
+  details.deploy ol{margin:6px 0 0;padding-left:20px}
+  details.deploy li{margin-bottom:4px}
+  details.deploy code{background:#eef2f7;border-radius:4px;padding:1px 5px;font-family:var(--mono);font-size:12px}
+  details.help summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--acc)}
+  details.help[open] summary{margin-bottom:8px}
+  table.howto{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0 10px}
+  table.howto th,table.howto td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+  table.howto th{background:#f8fafc;white-space:nowrap}
+  table.howto code{background:#eef2f7;border-radius:4px;padding:1px 4px;font-family:var(--mono);font-size:11.5px}
+  .tag-no{display:inline-block;background:#f0fdf4;color:var(--ok);border:1px solid #bbf7d0;
+          border-radius:4px;padding:0 6px;font-size:11.5px;font-weight:600}
+  .tag-yes{display:inline-block;background:#fff7ed;color:var(--warn);border:1px solid #fde68a;
+           border-radius:4px;padding:0 6px;font-size:11.5px;font-weight:600}
+  .grp .note{font-size:12px;color:#4b5563;background:#f8fafc;border-radius:6px;
+             padding:6px 9px;margin:2px 0 8px;line-height:1.6}
+  .grp .note b{color:var(--txt)}
+  .grp .note .att{color:var(--warn);font-weight:600}
   /* 右侧常驻屏幕版面模拟 */
   .mk-panel{background:#fff}
   .mk-switch{display:flex;gap:6px;margin:0 0 10px}
@@ -79,7 +140,7 @@
 <body>
 <header>
   <h1>HA Monitor Display 配置生成器 <span style="font-size:12px;opacity:.7">v3.0</span></h1>
-  <p>填 WiFi / MQTT + 选 49 个槽位实体 → 下载 secrets.yaml 与 monitor_display_push.yaml，改完即用，无需改代码。</p>
+  <p>填 WiFi / MQTT + 选 51 个槽位实体 → 下载 secrets.yaml 与 monitor_display_push.yaml，改完即用，无需改代码。</p>
 </header>
 
 <div class="wrap">
@@ -88,7 +149,7 @@
   <!-- ⓪ 新手必读 -->
   <details class="card c0 help" open>
     <summary>📖 使用前必读：改哪里、要不要重新编译？</summary>
-    <p class="hint" style="margin-top:6px">本页面给 <b>HA Monitor Display 电子墨水屏/触摸屏</b> 的使用者生成两份配置文件。<b>设备的 49 个数据键名是固件与 HA 约定好的"信箱编号"，永远不用改</b>——你只需要决定"每个信箱收哪个 HA 实体的数据"。
+    <p class="hint" style="margin-top:6px">本页面给 <b>HA Monitor Display 电子墨水屏/触摸屏</b> 的使用者生成两份配置文件。<b>设备的 51 个数据键名是固件与 HA 约定好的"信箱编号"，永远不用改</b>——你只需要决定"每个信箱收哪个 HA 实体的数据"。
       改动后的数据流：<code style="font-family:var(--mono)">HA 实体 → 自动化每5秒打包 JSON → MQTT → 屏幕</code>，实体 ID 不会进入固件。</p>
     <table class="howto">
       <tr><th style="width:150px">你改了什么</th><th>替换哪个文件</th><th style="width:110px">要重新编译烧录吗</th><th>如何生效</th></tr>
@@ -159,7 +220,7 @@
 
   <!-- ③ 槽位 -->
   <div class="card c3">
-    <h2><span class="n">3</span>槽位实体（49 个）<span style="margin-left:auto;font-size:12.5px;font-weight:400;color:var(--sub)">已填 <b id="fill_cnt" style="color:var(--acc)">0</b>/49</span>
+    <h2><span class="n">3</span>槽位实体（51 个）<span style="margin-left:auto;font-size:12.5px;font-weight:400;color:var(--sub)">已填 <b id="fill_cnt" style="color:var(--acc)">0</b><span id="fill_total">/51</span></span>
       <button id="btn_clear_slots" style="font-size:12px;padding:3px 8px">清空全部</button>
       <button id="btn_load_example" style="font-size:12px;padding:3px 8px">载入示例</button></h2>
     <p class="hint">键名是屏幕固件约定，不可改；右边填你 HA 里的 entity_id。顺序按屏幕版面排：
@@ -175,7 +236,7 @@
   <div class="card mk-panel">
     <h2>🖥 屏幕版面<span style="margin-left:auto;font-size:12px;font-weight:400;color:var(--sub)">480×320 等比 · 点方框跳到槽位</span></h2>
     <div class="mk-switch" id="mk_switch">
-      <button data-page="1" class="on">第1页 家居<i>23</i></button>
+      <button data-page="1" class="on">第1页 家居<i>25</i></button>
       <button data-page="2">第2页 网络<i>26</i></button>
       <button data-page="3">第3页 系统<i>—</i></button>
     </div>
@@ -185,6 +246,7 @@
       <div class="screen" id="mk_3" hidden></div>
     </div>
     <p class="legend" style="margin:10px 0 0">虚线框＝可填槽位；<span class="hl"></span>红框＝正在编辑的槽位。格内灰字为已填实体，悬停看全名；留空的框显示为暗色。
+      右边两个「设备A/B」格各含两个槽位（状态 + 显示名），格内显示的是你填的名称。
       点左侧任意槽位输入框，右侧会自动切到它所在的页面。「通知」页由消息触发、不使用槽位。</p>
   </div>
 </div>
@@ -240,7 +302,7 @@
 #     packages: !include_dir_named packages
 #
 # 作用：
-#   每 5 秒把 49 个槽位实体的当前值压成一个 JSON，publish 到
+#   每 5 秒把 51 个槽位的当前值压成一个 JSON，publish 到
 #   home/ha-monitor-display（retain=true），屏幕订阅这一个主题即可
 #   在任何网络下（家里 / 公司 / 酒店）拿到全部数据。
 #
@@ -290,15 +352,15 @@ automation:
                 macro 输出是"字符串"，会把 1 变成 "1"、null 变成 "null"，
                 ESP32 侧 is<int>() 判定失败，字段全落空。 -#}
             {%- set ns = namespace(
-                  nova13          = none,
-                  nova12          = none,
+                  device_a_online = none,
+                  device_b_online = none,
                   wan_status      = none,
                   voice_broadcast = none,
                   fan_in_switch   = none,
                   fan_out_switch  = none,
                   stock_chg       = none) -%}
-            {%- set ns.nova13          = none if states(SLOT.nova13 | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.nova13 | default(''), 'on') else 0) -%}
-            {%- set ns.nova12          = none if states(SLOT.nova12 | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.nova12 | default(''), 'on') else 0) -%}
+            {%- set ns.device_a_online = none if states(SLOT.device_a_online | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.device_a_online | default(''), 'on') else 0) -%}
+            {%- set ns.device_b_online = none if states(SLOT.device_b_online | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.device_b_online | default(''), 'on') else 0) -%}
             {%- set ns.wan_status      = none if states(SLOT.wan_status | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.wan_status | default(''), 'on') else 0) -%}
             {%- set ns.voice_broadcast = none if states(SLOT.voice_broadcast | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.voice_broadcast | default(''), 'on') else 0) -%}
             {%- set ns.fan_in_switch   = none if states(SLOT.fan_in_switch | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.fan_in_switch | default(''), 'on') else 0) -%}
@@ -368,8 +430,10 @@ automation:
                 "nas_download":     states(SLOT.nas_download | default('')) | float(none),
                 "nas_upload":       states(SLOT.nas_upload | default('')) | float(none),
 
-                "nova13":          ns.nova13,
-                "nova12":          ns.nova12,
+                "device_a_online": ns.device_a_online,
+                "device_b_online": ns.device_b_online,
+                "device_a_name":   SLOT.device_a_name | default(''),
+                "device_b_name":   SLOT.device_b_name | default(''),
                 "wan_status":      ns.wan_status,
                 "voice_broadcast": ns.voice_broadcast,
                 "fan_in_switch":   ns.fan_in_switch,
@@ -397,7 +461,7 @@ automation:
    第1页 家居：
      行1 时间 | 天气(温度属性temperature，户外温度为兜底) | 上证指数
      行2 在家 | 客人 | 手机 | 语音        行3 居家模式(音量+轨迹) | 车位(两车距离)
-     行4~5 左列电器动态：电灯/窗帘/空调/电器；中列今日能耗：电压/水压/用气/用电；右侧 Nova13 / Nova12
+     行4~5 左列电器动态：电灯/窗帘/空调/电器；中列今日能耗：电压/水压/用气/用电；右侧「在线设备 A / B」（通用两格，名称由 HA 下发）
    第2页 网络：
      行1 外网IP | WAN状态(图标着色) | 已连接时长
      行2 主机 | 网关 | 无线 | 设备 | 语音
@@ -445,11 +509,16 @@ const SLOTS = [
     ["gas_today","今日用气（屏:用气）","sensor","sensor.ri_yong_qi_liang"],
     ["energy_today","今日用电（屏:用电）","sensor","sensor.tasmota_energy_today"],
   ]},
-  { g:"第1页 家居 · 行4~5 右列：车机 / 手机在线", page:1,
-    note:"必须为 <b>binary_sensor</b>：on=图标亮（在线），off=图标灭（离线）。填 sensor 不会亮图标。",
+  { g:"第1页 家居 · 行4~5 右列：在线设备 A / B", page:1,
+    note:"两格完全通用，放任意你想盯在线状态的设备（车机、手机、电视盒…）。"
+       + "<b>_online</b> 必须为 <b>binary_sensor</b>（on=在线绿字，off=离线灰字）；"
+       + "<b>_name</b> 是<b>屏幕显示的名字（纯文本，不是实体 ID）</b>，留空则显示「设备1 / 设备2」，"
+       + "名称不写进固件，改这里即可。名字过长屏幕会自动截断。",
     items:[
-    ["nova13","轩逸车机在线（屏:Nova13）","binary_sensor","binary_sensor.lam_nova13"],
-    ["nova12","手机在线（屏:Nova12）","binary_sensor","binary_sensor.su_nova12"],
+    ["device_a_online","A 格在线状态（屏:右上格「在线/离线」）","binary_sensor","binary_sensor.lam_nova13"],
+    ["device_a_name","A 格显示名称（屏:右上格文字，留空=设备1）","text","车机"],
+    ["device_b_online","B 格在线状态（屏:右下格「在线/离线」）","binary_sensor","binary_sensor.su_nova12"],
+    ["device_b_name","B 格显示名称（屏:右下格文字，留空=设备2）","text","手机"],
   ]},
   { g:"第2页 网络 · 行1：外网 IP / WAN", page:2,
     note:"<b>wan_status</b> 必须为 <b>binary_sensor</b>（on=连接图标点亮）；<b>external_ip</b> 文本原样显示；<b>wan_uptime</b> 建议为秒数数值（路由器 uptime 传感器），屏幕自动换算为“x天x小时”。",
@@ -531,8 +600,8 @@ const MOCK = [
       ["water_pressure", 162,190,154,24,"水压"],
       ["gas_today", 162,214,154,24,"用气"],
       ["energy_today", 162,238,154,25,"用电"],
-      ["nova13", 319,162,156,49,"Nova13"],
-      ["nova12", 319,214,156,49,"Nova12"],
+      ["device_a_online", 319,162,156,49,"设备A",["device_a_name"]],
+      ["device_b_online", 319,214,156,49,"设备B",["device_b_name"]],
     ],
     texts:[] },
   { id:2, tab:1,
@@ -605,14 +674,19 @@ function buildSlotBlock(getVal){
     lines.push("      # ---- " + grp.g + " ----");
     for (const [key,desc,domain,def] of grp.items){
       const v = (getVal(key)||"").trim();
-      let head = ("        " + key + ":").padEnd(8+KPAD);
+      const head = ("        " + key + ":").padEnd(8+KPAD);
+      // 文本槽位（屏幕显示名）是字面量，必须加引号，否则含 : # 空格会破坏 YAML
+      const val = (domain === "text")
+        ? '"' + v.replace(/\\/g,"\\\\").replace(/"/g,'\\"') + '"'
+        : v;
       if (v){
-        // 实体比 EPAD 长时 padEnd 不会加空格，注释 # 会贴住实体
+        // 值比 EPAD 长时 padEnd 不会补空格，注释 # 会贴住值
         // （YAML 中"值#注释"不被视为注释），必须补最少两个空格。
-        const ent = v.padEnd(EPAD) + (v.length >= EPAD ? "  " : "");
+        const ent = val.padEnd(EPAD) + (val.length >= EPAD ? "  " : "");
         lines.push(head + ent + "# " + desc);
       } else {
-        lines.push(head + "''".padEnd(EPAD) + "# 未填（屏幕显示 --）· " + desc);
+        const tip = (domain === "text") ? "未填（屏幕用默认名）" : "未填（屏幕显示 --）";
+        lines.push(head + "''".padEnd(EPAD) + "# " + tip + " · " + desc);
       }
     }
   }
@@ -684,9 +758,11 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
         d.style.cssText = "left:"+PX(x,480)+";top:"+PX(y,320)+";width:"+PX(w,480)+";height:"+PX(h,320);
         scr.appendChild(d);
       }
-      for (const [key,x,y,w,h,label] of (pg.cells||[])){
+      // 第 7 项可以是同格其它槽位键（如设备名），点格子/高亮时一并算作该格
+      for (const [key,x,y,w,h,label,extras] of (pg.cells||[])){
         const d = document.createElement("div");
-        d.className = "mk-cell empty"; d.dataset.key = key;
+        d.className = "mk-cell empty";
+        d.dataset.keys = [key].concat(extras||[]).join(" ");
         d.style.cssText = "left:"+PX(x,480)+";top:"+PX(y,320)+";width:"+PX(w,480)+";height:"+PX(h,320);
         d.innerHTML = "<span>"+label+"</span><span class=\"v\"></span>";
         d.addEventListener("click", ()=>{
@@ -722,8 +798,9 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
   });
 
   function markCell(key,on){
-    document.querySelectorAll('.mk-cell[data-key="'+key+'"]')
-      .forEach(c=>c.classList.toggle("hit", !!on));
+    document.querySelectorAll(".mk-cell").forEach(c=>{
+      if ((c.dataset.keys||"").split(" ").includes(key)) c.classList.toggle("hit", !!on);
+    });
   }
 
   function onSlotFocus(e){
@@ -754,13 +831,15 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
     for (const grp of SLOTS) for (const [key,desc,domain] of grp.items){
       const inp = state.slots[key].input, v = inp.value.trim();
       inp.classList.remove("mismatch","filled-ok","empty");
+      const isText = (domain === "text");
       if (v){ filled++;
-        if (domainOf(v) !== domain){ inp.classList.add("mismatch"); mism.push(key+"（应为 "+domain+"）"); }
+        if (!isText && domainOf(v) !== domain){ inp.classList.add("mismatch"); mism.push(key+"（应为 "+domain+"）"); }
         else inp.classList.add("filled-ok");
-        if (/\s/.test(v)) bad.push(key+"（含空格）");
+        if (!isText && /\s/.test(v)) bad.push(key+"（含空格）");
       } else inp.classList.add("empty");
     }
     $("fill_cnt").textContent = filled;
+    if ($("fill_total")) $("fill_total").textContent = "/" + SLOTS.reduce((n,g)=>n+g.items.length,0);
     // 组计数
     document.querySelectorAll("#slots details.grp").forEach(d=>{
       const ks=[...d.querySelectorAll("input[data-key]")];
@@ -776,17 +855,19 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
     if (bad.length) msg.push("非法值：" + bad.join("、"));
     if (secMiss.length) msg.push("secrets 缺：" + secMiss.join(", "));
     if (msg.length){ box.className="valid warn"; box.textContent="⚠ " + msg.join("；"); }
-    else { box.className="valid ok"; box.textContent="✓ 校验通过：secrets 9 项齐全，槽位 " + filled + "/49，类型全部匹配"; }
+    else { box.className="valid ok"; box.textContent="✓ 校验通过：secrets 9 项齐全，槽位 " + filled + "/" + SLOTS.reduce((n,g)=>n+g.items.length,0) + "，类型全部匹配"; }
     // 输出
     $("out_secrets").textContent = buildSecrets(getSecret);
     $("out_push").textContent = buildPush(getVal);
     // 模拟图同步：显示当前实体、空槽位置灰、悬停显示全名
     document.querySelectorAll(".mk-cell").forEach(c=>{
-      const k = c.dataset.key, v = getVal(k);
-      c.classList.toggle("empty", !v);
+      const keys = (c.dataset.keys||"").split(" ").filter(Boolean);
+      const k = keys[0], nk = keys[1];
+      const v = getVal(k), nm = nk ? (getVal(nk)||"") : "";
+      c.classList.toggle("empty", !v && !nm);
       const vv = c.querySelector(".v");
-      if (vv) vv.textContent = v ? v.replace(/^[a-z_]+\./,"") : "";
-      c.title = k + (v ? "  ←  " + v : "（未填，屏幕显示 --）");
+      if (vv) vv.textContent = nm || (v ? v.replace(/^[a-z_]+\./,"") : "");
+      c.title = keys.map(x=>x+" = "+(getVal(x)||"（未填）")).join("\n");
     });
   }
 

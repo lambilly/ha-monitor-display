@@ -86,9 +86,14 @@ automation:
         nas_mem:        sensor.lamnas_ws_memory_usage_real             # NAS 内存
         nas_download:   sensor.lamnas_ws_download_throughput           # NAS 下载
         nas_upload:     sensor.lamnas_ws_upload_throughput             # NAS 上传
+        # ---- 在线设备指示（通用两格：状态 + 可自定义显示名） ----
+        # device_*_online 填 binary_sensor（on=在线、off=离线）
+        # device_*_name   填纯文本（不是实体 ID）；留空则屏幕显示「设备1 / 设备2」
+        device_a_online: binary_sensor.lam_nova13                      # 在线设备 A 状态（binary_sensor）
+        device_b_online: binary_sensor.su_nova12                       # 在线设备 B 状态（binary_sensor）
+        device_a_name:  "车机"                                          # 设备 A 显示名（纯文本）
+        device_b_name:  "手机"                                          # 设备 B 显示名（纯文本）
         # ---- 开关型（on=1 / off=0） ----
-        nova13:         binary_sensor.lam_nova13                       # 轩逸车机在线
-        nova12:         binary_sensor.su_nova12                        # 手机在线
         voice_broadcast: switch.voice_broadcast                        # 语音播报开关
         fan_in_switch:  switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1   # 内风扇开关
         fan_out_switch: switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2   # 外风扇开关
@@ -114,15 +119,15 @@ automation:
                 macro 输出是"字符串"，会把 1 变成 "1"、null 变成 "null"，
                 ESP32 侧 is<int>() 判定失败，字段全落空。 -#}
             {%- set ns = namespace(
-                  nova13          = none,
-                  nova12          = none,
+                  device_a_online = none,
+                  device_b_online = none,
                   wan_status      = none,
                   voice_broadcast = none,
                   fan_in_switch   = none,
                   fan_out_switch  = none,
                   stock_chg       = none) -%}
-            {%- set ns.nova13          = none if states(SLOT.nova13 | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.nova13 | default(''), 'on') else 0) -%}
-            {%- set ns.nova12          = none if states(SLOT.nova12 | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.nova12 | default(''), 'on') else 0) -%}
+            {%- set ns.device_a_online = none if states(SLOT.device_a_online | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.device_a_online | default(''), 'on') else 0) -%}
+            {%- set ns.device_b_online = none if states(SLOT.device_b_online | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.device_b_online | default(''), 'on') else 0) -%}
             {%- set ns.wan_status      = none if states(SLOT.wan_status | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.wan_status | default(''), 'on') else 0) -%}
             {%- set ns.voice_broadcast = none if states(SLOT.voice_broadcast | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.voice_broadcast | default(''), 'on') else 0) -%}
             {%- set ns.fan_in_switch   = none if states(SLOT.fan_in_switch | default('')) in ['unknown', 'unavailable'] else (1 if is_state(SLOT.fan_in_switch | default(''), 'on') else 0) -%}
@@ -192,8 +197,10 @@ automation:
                 "nas_download":     states(SLOT.nas_download | default('')) | float(none),
                 "nas_upload":       states(SLOT.nas_upload | default('')) | float(none),
 
-                "nova13":          ns.nova13,
-                "nova12":          ns.nova12,
+                "device_a_online": ns.device_a_online,
+                "device_b_online": ns.device_b_online,
+                "device_a_name":   SLOT.device_a_name | default(''),
+                "device_b_name":   SLOT.device_b_name | default(''),
                 "wan_status":      ns.wan_status,
                 "voice_broadcast": ns.voice_broadcast,
                 "fan_in_switch":   ns.fan_in_switch,

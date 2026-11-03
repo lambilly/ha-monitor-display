@@ -237,7 +237,7 @@ font:
       - "\U000F00E0"   # mdi:brightness-7 屏幕亮度（系统页中列）
       - "\U000F050F"   # mdi:thermometer 温度计（网络页风扇列）
       - "\U000F0379"   # mdi:monitor 显示器（系统页设备信息-屏幕）
-      - "\U000F0815"   # mdi:cellphone-wireless 手机无线（概览页 Nova13/12）
+      - "\U000F0815"   # mdi:cellphone-wireless 手机无线（概览页在线设备 A/B 两格）
       - "\U000F012A"   # mdi:chart-line 上证（折线走势）
       - "\U000F0128"   # mdi:chart-bar 今日能耗（柱状统计，与上证折线区分）
       - "\U000F02DC"   # mdi:home 居家模式

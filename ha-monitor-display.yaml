@@ -186,14 +186,18 @@ mqtt:
 
           // 开关类三态：-1=实体不存在/无数据，0=关，1=开
           //（HA 侧宏 sw() 在实体不可用时输出 null，此处落成 -1）
-          id(hd_nova13)          = x["nova13"].is<int>()          ? x["nova13"].as<int>()          : -1;
-          id(hd_nova12)          = x["nova12"].is<int>()          ? x["nova12"].as<int>()          : -1;
+          // 在线设备指示两格（通用槽位，名称由 HA 下发，固件不写死任何具体设备）
+          id(hd_device_a_online) = x["device_a_online"].is<int>() ? x["device_a_online"].as<int>() : -1;
+          id(hd_device_b_online) = x["device_b_online"].is<int>() ? x["device_b_online"].as<int>() : -1;
           id(hd_wan_status)      = x["wan_status"].is<int>()      ? x["wan_status"].as<int>()      : -1;
           id(hd_voice_broadcast) = x["voice_broadcast"].is<int>() ? x["voice_broadcast"].as<int>() : -1;
           id(hd_fan_in_switch)   = x["fan_in_switch"].is<int>()   ? x["fan_in_switch"].as<int>()   : -1;
           id(hd_fan_out_switch)  = x["fan_out_switch"].is<int>()  ? x["fan_out_switch"].as<int>()  : -1;
 
           id(hd_time_text) = x["time_text"].is<const char *>() ? std::string(x["time_text"].as<const char *>()) : std::string();
+          // 在线设备两格的显示名称（HA 下发；留空则界面用默认「设备1/设备2」）
+          id(hd_device_a_name) = x["device_a_name"].is<const char *>() ? std::string(x["device_a_name"].as<const char *>()) : std::string();
+          id(hd_device_b_name) = x["device_b_name"].is<const char *>() ? std::string(x["device_b_name"].as<const char *>()) : std::string();
           id(hd_external_ip) = x["external_ip"].is<const char *>() ? std::string(x["external_ip"].as<const char *>()) : std::string();
           id(hd_weather) = x["weather"].is<const char *>() ? std::string(x["weather"].as<const char *>()) : std::string();
           id(hd_stock) = x["stock"].is<const char *>() ? std::string(x["stock"].as<const char *>()) : std::string();
@@ -782,14 +786,22 @@ globals:
     type: float
     restore_value: false
     initial_value: 'NAN'
-  - id: hd_nova13
+  - id: hd_device_a_online
     type: int8_t          # 三态：-1=无数据(null) 0=关 1=开
     restore_value: false
     initial_value: '-1'
-  - id: hd_nova12
+  - id: hd_device_b_online
     type: int8_t          # 三态：-1=无数据(null) 0=关 1=开
     restore_value: false
     initial_value: '-1'
+  - id: hd_device_a_name
+    type: std::string     # 屏幕显示名（HA 下发，空则界面用「设备1」）
+    restore_value: false
+    initial_value: '""'
+  - id: hd_device_b_name
+    type: std::string     # 屏幕显示名（HA 下发，空则界面用「设备2」）
+    restore_value: false
+    initial_value: '""'
   - id: hd_wan_status
     type: int8_t          # 三态：-1=无数据(null) 0=关 1=开
     restore_value: false
@@ -1493,22 +1505,22 @@ script:
 # ha_data_last_ms == 0 守卫，避免开机瞬间把 "--" 误判成"关"。
 # ==========================================================
 binary_sensor:
-  # nova13
+  # device_a_online（通用槽位：任意 binary_sensor，名称由 HA 下发）
   - platform: template
-    id: ha_nova13
+    id: ha_device_a_online
     internal: true
     lambda: |-
       // 三态：-1 表示 HA 侧实体不存在/无数据，此时不发布（保持 has_state=false）
-      if (id(ha_data_last_ms) == 0 || id(hd_nova13) < 0) return {};
-      return id(hd_nova13) != 0;
-  # nova12
+      if (id(ha_data_last_ms) == 0 || id(hd_device_a_online) < 0) return {};
+      return id(hd_device_a_online) != 0;
+  # device_b_online
   - platform: template
-    id: ha_nova12
+    id: ha_device_b_online
     internal: true
     lambda: |-
       // 三态：-1 表示 HA 侧实体不存在/无数据，此时不发布（保持 has_state=false）
-      if (id(ha_data_last_ms) == 0 || id(hd_nova12) < 0) return {};
-      return id(hd_nova12) != 0;
+      if (id(ha_data_last_ms) == 0 || id(hd_device_b_online) < 0) return {};
+      return id(hd_device_b_online) != 0;
   # wan_status
   - platform: template
     id: net_wan_status
