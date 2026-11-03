@@ -156,9 +156,15 @@
   <!-- ⓪ 新手必读 -->
   <details class="card c0 help" open>
     <summary>📖 使用前必读：改哪里、要不要重新编译？</summary>
-    <p class="hint" style="margin-top:6px"><b>填 WiFi / MQTT + 选 51 个槽位实体 → 下载 secrets.yaml 与 monitor_display_push.yaml，改完即用，无需改代码。</b><br>
-      本页面给 <b>HA Monitor Display 电子墨水屏/触摸屏</b> 的使用者生成两份配置文件。<b>设备的 51 个数据键名是固件与 HA 约定好的"信箱编号"，永远不用改</b>——你只需要决定"每个信箱收哪个 HA 实体的数据"。
-      改动后的数据流：<code style="font-family:var(--mono)">HA 实体 → 自动化每5秒打包 JSON → MQTT → 屏幕</code>，实体 ID 不会进入固件。</p>
+    <p class="hint" style="margin-top:6px"><b>本页面为 HA Monitor Display（3.5 寸彩色触摸屏）生成两份配置文件</b>：
+      <code>secrets.yaml</code>（WiFi、MQTT 与各类密码）和 <code>monitor_display_push.yaml</code>（51 个槽位的实体映射）。
+      填好 → 下载 → 覆盖对应文件即可生效，<b>无需改代码，也不必重新编译固件</b>。</p>
+    <p class="hint">固件与 HA 事先约定了 51 个固定的数据键名，相当于 51 个「信箱」：<b>键名永远不用改</b>，
+      你只需决定「每个信箱收哪个 HA 实体的数据」。数据流向为
+      <code style="font-family:var(--mono)">HA 实体 → 自动化每 5 秒打包 JSON → MQTT → 屏幕</code>；
+      实体 ID 只写在 HA 自动化里，不会进入固件，所以日后更换实体，只需重新生成推送包并在 HA 里重新加载自动化。</p>
+    <p class="hint">操作顺序：左侧 <b>① 基础配置</b> 填连接参数 → <b>② 连接 HA</b>（可选）拉取实体列表辅助填写 →
+      <b>③ 槽位实体</b> 逐项填入 entity_id；右侧可实时查看屏幕版面与生成结果。</p>
     <table class="howto">
       <tr><th style="width:150px">你改了什么</th><th>替换哪个文件</th><th style="width:110px">要重新编译烧录吗</th><th>如何生效</th></tr>
       <tr>
