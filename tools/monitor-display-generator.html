@@ -126,7 +126,8 @@
     <h2><span class="n">3</span>槽位实体（49 个）<span style="margin-left:auto;font-size:12.5px;font-weight:400;color:var(--sub)">已填 <b id="fill_cnt" style="color:var(--acc)">0</b>/49</span>
       <button id="btn_clear_slots" style="font-size:12px;padding:3px 8px">清空全部</button>
       <button id="btn_load_example" style="font-size:12px;padding:3px 8px">载入示例</button></h2>
-    <p class="hint">键名是屏幕固件约定，不可改；右边填你 HA 里的 entity_id。<span class="badge">sensor</span> 等标签是期望类型，填其他类型会标红提示（仍允许保存）。
+    <p class="hint">键名是屏幕固件约定，不可改；右边填你 HA 里的 entity_id。顺序按屏幕版面排：
+      第 1 页→第 2 页，行内从左到右、从上到下（系统页/通知页不使用数据槽位）。<span class="badge">sensor</span> 等标签是期望类型，填其他类型会标红提示（仍允许保存）。
       留空的槽位屏幕对应位置显示 “--”，不会报错。</p>
     <div id="slots"></div>
   </div>
@@ -333,72 +334,90 @@ automation:
 
 <script>
 "use strict";
-/* ================= 槽位元数据（键名与固件约定，不可改） ================= */
+/* ================= 槽位元数据（键名与固件约定，不可改） =================
+   顺序 = 屏幕版面顺序：第1页→第2页，行内从左到右、从上到下。
+   （系统页 / 通知页不使用数据槽位：系统页只显示本机信息，
+     通知内容走 home/ha-monitor-display/notify 独立通道。）
+   第1页 家居：
+     行1 时间 | 天气(温度属性temperature，户外温度为兜底) | 上证指数
+     行2 在家 | 客人 | 手机 | 语音        行3 居家模式(音量+轨迹) | 车位(两车距离)
+     行4~5 左列电器动态：电灯/窗帘/空调/电器；中列今日能耗：电压/水压/用气/用电；右侧 Nova13 / Nova12
+   第2页 网络：
+     行1 外网IP | WAN状态(图标着色) | 已连接时长
+     行2 主机 | 网关 | 无线 | 设备 | 语音
+     行3 左列网络运行：路由/控制设备/终端/低电量；中列NAS：CPU/内存/上传/下载；
+         右列风扇运行：前扇(转速+百分比+前温)/后扇/进扇(开关+进温)/出扇 */
 const SLOTS = [
-  { g:"温度 / 风扇（机柜）", items:[
-    ["fan1_rpm","1号风扇转速","sensor","sensor.fan_pwm_controller_fan_1_speed"],
-    ["fan2_rpm","2号风扇转速","sensor","sensor.fan_pwm_controller_fan_2_speed"],
-    ["fan1_speed","1号风扇百分比","fan","fan.fan_pwm_controller_fan_1"],
-    ["fan2_speed","2号风扇百分比","fan","fan.fan_pwm_controller_fan_2"],
-    ["temp_front","前温度","sensor","sensor.fan_pwm_controller_temperature"],
-    ["temp_back","背面温度","sensor","sensor.miaomiaoc_cn_blt_3_1f33gjhbc4k00_t2_temperature_p_2_1"],
-    ["temp_in","室内温度","sensor","sensor.miaomiaoc_cn_blt_3_1f308atcc4o01_t2_temperature_p_2_1"],
-    ["temp_out","室外温度","sensor","sensor.miaomiaoc_cn_blt_3_1fpsendsc4g01_t2_temperature_p_2_1"],
+  { g:"第1页 家居 · 行1：时间 / 天气 / 上证", page:1, items:[
+    ["time_text","中文时间（屏:行1时间）","sensor","sensor.zhong_wen_shi_jian"],
+    ["weather","天气（屏:行1天气，温度取属性 temperature）","weather","weather.tian_qi"],
+    ["outdoor_temp","户外温度（屏:天气温度兜底）","sensor","sensor.outdoor_temperature"],
+    ["stock","股票（屏:上证，涨跌幅取属性 sh000001.changeRatio）","sensor","sensor.mei_ri_gu_zhi"],
   ]},
-  { g:"人数统计", items:[
-    ["family_home","在家人数","sensor","sensor.family_home_count"],
-    ["guest_visit","来访人数","sensor","sensor.guest_visit_count"],
-    ["phone_online","手机在线数","sensor","sensor.phone_online_count"],
+  { g:"第1页 家居 · 行2：四格在线数", page:1, items:[
+    ["family_home","在家人数（屏:在家）","sensor","sensor.family_home_count"],
+    ["guest_visit","来访人数（屏:客人）","sensor","sensor.guest_visit_count"],
+    ["phone_online","手机在线数（屏:手机）","sensor","sensor.phone_online_count"],
+    ["voice_broadcast","语音播报开关（屏:语音）","switch","switch.voice_broadcast"],
   ]},
-  { g:"网络设备统计", items:[
-    ["server_count","服务器在线","sensor","sensor.server_online_count"],
-    ["gateway_count","网关在线","sensor","sensor.gateway_online_count"],
-    ["ap_count","AP 在线","sensor","sensor.ap_online_count"],
-    ["monitor_count","监控设备数","sensor","sensor.device_monitor_count"],
-    ["light_on","灯开启数","sensor","sensor.light_on_count"],
-    ["curtain_closed","窗帘关闭数","sensor","sensor.curtain_closed_count"],
-    ["climate_on","空调开启数","sensor","sensor.climate_on_count"],
-    ["equipment_on","电器开启数","sensor","sensor.equipment_on_count"],
-    ["asr_count","ASR 在线","sensor","sensor.asr_online_count"],
-    ["router_count","路由器在线","sensor","sensor.router_online_count"],
-    ["device_ctrl","设备控制数","sensor","sensor.device_control_count"],
-    ["terminal_count","终端在线","sensor","sensor.terminal_online_count"],
-    ["low_battery","低电量设备数","sensor","sensor.low_battery_count"],
-  ]},
-  { g:"能耗 / 环境", items:[
-    ["weather","天气（温度取属性 temperature）","weather","weather.tian_qi"],
-    ["outdoor_temp","户外温度","sensor","sensor.outdoor_temperature"],
-    ["energy_today","今日用电","sensor","sensor.tasmota_energy_today"],
-    ["gas_today","今日用气","sensor","sensor.ri_yong_qi_liang"],
-    ["voltage","电压","sensor","sensor.tasmota_energy_voltage"],
-    ["water_pressure","水压","sensor","sensor.maze_wateronev3_tp_f8e644"],
-  ]},
-  { g:"车辆", items:[
-    ["xuanyi_dist","轩逸距离","sensor","sensor.wo_de_jia_xuan_yi_distance"],
-    ["byd_dist","比亚迪距离","sensor","sensor.wo_de_jia_bi_ya_di_distance"],
-  ]},
-  { g:"路由器 / NAS", items:[
-    ["wan_uptime","WAN 在线时长","sensor","sensor.tp_link_smb_tl_r498gpm_ac_uptime"],
-    ["external_ip","外网 IP","sensor","sensor.tp_link_smb_tl_r498gpm_ac_external_ip"],
-    ["wan_status","WAN 状态（开关型）","binary_sensor","binary_sensor.tp_link_smb_tl_r498gpm_ac_wan_status"],
-    ["nas_cpu","NAS CPU","sensor","sensor.lamnas_ws_cpu_utilization_total"],
-    ["nas_mem","NAS 内存","sensor","sensor.lamnas_ws_memory_usage_real"],
-    ["nas_download","NAS 下载","sensor","sensor.lamnas_ws_download_throughput"],
-    ["nas_upload","NAS 上传","sensor","sensor.lamnas_ws_upload_throughput"],
-  ]},
-  { g:"开关型（on=1 / off=0）", items:[
-    ["nova13","轩逸车机在线","binary_sensor","binary_sensor.lam_nova13"],
-    ["nova12","手机在线","binary_sensor","binary_sensor.su_nova12"],
-    ["voice_broadcast","语音播报开关","switch","switch.voice_broadcast"],
-    ["fan_in_switch","内风扇开关","switch","switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1"],
-    ["fan_out_switch","外风扇开关","switch","switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2"],
-  ]},
-  { g:"文本", items:[
-    ["time_text","中文时间","sensor","sensor.zhong_wen_shi_jian"],
-    ["stock","股票（涨跌幅取属性 sh000001.changeRatio）","sensor","sensor.mei_ri_gu_zhi"],
-    ["home_mode","居家模式（音量取 volume 类属性）","sensor","sensor.ju_jia_mo_shi"],
-    ["activity_log","活动轨迹","sensor","sensor.huo_dong_gui_ji"],
+  { g:"第1页 家居 · 行3：居家模式 / 车位", page:1, items:[
+    ["home_mode","居家模式（屏:居家模式，音量取 volume 类属性）","sensor","sensor.ju_jia_mo_shi"],
+    ["activity_log","活动轨迹（屏:居家模式卡轨迹段）","sensor","sensor.huo_dong_gui_ji"],
     ["parking_status","车位状态","sensor","sensor.parking_status"],
+    ["xuanyi_dist","轩逸距离（屏:车位卡右栏上行·黄）","sensor","sensor.wo_de_jia_xuan_yi_distance"],
+    ["byd_dist","比亚迪距离（屏:车位卡右栏下行·粉）","sensor","sensor.wo_de_jia_bi_ya_di_distance"],
+  ]},
+  { g:"第1页 家居 · 行4~5 左列：电器动态", page:1, items:[
+    ["light_on","灯开启数（屏:电灯）","sensor","sensor.light_on_count"],
+    ["curtain_closed","窗帘关闭数（屏:窗帘）","sensor","sensor.curtain_closed_count"],
+    ["climate_on","空调开启数（屏:空调）","sensor","sensor.climate_on_count"],
+    ["equipment_on","电器开启数（屏:电器）","sensor","sensor.equipment_on_count"],
+  ]},
+  { g:"第1页 家居 · 行4~5 中列：今日能耗", page:1, items:[
+    ["voltage","电压（屏:电压）","sensor","sensor.tasmota_energy_voltage"],
+    ["water_pressure","水压（屏:水压）","sensor","sensor.maze_wateronev3_tp_f8e644"],
+    ["gas_today","今日用气（屏:用气）","sensor","sensor.ri_yong_qi_liang"],
+    ["energy_today","今日用电（屏:用电）","sensor","sensor.tasmota_energy_today"],
+  ]},
+  { g:"第1页 家居 · 行4~5 右列：车机 / 手机在线", page:1, items:[
+    ["nova13","轩逸车机在线（屏:Nova13）","binary_sensor","binary_sensor.lam_nova13"],
+    ["nova12","手机在线（屏:Nova12）","binary_sensor","binary_sensor.su_nova12"],
+  ]},
+  { g:"第2页 网络 · 行1：外网 IP / WAN", page:2, items:[
+    ["external_ip","外网 IP（屏:外网IP）","sensor","sensor.tp_link_smb_tl_r498gpm_ac_external_ip"],
+    ["wan_status","WAN 状态（屏:行1连接图标着色，开关型）","binary_sensor","binary_sensor.tp_link_smb_tl_r498gpm_ac_wan_status"],
+    ["wan_uptime","WAN 在线时长（屏:已连接）","sensor","sensor.tp_link_smb_tl_r498gpm_ac_uptime"],
+  ]},
+  { g:"第2页 网络 · 行2：五格在线数", page:2, items:[
+    ["server_count","服务器在线（屏:主机）","sensor","sensor.server_online_count"],
+    ["gateway_count","网关在线（屏:网关）","sensor","sensor.gateway_online_count"],
+    ["ap_count","AP 在线（屏:无线）","sensor","sensor.ap_online_count"],
+    ["monitor_count","监控设备数（屏:设备）","sensor","sensor.device_monitor_count"],
+    ["asr_count","ASR 在线（屏:语音）","sensor","sensor.asr_online_count"],
+  ]},
+  { g:"第2页 网络 · 行3 左列：网络运行", page:2, items:[
+    ["router_count","路由器在线（屏:路由在线）","sensor","sensor.router_online_count"],
+    ["device_ctrl","设备控制数（屏:控制设备）","sensor","sensor.device_control_count"],
+    ["terminal_count","终端在线（屏:终端在线）","sensor","sensor.terminal_online_count"],
+    ["low_battery","低电量设备数（屏:低电量数）","sensor","sensor.low_battery_count"],
+  ]},
+  { g:"第2页 网络 · 行3 中列：NAS 运行", page:2, items:[
+    ["nas_cpu","NAS CPU（屏:CPU利用）","sensor","sensor.lamnas_ws_cpu_utilization_total"],
+    ["nas_mem","NAS 内存（屏:内存可用）","sensor","sensor.lamnas_ws_memory_usage_real"],
+    ["nas_upload","NAS 上传（屏:上传）","sensor","sensor.lamnas_ws_upload_throughput"],
+    ["nas_download","NAS 下载（屏:下载）","sensor","sensor.lamnas_ws_download_throughput"],
+  ]},
+  { g:"第2页 网络 · 行3 右列：风扇 / 温度", page:2, items:[
+    ["fan1_rpm","1号风扇转速（屏:前扇）","sensor","sensor.fan_pwm_controller_fan_1_speed"],
+    ["fan1_speed","1号风扇百分比（屏:前扇，fan 实体）","fan","fan.fan_pwm_controller_fan_1"],
+    ["temp_front","前温度（屏:前扇右侧温度）","sensor","sensor.fan_pwm_controller_temperature"],
+    ["fan2_rpm","2号风扇转速（屏:后扇）","sensor","sensor.fan_pwm_controller_fan_2_speed"],
+    ["fan2_speed","2号风扇百分比（屏:后扇，fan 实体）","fan","fan.fan_pwm_controller_fan_2"],
+    ["temp_back","背面温度（屏:后扇右侧温度）","sensor","sensor.miaomiaoc_cn_blt_3_1f33gjhbc4k00_t2_temperature_p_2_1"],
+    ["fan_in_switch","内风扇开关（屏:进扇）","switch","switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1"],
+    ["temp_in","室内温度（屏:进扇右侧温度）","sensor","sensor.miaomiaoc_cn_blt_3_1f308atcc4o01_t2_temperature_p_2_1"],
+    ["fan_out_switch","外风扇开关（屏:出扇）","switch","switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2"],
+    ["temp_out","室外温度·机柜（屏:出扇右侧温度）","sensor","sensor.miaomiaoc_cn_blt_3_1fpsendsc4g01_t2_temperature_p_2_1"],
   ]},
 ];
 const SECRET_KEYS = ["wifi_ssid","wifi_password","ap_password","api_key","ota_password",
@@ -469,7 +488,8 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
     for (const grp of SLOTS){
       const d = document.createElement("details");
       d.className = "grp"; d.open = true;
-      d.innerHTML = "<summary>" + grp.g + ' <span class="cnt" data-cnt></span></summary>'
+      d.innerHTML = "<summary><span class=\"badge\">第" + grp.page + "页</span> " + grp.g.replace(/^第\d页 /,"")
+        + ' <span class="cnt" data-cnt></span></summary>'
         + '<div class="body"></div>';
       const body = d.querySelector(".body");
       for (const [key,desc,domain,def] of grp.items){
