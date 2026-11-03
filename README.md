@@ -98,11 +98,12 @@ ESPHome 里 Install（USB 首次，之后可 OTA）；在 HA 里重载自动化�
 ha-monitor-display.yaml     主配置（板型 / WiFi / MQTT / API / 屏 / 触摸 / 休眠 / LVGL 全局）
 ui/                         四个页面 + ui_common（字体/globals/公共件）+ tab_bar 底部导航
 include/                    notify_store.h 通知环形缓冲/折行/清洗 + notify_charset.h 通知字库表（v2.0）
-ha/                         HA 侧配置包（→ /config/packages/）：
+ha/                         HA 侧资源（→ /config/packages/ 部署）：
                               monitor_display_push.yaml     5 秒推送自动化（MQTT 版专用）
                               monitor_display_control.yaml  远程控制 5 实体（v2.1）
+                              NR子流程-屏幕推送.json         Node-RED「屏幕推送」子流程导出（导入 NR 用）
 fonts/                      中文字体 + MDI 图标字体
-docs/                       方案文档：v2.0 NOTIFY 方案 / 外网 MQTT/TLS 方案与踩坑 / NR 屏幕推送子流程导出
+docs/                       方案文档：v2.0 NOTIFY 方案 / 外网 MQTT/TLS 方案与踩坑
 hardware/                   硬件焊接接线指南 + 整机照片（正面 / 背面）
 releases/                   历史发布包（GitHub Release 已挂对应 zip）
 CHANGELOG.md                更新日志
