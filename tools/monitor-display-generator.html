@@ -77,6 +77,9 @@
   .slot{display:grid;grid-template-columns:1fr 1.2fr;gap:8px;align-items:center;
         padding:5px 0;border-bottom:1px dashed #eef1f5}
   .slot:last-child{border-bottom:none}
+  /* 键名统一外观：等宽 + 浅灰底 + 加粗——它是固件约定的契约，不该被当成普通文字 */
+  .kn,.slot .k>b{font-family:var(--mono);font-weight:700;font-size:11.5px;color:var(--txt);
+                 background:#e6ecf5;border-radius:4px;padding:1px 5px}
   .slot .k{font:12.5px var(--mono);color:var(--txt)}
   .slot .k .d{display:block;font:12px "Microsoft YaHei";color:var(--sub)}
   .badge{display:inline-block;font-size:10.5px;border-radius:4px;padding:1px 5px;margin-left:6px;
@@ -206,19 +209,19 @@
     <h2><span class="n">1</span>基础配置（secrets.yaml）</h2>
     <p class="hint">这 9 个键与设备固件 <code style="font-family:var(--mono)">ha-monitor-display.yaml</code> 的 !secret 引用一一对应，键名不可改。「随机」按钮生成高强度密码。</p>
     <div class="grid">
-      <div class="f"><label><b>WiFi 名称</b> wifi_ssid</label><input type="text" id="k_wifi_ssid"></div>
-      <div class="f"><label><b>WiFi 密码</b> wifi_password</label>
+      <div class="f"><label><b>WiFi 名称</b> <span class="kn">wifi_ssid</span></label><input type="text" id="k_wifi_ssid"></div>
+      <div class="f"><label><b>WiFi 密码</b> <span class="kn">wifi_password</span></label>
         <div class="row"><input type="text" id="k_wifi_password"><button data-gen="k_wifi_password">随机</button></div></div>
-      <div class="f"><label><b>MQTT 服务器</b> mqtt_broker</label><input type="text" id="k_mqtt_broker" placeholder="例：mqtt.example.com 或 IP"></div>
-      <div class="f"><label><b>MQTT 端口</b> mqtt_port <span style="color:var(--sub)">（默认 1883）</span></label><input type="text" id="k_mqtt_port" inputmode="numeric" placeholder="1883"></div>
-      <div class="f"><label><b>MQTT 用户名</b> mqtt_username</label><input type="text" id="k_mqtt_username"></div>
-      <div class="f"><label><b>MQTT 密码</b> mqtt_password</label>
+      <div class="f"><label><b>MQTT 服务器</b> <span class="kn">mqtt_broker</span></label><input type="text" id="k_mqtt_broker" placeholder="例：mqtt.example.com 或 IP"></div>
+      <div class="f"><label><b>MQTT 端口</b> <span class="kn">mqtt_port</span> <span style="color:var(--sub)">（默认 1883）</span></label><input type="text" id="k_mqtt_port" inputmode="numeric" placeholder="1883"></div>
+      <div class="f"><label><b>MQTT 用户名</b> <span class="kn">mqtt_username</span></label><input type="text" id="k_mqtt_username"></div>
+      <div class="f"><label><b>MQTT 密码</b> <span class="kn">mqtt_password</span></label>
         <div class="row"><input type="text" id="k_mqtt_password"><button data-gen="k_mqtt_password">随机</button></div></div>
-      <div class="f"><label><b>热点密码</b> ap_password <span style="color:var(--warn)">（配网时用，≥8位）</span></label>
+      <div class="f"><label><b>热点密码</b> <span class="kn">ap_password</span> <span style="color:var(--warn)">（配网时用，≥8位）</span></label>
         <div class="row"><input type="text" id="k_ap_password"><button data-gen="k_ap_password">随机</button></div></div>
-      <div class="f"><label><b>网页密码</b> web_password <span style="color:var(--warn)">（设备内置页，≥8位）</span></label>
+      <div class="f"><label><b>网页密码</b> <span class="kn">web_password</span> <span style="color:var(--warn)">（设备内置页，≥8位）</span></label>
         <div class="row"><input type="text" id="k_web_password"><button data-gen="k_web_password">随机</button></div></div>
-      <div class="f" style="grid-column:1/-1"><label><b>API 密钥</b> api_key <span style="color:var(--warn)">（32位，勿手填）</span></label>
+      <div class="f" style="grid-column:1/-1"><label><b>API 密钥</b> <span class="kn">api_key</span> <span style="color:var(--warn)">（32位，勿手填）</span></label>
         <div class="row"><input type="text" id="k_api_key"><button data-gen="k_api_key">随机</button></div></div>
       <p class="hint" style="margin:2px 0 0">MQTT 端口默认 1883（TLS 8883 需证书，暂不支持）。无线 OTA 复用上面的 <b>api_key</b> 加密密钥（ESPHome 要求两者一致），不再单独设 OTA 密码；<b>从旧版升级后需 USB 线刷一次</b>。</p>
     </div>
@@ -230,8 +233,8 @@
     <p class="hint">把本页放到 HA 的 <code style="font-family:var(--mono)">/config/www/</code> 后经 <code style="font-family:var(--mono)">http://HA地址:8123/local/monitor-display-generator.html</code> 打开（同源直连，无跨域）。
       令牌在 HA 个人资料 → 安全 → 长期访问令牌 创建，只读即可用。不填也能用第 3 步手填。</p>
     <div class="grid">
-      <div class="f"><label>HA 地址（同源打开可留空）</label><input type="text" id="ha_base" placeholder="http://192.168.x.x:8123"></div>
-      <div class="f"><label>长期访问令牌</label>
+      <div class="f"><label><b>HA 地址</b> <span class="kn">ha_base</span> <span style="color:var(--sub)">（同源打开可留空）</span></label><input type="text" id="ha_base" placeholder="http://192.168.x.x:8123"></div>
+      <div class="f"><label><b>长期访问令牌</b> <span class="kn">ha_token</span> <span style="color:var(--sub)">（只读权限即可）</span></label>
         <div class="row"><input type="password" id="ha_token" placeholder="eyJhbGciOi..."><button class="pri" id="btn_fetch">拉取实体</button></div>
       </div>
     </div>
@@ -759,7 +762,7 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
       for (const [key,desc,domain,def] of grp.items){
         const row = document.createElement("div");
         row.className = "slot";
-        row.innerHTML = '<div class="k">' + key
+        row.innerHTML = '<div class="k"><b>' + key + '</b>'
           + '<span class="badge">' + domain + '</span>'
           + '<span class="d">' + desc + '</span></div>'
           + '<input type="text" id="s_' + key + '" data-key="' + key
