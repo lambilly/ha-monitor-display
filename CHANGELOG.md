@@ -8,9 +8,12 @@
 
 ## [未发布] — 2026-11-03（OTA 显式加密，消除 Dashboard「需要加密OTA」提示）
 
-- `ota:` 从「省略 encryption（自动复用 api_key，同时兼容明文上传）」改为**显式声明**
-  `encryption: key: !secret api_key`——密钥引用与 `api:` 同一个 secret，永不错配；
-  声明后**明文 OTA 请求被拒绝**，Dashboard 设备卡片上的黄色安全提示随之消失
+- `ota:` 使用**空的 `encryption:` 块（bare block）**：编译时自动继承 `api:` 的 `api_key`
+  （见 ESPHome `components/esphome/ota/_resolve_encryption_key`），明文 OTA 上传被拒绝，
+  且 Dashboard 不会判定为「另外配了一把密钥」——两条安全提示都不会再出现
+- 试过的两种写法及结果：省略 `encryption` → 提示「请添加加密选项以拒绝明文」；
+  写 `encryption: key: !secret api_key` → 提示「还拥有自己的加密密钥，建议移除」；
+  **空 `encryption:` → 无提示**，且行为等价（同样拒绝明文）
 - 编译提示：`web_server` 的 `/update` 端点（浏览器直传 bin）不走加密，属局域网调试通道，
   警告可忽略；介意的话可在 `web_server:` 里禁用其 OTA
 - 升级路径：当前固件 OTA 兼容明文+加密，**本次可直接无线推送**，无需线刷；
