@@ -71,9 +71,12 @@ api:
 
 ota:
   - platform: esphome
-    # 不设 password / 不单独设 encryption：ESPHome 会自动复用上面 api 的 encryption key，
-    # 既不额外占 Flash/RAM，也避免明文密码。OTA 与 API 共用同一把密钥。
-    # 注意：从旧版 password 切过来后，旧固件无法无线 OTA，必须 USB 线刷一次。
+    # 显式声明加密 OTA：密钥直接引用 api_key（ESPHome 强制 OTA 与 API 密钥一致，
+    # 引用同一 secret 永不会错配）。显式声明后「明文 OTA 请求」会被拒绝，
+    # 也消除 Dashboard 设备卡片上的「需要加密OTA」提示。
+    # 注意：从旧版 password 升级到加密 OTA，需 USB 线刷一次；之后无线 OTA 正常用。
+    encryption:
+      key: !secret api_key
 
 # ==========================================================
 # MQTT（外网远程通道）

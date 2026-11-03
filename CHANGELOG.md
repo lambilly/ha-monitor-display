@@ -6,6 +6,16 @@
 - **API 线**：`HA Monitor Display API v0.9.0`（ESPHome Native API 拉取，前身版本）
 - **通知线**：`HA Monitor Display Notify v2.0`（开发中）
 
+## [未发布] — 2026-11-03（OTA 显式加密，消除 Dashboard「需要加密OTA」提示）
+
+- `ota:` 从「省略 encryption（自动复用 api_key，同时兼容明文上传）」改为**显式声明**
+  `encryption: key: !secret api_key`——密钥引用与 `api:` 同一个 secret，永不错配；
+  声明后**明文 OTA 请求被拒绝**，Dashboard 设备卡片上的黄色安全提示随之消失
+- 编译提示：`web_server` 的 `/update` 端点（浏览器直传 bin）不走加密，属局域网调试通道，
+  警告可忽略；介意的话可在 `web_server:` 里禁用其 OTA
+- 升级路径：当前固件 OTA 兼容明文+加密，**本次可直接无线推送**，无需线刷；
+  烧录后固件只接受加密 OTA（Dashboard 会自动用 api_key 加密推送）
+
 ## [未发布] — 2026-11-03（修复：通知唤醒后屏幕闪一下就熄）
 
 **现象**：打开「通知亮屏」（Notify Wake Screen）后，来通知时屏幕亮一下就立刻熄灭，
