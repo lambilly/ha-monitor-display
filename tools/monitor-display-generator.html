@@ -22,6 +22,47 @@
   @media (max-width:1100px){.wrap{flex-direction:column}.col-r{position:static;width:100%}}
   .card{background:var(--card);border:1px solid var(--line);border-radius:10px;
         padding:14px 16px;margin-bottom:14px}
+  /* 左侧四个板块用底色区分（便于一眼分辨：说明 / 基础配置 / 连 HA / 槽位） */
+  .card.c0{background:#f4f6fa;border-color:#dbe3ef}
+  .card.c1{background:#f1f7ff;border-color:#d2e3f9}
+  .card.c2{background:#f1faf4;border-color:#cde8d8}
+  .card.c3{background:#fdf7ef;border-color:#efdfc6}
+  .card.c0 h2 .n{background:#64748b}
+  .card.c1 h2 .n{background:#2563eb}
+  .card.c2 h2 .n{background:#16a34a}
+  .card.c3 h2 .n{background:#d97706}
+  .card.c3 .grp{background:#fff}
+  /* 底部屏幕版面模拟 */
+  section.mocks{max-width:1500px;margin:0 auto 30px;padding:0 20px}
+  .mocks .card{background:#fff}
+  .mk-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:4px}
+  .mk-fig{margin:0}
+  .mk-fig figcaption{font-size:12.5px;color:var(--sub);text-align:center;margin-top:8px}
+  .mk-fig figcaption b{color:var(--txt)}
+  .screen{position:relative;aspect-ratio:480/320;background:#0f0f0f;border:6px solid #22262e;
+          border-radius:12px;container-type:inline-size;overflow:hidden;
+          box-shadow:0 6px 18px rgba(15,23,42,.22)}
+  .mk-card{position:absolute;background:#1e1e1e;border-radius:6px}
+  .mk-cell{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;
+           border:1px dashed rgba(255,255,255,.22);border-radius:5px;color:#e8eef6;
+           font-size:2.9cqw;line-height:1.05;text-align:center;cursor:pointer;
+           transition:background .15s,border-color .15s;padding:0 1px;overflow:hidden}
+  .mk-cell:hover{background:rgba(37,99,235,.42);border-color:#7aa9ff;border-style:solid}
+  .mk-cell.hit{background:rgba(220,38,38,.55);border:1px solid #ff8f8f;color:#fff}
+  .mk-cell.empty{color:#7d8798;border-style:dotted}
+  .mk-cell .v{font-size:2.2cqw;color:#9aa6b8;margin-top:1px;max-width:100%;overflow:hidden;
+              white-space:nowrap;text-overflow:ellipsis}
+  .mk-cell.empty .v{display:none}
+  .mk-tab{position:absolute;display:flex;align-items:center;justify-content:space-around;
+          color:#757575;font-size:3.1cqw}
+  .mk-tab b{font-weight:600}
+  .mk-tab b.on{color:#4fd1c5}
+  .mk-note{position:absolute;display:flex;align-items:center;justify-content:center;
+           color:#8a94a6;font-size:2.6cqw;text-align:center;line-height:1.5;padding:0 6%}
+  .legend{font-size:12.5px;color:var(--sub);margin:0 0 12px}
+  .legend span{display:inline-block;width:10px;height:10px;border-radius:3px;
+               border:1px dashed rgba(0,0,0,.35);margin:0 4px 0 12px;vertical-align:-1px}
+  .legend span.hl{background:rgba(220,38,38,.55);border:1px solid #ff8f8f}
   .card h2{margin:0 0 10px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
   .card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
               border-radius:50%;background:var(--acc);color:#fff;font-size:12px}
@@ -91,7 +132,7 @@
 </head>
 <body>
 <header>
-  <h1>HA Monitor Display 配置生成器 <span style="font-size:12px;opacity:.7">v3.0 · 第二档</span></h1>
+  <h1>HA Monitor Display 配置生成器 <span style="font-size:12px;opacity:.7">v3.0</span></h1>
   <p>填 WiFi / MQTT + 选 49 个槽位实体 → 下载 secrets.yaml 与 monitor_display_push.yaml，改完即用，无需改代码。</p>
 </header>
 
@@ -99,7 +140,7 @@
 <div class="col-l">
 
   <!-- ⓪ 新手必读 -->
-  <details class="card help" open>
+  <details class="card c0 help" open>
     <summary>📖 使用前必读：改哪里、要不要重新编译？</summary>
     <p class="hint" style="margin-top:6px">本页面给 <b>HA Monitor Display 电子墨水屏/触摸屏</b> 的使用者生成两份配置文件。<b>设备的 49 个数据键名是固件与 HA 约定好的"信箱编号"，永远不用改</b>——你只需要决定"每个信箱收哪个 HA 实体的数据"。
       改动后的数据流：<code style="font-family:var(--mono)">HA 实体 → 自动化每5秒打包 JSON → MQTT → 屏幕</code>，实体 ID 不会进入固件。</p>
@@ -134,7 +175,7 @@
   </details>
 
   <!-- ① 基础配置 -->
-  <div class="card">
+  <div class="card c1">
     <h2><span class="n">1</span>基础配置（secrets.yaml）</h2>
     <p class="hint">这 9 个键与设备固件 <code style="font-family:var(--mono)">ha-monitor-display.yaml</code> 的 !secret 引用一一对应，键名不可改。「随机」按钮生成高强度密码。</p>
     <div class="grid">
@@ -157,7 +198,7 @@
   </div>
 
   <!-- ② HA 实体拉取 -->
-  <div class="card">
+  <div class="card c2">
     <h2><span class="n">2</span>连接 HA 自动填实体（可选）</h2>
     <p class="hint">把本页放到 HA 的 <code style="font-family:var(--mono)">/config/www/</code> 后经 <code style="font-family:var(--mono)">http://HA地址:8123/local/monitor-display-generator.html</code> 打开（同源直连，无跨域）。
       令牌在 HA 个人资料 → 安全 → 长期访问令牌 创建，只读即可用。不填也能用第 3 步手填。</p>
@@ -171,7 +212,7 @@
   </div>
 
   <!-- ③ 槽位 -->
-  <div class="card">
+  <div class="card c3">
     <h2><span class="n">3</span>槽位实体（49 个）<span style="margin-left:auto;font-size:12.5px;font-weight:400;color:var(--sub)">已填 <b id="fill_cnt" style="color:var(--acc)">0</b>/49</span>
       <button id="btn_clear_slots" style="font-size:12px;padding:3px 8px">清空全部</button>
       <button id="btn_load_example" style="font-size:12px;padding:3px 8px">载入示例</button></h2>
@@ -221,6 +262,28 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<section class="mocks">
+  <div class="card">
+    <h2>🖥 屏幕版面示意（等比 480×320，与实机同步）<span style="margin-left:auto;font-size:12.5px;font-weight:400;color:var(--sub)">点任意方框＝跳到对应槽位</span></h2>
+    <p class="legend">虚线框＝可填槽位的位置（「天气」与「户外」同区：天气实体不可用时温度取户外）；<span class="hl"></span>红框＝你当前正在编辑的槽位。
+      框内灰色小字是当前填入的实体（过长省略，悬停看全名）；留空的框显示为暗色。底部四页标签中「通知」页由消息触发、不使用槽位。</p>
+    <div class="mk-row">
+      <figure class="mk-fig">
+        <div class="screen" id="mk_1"></div>
+        <figcaption><b>第 1 页 · 家居</b>　23 个槽位</figcaption>
+      </figure>
+      <figure class="mk-fig">
+        <div class="screen" id="mk_2"></div>
+        <figcaption><b>第 2 页 · 网络</b>　26 个槽位</figcaption>
+      </figure>
+      <figure class="mk-fig">
+        <div class="screen" id="mk_3"></div>
+        <figcaption><b>第 3 页 · 系统</b>　设备自身信息，不使用槽位</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
 
 <!-- ============ 推送包模板（槽位区由生成器替换 @@SLOT_BLOCK@@） ============ -->
 <script type="text/template" id="push_template">
@@ -494,6 +557,81 @@ const SLOTS = [
 const SECRET_KEYS = ["wifi_ssid","wifi_password","ap_password","api_key","ota_password",
                      "mqtt_broker","mqtt_username","mqtt_password","web_password"];
 
+/* ================= 屏幕版面模拟数据（480×320，坐标取自 ui/page_*.yaml 实测） =================
+   cards: [x,y,w,h] 卡片底块；cells: [key,x,y,w,h,屏幕标签]；texts: [x,y,w,h,文本]
+   每格 click → 跳到对应槽位输入框；输入框 focus → 该格红框高亮。 */
+const MOCK = [
+  { id:1, tab:0,
+    cards:[[5,5,470,50],[5,61,105,41],[126,61,105,41],[249,61,105,41],[370,61,105,41],
+           [5,110,233,49],[241,110,234,49],[5,162,154,101],[162,162,154,101],
+           [319,162,156,49],[319,214,156,49],[5,266,470,49]],
+    cells:[
+      ["time_text", 8,10,180,40,"时间"],
+      ["weather", 192,10,72,40,"天气"],
+      ["outdoor_temp", 264,10,42,40,"户外"],
+      ["stock", 306,10,164,40,"上证"],
+      ["family_home", 5,61,105,41,"在家"],
+      ["guest_visit", 126,61,105,41,"客人"],
+      ["phone_online", 249,61,105,41,"手机"],
+      ["voice_broadcast", 370,61,105,41,"语音"],
+      ["home_mode", 5,110,128,49,"居家模式"],
+      ["activity_log", 135,110,101,49,"活动轨迹"],
+      ["parking_status", 241,110,86,49,"车位"],
+      ["xuanyi_dist", 329,110,144,24,"轩逸"],
+      ["byd_dist", 329,134,144,25,"比亚迪"],
+      ["light_on", 5,162,154,28,"电灯"],
+      ["curtain_closed", 5,190,154,24,"窗帘"],
+      ["climate_on", 5,214,154,24,"空调"],
+      ["equipment_on", 5,238,154,25,"电器"],
+      ["voltage", 162,162,154,28,"电压"],
+      ["water_pressure", 162,190,154,24,"水压"],
+      ["gas_today", 162,214,154,24,"用气"],
+      ["energy_today", 162,238,154,25,"用电"],
+      ["nova13", 319,162,156,49,"Nova13"],
+      ["nova12", 319,214,156,49,"Nova12"],
+    ],
+    texts:[] },
+  { id:2, tab:1,
+    cards:[[5,5,470,50],[5,61,84,41],[102,61,84,41],[199,61,84,41],[296,61,83,41],[392,61,83,41],
+           [5,110,155,153],[163,110,155,153],[321,110,154,153],[5,266,470,49]],
+    cells:[
+      ["external_ip", 5,5,250,50,"外网IP"],
+      ["wan_status", 257,5,40,50,"WAN"],
+      ["wan_uptime", 299,5,176,50,"已连接"],
+      ["server_count", 5,61,84,41,"主机"],
+      ["gateway_count", 102,61,84,41,"网关"],
+      ["ap_count", 199,61,84,41,"无线"],
+      ["monitor_count", 296,61,83,41,"设备"],
+      ["asr_count", 392,61,83,41,"语音"],
+      ["router_count", 5,110,155,38,"路由在线"],
+      ["device_ctrl", 5,148,155,38,"控制设备"],
+      ["terminal_count", 5,186,155,38,"终端在线"],
+      ["low_battery", 5,224,155,39,"低电量数"],
+      ["nas_cpu", 163,110,155,38,"CPU"],
+      ["nas_mem", 163,148,155,38,"内存"],
+      ["nas_upload", 163,186,155,38,"上传"],
+      ["nas_download", 163,224,155,39,"下载"],
+      ["fan1_rpm", 321,110,48,38,"前扇"],
+      ["fan1_speed", 369,110,40,38,"占空"],
+      ["temp_front", 409,110,66,38,"前温"],
+      ["fan2_rpm", 321,148,48,38,"后扇"],
+      ["fan2_speed", 369,148,40,38,"占空"],
+      ["temp_back", 409,148,66,38,"后温"],
+      ["fan_in_switch", 321,186,48,38,"进扇"],
+      ["temp_in", 369,186,106,38,"进温"],
+      ["fan_out_switch", 321,224,48,39,"出扇"],
+      ["temp_out", 369,224,106,39,"出温"],
+    ],
+    texts:[] },
+  { id:3, tab:2,
+    cards:[[5,5,470,50],[5,58,233,49],[241,58,234,49],
+           [5,110,155,153],[163,110,155,153],[321,110,154,153],[5,266,470,49]],
+    cells:[],
+    texts:[[12,20,300,20,"系统状态 · 主机名 · 运行时长"],
+           [12,72,220,18,"SSID  /  本机 IP"],
+           [12,112,140,18,"设备信息"],[170,112,140,18,"系统负载"],[328,112,140,18,"网络参数"]] },
+];
+
 /* ===================== 纯函数区（可独立测试） ===================== */
 function yamlQuote(v){
   v = String(v);
@@ -582,10 +720,52 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
         state.slots[key] = { def, input: row.querySelector("input"), dl };
         state.slots[key].input.addEventListener("input", onChange);
         state.slots[key].input.addEventListener("focus", onSlotFocus);
+        state.slots[key].input.addEventListener("focus", ()=>markCell(key,true));
+        state.slots[key].input.addEventListener("blur", ()=>markCell(key,false));
       }
       root.appendChild(d);
     }
   })();
+
+  /* ---- 屏幕版面模拟图（三页等比例 480×320） ---- */
+  const PX = (v,total) => (v/total*100).toFixed(3)+"%";
+  (function buildMocks(){
+    for (const pg of MOCK){
+      const scr = $("mk_"+pg.id); if (!scr) continue;
+      for (const [x,y,w,h] of (pg.cards||[])){
+        const d = document.createElement("div"); d.className = "mk-card";
+        d.style.cssText = "left:"+PX(x,480)+";top:"+PX(y,320)+";width:"+PX(w,480)+";height:"+PX(h,320);
+        scr.appendChild(d);
+      }
+      for (const [key,x,y,w,h,label] of (pg.cells||[])){
+        const d = document.createElement("div");
+        d.className = "mk-cell empty"; d.dataset.key = key;
+        d.style.cssText = "left:"+PX(x,480)+";top:"+PX(y,320)+";width:"+PX(w,480)+";height:"+PX(h,320);
+        d.innerHTML = "<span>"+label+"</span><span class=\"v\"></span>";
+        d.addEventListener("click", ()=>{
+          const el = $("s_"+key);
+          if (el){ el.scrollIntoView({behavior:"smooth", block:"center"}); el.focus({preventScroll:true}); }
+        });
+        scr.appendChild(d);
+      }
+      for (const [x,y,w,h,txt] of (pg.texts||[])){
+        const d = document.createElement("div"); d.className = "mk-note";
+        d.style.cssText = "left:"+PX(x,480)+";top:"+PX(y,320)+";width:"+PX(w,480)+";height:"+PX(h,320)
+          + ";white-space:pre-line";
+        d.textContent = txt;
+        scr.appendChild(d);
+      }
+      const tb = document.createElement("div"); tb.className = "mk-tab";
+      tb.style.cssText = "left:"+PX(5,480)+";top:"+PX(266,320)+";width:"+PX(470,480)+";height:"+PX(49,320);
+      tb.innerHTML = ["家居","网络","系统","通知"]
+        .map((n,i)=>'<b class="'+(i===pg.tab?"on":"")+'">'+n+'</b>').join("");
+      scr.appendChild(tb);
+    }
+  })();
+  function markCell(key,on){
+    document.querySelectorAll('.mk-cell[data-key="'+key+'"]')
+      .forEach(c=>c.classList.toggle("hit", !!on));
+  }
 
   function onSlotFocus(e){
     const key = e.target.dataset.key, dom = e.target.dataset.domain;
@@ -641,6 +821,14 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
     // 输出
     $("out_secrets").textContent = buildSecrets(getSecret);
     $("out_push").textContent = buildPush(getVal);
+    // 模拟图同步：显示当前实体、空槽位置灰、悬停显示全名
+    document.querySelectorAll(".mk-cell").forEach(c=>{
+      const k = c.dataset.key, v = getVal(k);
+      c.classList.toggle("empty", !v);
+      const vv = c.querySelector(".v");
+      if (vv) vv.textContent = v ? v.replace(/^[a-z_]+\./,"") : "";
+      c.title = k + (v ? "  ←  " + v : "（未填，屏幕显示 --）");
+    });
   }
 
   /* ---- secrets 随机按钮 ---- */
