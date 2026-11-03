@@ -42,6 +42,7 @@
   .hint{color:var(--sub);font-size:12.5px;margin:2px 0 10px}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
   .card.c1 .grid{grid-template-columns:1fr 1fr}
+  .card.c1 .grid>p{grid-column:1/-1}
   @media (max-width:720px){.card.c1 .grid{grid-template-columns:1fr}}
   .f{display:flex;flex-direction:column;gap:3px}
   .f label{font-size:12.5px;color:var(--sub)}
@@ -212,7 +213,7 @@
         <div class="row"><input type="text" id="k_ap_password"><button data-gen="k_ap_password">随机</button></div></div>
       <div class="f"><label><b>网页密码</b> web_password <span style="color:var(--warn)">（设备内置页，≥8位）</span></label>
         <div class="row"><input type="text" id="k_web_password"><button data-gen="k_web_password">随机</button></div></div>
-      <div class="f"><label><b>API 密钥</b> api_key <span style="color:var(--warn)">（32位，勿手填）</span></label>
+      <div class="f" style="grid-column:1/-1"><label><b>API 密钥</b> api_key <span style="color:var(--warn)">（32位，勿手填）</span></label>
         <div class="row"><input type="text" id="k_api_key"><button data-gen="k_api_key">随机</button></div></div>
       <p class="hint" style="margin:2px 0 0">MQTT 端口默认 1883（TLS 8883 需证书，暂不支持）。无线 OTA 复用上面的 <b>api_key</b> 加密密钥（ESPHome 要求两者一致），不再单独设 OTA 密码；<b>从旧版升级后需 USB 线刷一次</b>。</p>
     </div>
@@ -693,10 +694,9 @@ function buildSlotBlock(getVal){
     for (const [key,desc,domain,def] of grp.items){
       const v = (getVal(key)||"").trim();
       const head = ("        " + key + ":").padEnd(8+KPAD);
-      // 文本槽位（屏幕显示名）是字面量，必须加引号，否则含 : # 空格会破坏 YAML
-      const val = (domain === "text")
-        ? '"' + v.replace(/\\/g,"\\\\").replace(/"/g,'\\"') + '"'
-        : v;
+      // 所有值统一加双引号：实体 ID 与显示名都是字符串，加引号可避免值里的
+      // " #" 被当成注释、": " 被当成映射而截断（YAML 里带引号与裸值等价）
+      const val = '"' + v.replace(/\r?\n/g," ").replace(/\\/g,"\\\\").replace(/"/g,'\\"') + '"';
       if (v){
         // 值比 EPAD 长时 padEnd 不会补空格，注释 # 会贴住值
         // （YAML 中"值#注释"不被视为注释），必须补最少两个空格。
@@ -914,7 +914,7 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
     state.ha.base = $("ha_base").value.trim(); saveSoon();
   });
   $("btn_clear_slots").addEventListener("click", ()=>{
-    if (!confirm("清空全部 49 个槽位？")) return;
+    if (!confirm("清空全部 " + SLOTS.reduce((n,g)=>n+g.items.length,0) + " 个槽位？")) return;
     for (const k in state.slots) state.slots[k].input.value = "";
     onChange();
   });
