@@ -105,6 +105,9 @@ ha/                         HA 侧资源（→ /config/packages/ 部署）：
 fonts/                      中文字体 + MDI 图标字体
 docs/                       方案文档：v2.0 NOTIFY 方案 / 外网 MQTT/TLS 方案与踩坑
 hardware/                   硬件焊接接线指南 + 整机照片（正面 / 背面）
+tools/                      monitor-display-generator.html  3.0 配置生成器（单文件，
+                              放 /config/www/ 经 /local/ 打开；填 MQTT/WiFi + 选 49 槽位
+                              实体 → 输出 secrets.yaml 与填好的推送包，支持连 HA 拉实体）
 releases/                   历史发布包（GitHub Release 已挂对应 zip）
 CHANGELOG.md                更新日志
 ```
