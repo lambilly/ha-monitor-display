@@ -115,20 +115,20 @@
   .mk-card{position:absolute;background:#1e1e1e;border-radius:6px}
   .mk-cell{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;
            border:1px dashed rgba(255,255,255,.22);border-radius:5px;color:#e8eef6;
-           font-size:2.9cqw;line-height:1.05;text-align:center;cursor:pointer;
+           font-size:12px;line-height:1.05;text-align:center;cursor:pointer;
            transition:background .15s,border-color .15s;padding:0 1px;overflow:hidden}
   .mk-cell:hover{background:rgba(37,99,235,.42);border-color:#7aa9ff;border-style:solid}
   .mk-cell.hit{background:rgba(220,38,38,.55);border:1px solid #ff8f8f;color:#fff}
   .mk-cell.empty{color:#7d8798;border-style:dotted}
-  .mk-cell .v{font-size:2.2cqw;color:#9aa6b8;margin-top:1px;max-width:100%;overflow:hidden;
+  .mk-cell .v{font-size:11px;color:#9aa6b8;margin-top:1px;max-width:100%;overflow:hidden;
               white-space:nowrap;text-overflow:ellipsis}
   .mk-cell.empty .v{display:none}
   .mk-tab{position:absolute;display:flex;align-items:center;justify-content:space-around;
-          color:#757575;font-size:3.1cqw}
+          color:#757575;font-size:12px}
   .mk-tab b{font-weight:600}
   .mk-tab b.on{color:#4fd1c5}
   .mk-note{position:absolute;display:flex;align-items:center;justify-content:center;
-           color:#8a94a6;font-size:2.6cqw;text-align:center;line-height:1.5;padding:0 6%}
+           color:#8a94a6;font-size:11px;text-align:center;line-height:1.5;padding:0 6%}
   .legend{font-size:12px;color:var(--sub);line-height:1.6}
   .legend span{display:inline-block;width:10px;height:10px;border-radius:3px;
                border:1px dashed rgba(0,0,0,.35);margin:0 4px 0 10px;vertical-align:-1px}
@@ -768,6 +768,7 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
         const d = document.createElement("div");
         d.className = "mk-cell empty";
         d.dataset.keys = [key].concat(extras||[]).join(" ");
+        d.dataset.label = label;
         d.style.cssText = "left:"+PX(x,480)+";top:"+PX(y,320)+";width:"+PX(w,480)+";height:"+PX(h,320);
         d.innerHTML = "<span>"+label+"</span><span class=\"v\"></span>";
         d.addEventListener("click", ()=>{
@@ -870,8 +871,11 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
       const k = keys[0], nk = keys[1];
       const v = getVal(k), nm = nk ? (getVal(nk)||"") : "";
       c.classList.toggle("empty", !v && !nm);
+      // 双键格（设备A/B）：上行显示名称，下行显示在线状态实体；单键格：上行固定标签，下行实体短名
+      const main = c.querySelector("span:not(.v)");
+      if (main && nk) main.textContent = nm || c.dataset.label || "";
       const vv = c.querySelector(".v");
-      if (vv) vv.textContent = nm || (v ? v.replace(/^[a-z_]+\./,"") : "");
+      if (vv) vv.textContent = v ? v.replace(/^[a-z_]+\./,"") : "";
       c.title = keys.map(x=>x+" = "+(getVal(x)||"（未填）")).join("\n");
     });
   }
