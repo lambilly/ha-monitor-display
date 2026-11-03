@@ -54,16 +54,17 @@ esphome/ha-monitor-display/...   设备侧前缀（日志等）
 wifi_ssid: your-wifi
 wifi_password: your-wifi-password
 ap_password: your-fallback-ap-password
-ota_password: your-ota-password
 api_key: "运行 esphome 时自动生成，或自填 32 字节 base64"
 mqtt_broker: your-mqtt-broker-address   # 例如 home.example.top
+mqtt_port: 1883                         # 明文 MQTT 默认 1883
 mqtt_username: your-mqtt-username
 mqtt_password: your-mqtt-password
 web_password: your-web-password
 ```
 
 > Mqtt 版主配置的 broker 地址与用户名同样走 `!secret`（`mqtt_broker` / `mqtt_username`），
-> 上面模板已含全部 9 项。
+> 上面模板已含全部 9 项。无线 OTA **不需要单独的密码**：`ota:` 会自动复用 `api_key`
+> 的加密密钥（ESPHome 强制两者一致）。
 
 ### 3. 部署文件
 

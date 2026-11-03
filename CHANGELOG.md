@@ -18,9 +18,10 @@
 - JSON 键名：`nova13` / `nova12` → `device_a_online` / `device_b_online`
   （固件 `hd_device_a_online` / `hd_device_b_online`、模板实体
   `ha_device_a_online` / `ha_device_b_online` 同步改名）
-- 屏幕两格拆成三段：图标（固定色）+ **名称（HA 下发，可改）** + 状态（在线绿 / 离线灰）
-- 名称为空时回退到「设备1 / 设备2」；名字超过 74px 自动截断（`long_mode: DOT`），
-  状态字改为右对齐，不会再被长名字挤掉
+- 屏幕两格：图标（固定色）+ **名称（HA 下发，可改）** + 状态（在线绿 / 离线灰），
+  **三者排在同一行**（与原版观感一致，不做上下换行）；名称区宽 58px，超出自动截断
+  （`long_mode: DOT`），状态固定在 x=88 不会被长名字挤走
+- 名称为空时回退到「Nova13 / Nova12」（保留原有观感，同时仍可被 HA 覆盖）
 
 ### Added
 
@@ -31,11 +32,27 @@
 
 - **需要重新编译烧录**（固件改了 JSON 键名与标签），同时替换
   `monitor_display_push.yaml`；两者都换完屏幕两格才恢复显示
-- 只换固件不换推送包：两格显示 `--` + 默认名「设备1/设备2」，**不影响其他 47 个槽位**
+- 只换固件不换推送包：两格显示 `--` + 默认名「Nova13/Nova12」，**不影响其他 47 个槽位**
+
+### Changed（OTA 安全）
+
+- `ota:` 去掉明文 `password`，也不再单独设 `encryption`：ESPHome 2026.10.1 强制 OTA 与 API
+  的加密密钥一致，省略后自动复用 `api:` 的 `api_key`，不再浪费 Flash/RAM，也消掉编译警告
+- `secrets.yaml` 去掉 `ota_password`（不再被引用，可保留，无副作用）
+
+### Added（MQTT 端口可配）
+
+- `mqtt:` 的 `port` 从写死 `1883` 改为 `!secret mqtt_port`，`secrets.yaml` 新增 `mqtt_port`
+  （默认 1883）。生成器配置页同步增加「MQTT 端口」输入框，输出时按**裸数字**写入，不加引号
+- TLS 8883 仍暂不支持（需额外证书与 `ssl` 配置），端口值留作后续扩展
+
+> ⚠️ **升级注意**：从 `password` 切到加密密钥后，旧固件无法再用无线 OTA 连上，
+> 必须 **USB 线刷一次**；之后恢复无线 OTA，密码为 `api_key`。
 
 ### 验证
 
-- `esphome config`：Configuration is valid（含 `long_mode: DOT`、标签 `width`）
+- `esphome config`：Configuration is valid（含 `long_mode: DOT`、标签 `width`；OTA 无警告）
+- `esphome compile`：编译通过，可直接线刷
 - 推送包：YAML 解析 51 槽 / 渲染 56 键；jinja2 编译 + 双阶段渲染（无 SLOT 兜底 / 带 SLOT）
   均为合法 JSON，中文名称正确转义
 - 生成器：按当前值重生成为与正式文件 **payload 一字不差**；模拟图 51 个键全覆盖

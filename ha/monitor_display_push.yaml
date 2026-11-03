@@ -88,11 +88,11 @@ automation:
         nas_upload:     sensor.lamnas_ws_upload_throughput             # NAS 上传
         # ---- 在线设备指示（通用两格：状态 + 可自定义显示名） ----
         # device_*_online 填 binary_sensor（on=在线、off=离线）
-        # device_*_name   填纯文本（不是实体 ID）；留空则屏幕显示「设备1 / 设备2」
+        # device_*_name   填纯文本（不是实体 ID）；留空则屏幕显示固件默认「Nova13 / Nova12」
         device_a_online: binary_sensor.lam_nova13                      # 在线设备 A 状态（binary_sensor）
         device_b_online: binary_sensor.su_nova12                       # 在线设备 B 状态（binary_sensor）
-        device_a_name:  "车机"                                          # 设备 A 显示名（纯文本）
-        device_b_name:  "手机"                                          # 设备 B 显示名（纯文本）
+        device_a_name:  "Nova13"                                        # 设备 A 显示名（纯文本）
+        device_b_name:  "Nova12"                                        # 设备 B 显示名（纯文本）
         # ---- 开关型（on=1 / off=0） ----
         voice_broadcast: switch.voice_broadcast                        # 语音播报开关
         fan_in_switch:  switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1   # 内风扇开关

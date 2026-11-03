@@ -195,6 +195,7 @@
       <div class="f"><label><b>WiFi 密码</b> wifi_password</label>
         <div class="row"><input type="text" id="k_wifi_password"><button data-gen="k_wifi_password">随机</button></div></div>
       <div class="f"><label><b>MQTT 服务器</b> mqtt_broker</label><input type="text" id="k_mqtt_broker" placeholder="例：mqtt.example.com 或 IP"></div>
+      <div class="f"><label><b>MQTT 端口</b> mqtt_port <span style="color:var(--sub)">（默认 1883；TLS 8883 还需证书，暂不支持）</span></label><input type="text" id="k_mqtt_port" inputmode="numeric" placeholder="1883"></div>
       <div class="f"><label><b>MQTT 用户名</b> mqtt_username</label><input type="text" id="k_mqtt_username"></div>
       <div class="f"><label><b>MQTT 密码</b> mqtt_password</label>
         <div class="row"><input type="text" id="k_mqtt_password"><button data-gen="k_mqtt_password">随机</button></div></div>
@@ -204,8 +205,7 @@
         <div class="row"><input type="text" id="k_web_password"><button data-gen="k_web_password">随机</button></div></div>
       <div class="f"><label><b>API 密钥</b> api_key <span style="color:var(--warn)">（32位，勿手填）</span></label>
         <div class="row"><input type="text" id="k_api_key"><button data-gen="k_api_key">随机</button></div></div>
-      <div class="f"><label><b>OTA 密码</b> ota_password</label>
-        <div class="row"><input type="text" id="k_ota_password"><button data-gen="k_ota_password">随机</button></div></div>
+      <p class="hint" style="margin:2px 0 0">无线 OTA 复用上面的 <b>api_key</b> 加密密钥（ESPHome 要求两者一致），不再单独设 OTA 密码。<b>从旧版升级后需 USB 线刷一次</b>，之后才能无线 OTA。</p>
     </div>
   </div>
 
@@ -251,7 +251,7 @@
       <div class="screen" id="mk_3" hidden></div>
     </div>
     <p class="legend" style="margin:10px 0 0">虚线框＝可填槽位；<span class="hl"></span>红框＝正在编辑的槽位。格内灰字为已填实体，悬停看全名；留空的框显示为暗色。
-      右边两个「设备A/B」格各含两个槽位（状态 + 显示名），格内显示的是你填的名称。
+      右列两格「在线设备」各含两个槽位（状态 + 显示名），屏幕上名称与在线状态排在同一行（与原版一致）。
       点左侧任意槽位输入框，右侧会自动切到它所在的页面。「通知」页由消息触发、不使用槽位。</p>
   </div>
 
@@ -517,13 +517,13 @@ const SLOTS = [
   { g:"第1页 家居 · 行4~5 右列：在线设备 A / B", page:1,
     note:"两格完全通用，放任意你想盯在线状态的设备（车机、手机、电视盒…）。"
        + "<b>_online</b> 必须为 <b>binary_sensor</b>（on=在线绿字，off=离线灰字）；"
-       + "<b>_name</b> 是<b>屏幕显示的名字（纯文本，不是实体 ID）</b>，留空则显示「设备1 / 设备2」，"
+       + "<b>_name</b> 是<b>屏幕显示的名字（纯文本，不是实体 ID）</b>，留空则显示固件默认「Nova13 / Nova12」，"
        + "名称不写进固件，改这里即可。名字过长屏幕会自动截断。",
     items:[
     ["device_a_online","A 格在线状态（屏:右上格「在线/离线」）","binary_sensor","binary_sensor.lam_nova13"],
-    ["device_a_name","A 格显示名称（屏:右上格文字，留空=设备1）","text","车机"],
+    ["device_a_name","A 格显示名称（屏:右上格文字，留空=Nova13）","text","Nova13"],
     ["device_b_online","B 格在线状态（屏:右下格「在线/离线」）","binary_sensor","binary_sensor.su_nova12"],
-    ["device_b_name","B 格显示名称（屏:右下格文字，留空=设备2）","text","手机"],
+    ["device_b_name","B 格显示名称（屏:右下格文字，留空=Nova12）","text","Nova12"],
   ]},
   { g:"第2页 网络 · 行1：外网 IP / WAN", page:2,
     note:"<b>wan_status</b> 必须为 <b>binary_sensor</b>（on=连接图标点亮）；<b>external_ip</b> 文本原样显示；<b>wan_uptime</b> 建议为秒数数值（路由器 uptime 传感器），屏幕自动换算为“x天x小时”。",
@@ -572,8 +572,8 @@ const SLOTS = [
     ["temp_out","室外温度·机柜（屏:出扇右侧温度）","sensor","sensor.miaomiaoc_cn_blt_3_1fpsendsc4g01_t2_temperature_p_2_1"],
   ]},
 ];
-const SECRET_KEYS = ["wifi_ssid","wifi_password","ap_password","api_key","ota_password",
-                     "mqtt_broker","mqtt_username","mqtt_password","web_password"];
+const SECRET_KEYS = ["wifi_ssid","wifi_password","ap_password","api_key",
+                     "mqtt_broker","mqtt_port","mqtt_username","mqtt_password","web_password"];
 
 /* ================= 屏幕版面模拟数据（480×320，坐标取自 ui/page_*.yaml 实测） =================
    cards: [x,y,w,h] 卡片底块；cells: [key,x,y,w,h,屏幕标签]；texts: [x,y,w,h,文本]
@@ -605,8 +605,8 @@ const MOCK = [
       ["water_pressure", 162,190,154,24,"水压"],
       ["gas_today", 162,214,154,24,"用气"],
       ["energy_today", 162,238,154,25,"用电"],
-      ["device_a_online", 319,162,156,49,"设备A",["device_a_name"]],
-      ["device_b_online", 319,214,156,49,"设备B",["device_b_name"]],
+      ["device_a_online", 319,162,156,49,"Nova13",["device_a_name"]],
+      ["device_b_online", 319,214,156,49,"Nova12",["device_b_name"]],
     ],
     texts:[] },
   { id:2, tab:1,
@@ -669,6 +669,10 @@ function genPw(n){
     ? crypto.getRandomValues(b) : b.map(()=>Math.random()*256|0);
   let s = ""; for (let i=0;i<n;i++) s += c[rnd[i]%c.length]; return s;
 }
+function genSecret(k){        // 按字段类型生成随机值
+  if (k === "api_key") return genApiKey();
+  return genPw(k === "ap_password" || k === "web_password" ? 12 : 16);
+}
 function domainOf(eid){ const i=(eid||"").indexOf("."); return i<0 ? "" : eid.slice(0,i); }
 
 function buildSlotBlock(getVal){
@@ -700,7 +704,14 @@ function buildSlotBlock(getVal){
 function buildSecrets(get){
   const L = ["# HA Monitor Display —— secrets.yaml",
              "# 由配置生成器输出；此文件含明文密码，勿提交到任何仓库！",""];
-  for (const k of SECRET_KEYS) L.push(k + ": " + yamlQuote(get(k)||""));
+  for (const k of SECRET_KEYS){
+    const v = (get(k)||"").trim();
+    if (k === "mqtt_port"){                       // 端口必须是数字，不能加引号
+      L.push(k + ": " + (v.replace(/\D/g,"") || "1883"));
+    } else {
+      L.push(k + ": " + yamlQuote(v));
+    }
+  }
   return L.join("\n") + "\n";
 }
 function buildPush(getSlot){
@@ -884,7 +895,7 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
   document.querySelectorAll("button[data-gen]").forEach(b=>{
     b.addEventListener("click", ()=>{
       const k = b.dataset.gen;
-      $("k_"+k).value = (k==="api_key") ? genApiKey() : genPw(k==="ap_password"||k==="web_password" ? 12 : 16);
+      $("k_"+k).value = genSecret(k);
       onChange();
     });
   });
@@ -986,12 +997,12 @@ if (typeof document !== "undefined" && document.getElementById("push_template"))
   });
 
   /* ---- 启动：有存档则恢复，否则载入示例 ---- */
+  if (!$("k_mqtt_port").value) $("k_mqtt_port").value = "1883";
   if (!load()) $("btn_load_example").click();
   // 首次给四个密码生成随机值（不覆盖已填）
-  ["ap_password","web_password","api_key","ota_password"].forEach(k=>{
+  ["ap_password","web_password","api_key"].forEach(k=>{
     if (!$("k_"+k).value){
-      $("k_"+k).value = (k==="api_key") ? genApiKey()
-        : genPw(k==="api_key" ? 0 : 12);
+      $("k_"+k).value = genSecret(k);
     }
   });
   refresh();

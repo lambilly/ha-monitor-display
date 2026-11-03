@@ -71,14 +71,16 @@ api:
 
 ota:
   - platform: esphome
-    password: !secret ota_password
+    # 不设 password / 不单独设 encryption：ESPHome 会自动复用上面 api 的 encryption key，
+    # 既不额外占 Flash/RAM，也避免明文密码。OTA 与 API 共用同一把密钥。
+    # 注意：从旧版 password 切过来后，旧固件无法无线 OTA，必须 USB 线刷一次。
 
 # ==========================================================
 # MQTT（外网远程通道）
 # ==========================================================
 mqtt:
   broker: !secret mqtt_broker      # 阿里云 DDNS 解析到你家公网 IP（地址放 secrets.yaml）
-  port: 1883
+  port: !secret mqtt_port           # secrets.yaml 里配，明文 1883
   username: !secret mqtt_username
   password: !secret mqtt_password
   # topic_prefix 只影响本机"对外发布"的主题前缀。

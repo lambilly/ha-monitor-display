@@ -501,8 +501,8 @@ lvgl:
                   recolor: true
 
         # ============ 行4~行5 右侧上格：在线设备 A (y162 h49) ============
-        # 通用格：名称由 HA 下发（device_a_name），留空显示「设备1」；超长截断
-        # 图标固定天蓝；名称在上（HA 下发）、状态在下，在线绿/离线灰
+        # 通用格：名称由 HA 下发（device_a_name），留空显示「Nova13」；超长截断
+        # 图标固定天蓝；名称与状态同一行（名称左、状态右），在线绿/离线灰
         - obj:
             x: 319
             y: 162
@@ -522,29 +522,27 @@ lvgl:
                   text_font: mdi_icons_20
                   height: 18
                   text_color: 0x7BC8FF
-              # 名称在上（16px，宽 118 超出省略），状态在下（12px）
+              # 名称与状态同一行（16px）：名称 x26 宽 58 超出省略，状态 x88
               - label:
                   id: home_dev_a_name
-                  align: top_left
+                  align: left_mid
                   x: 26
-                  y: 6
-                  width: 118
+                  width: 58
                   long_mode: DOT
-                  text: "设备1"
+                  text: "Nova13"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
               - label:
                   id: home_dev_a_state
-                  align: bottom_left
-                  x: 26
-                  y: -6
+                  align: left_mid
+                  x: 88
                   text: "--"
-                  text_font: ui_font_small
+                  text_font: ui_font_medium
                   text_color: 0x757575
 
         # ============ 行4~行5 右侧下格：在线设备 B (y214 h49) ============
-        # 通用格：名称由 HA 下发（device_b_name），留空显示「设备2」；超长截断
-        # 图标固定紫色；名称在上（HA 下发）、状态在下，在线绿/离线灰
+        # 通用格：名称由 HA 下发（device_b_name），留空显示「Nova12」；超长截断
+        # 图标固定紫色；名称与状态同一行（名称左、状态右），在线绿/离线灰
         - obj:
             x: 319
             y: 214
@@ -564,24 +562,22 @@ lvgl:
                   text_font: mdi_icons_20
                   height: 18
                   text_color: 0xB39DFF
-              # 名称在上（16px，宽 118 超出省略），状态在下（12px）
+              # 名称与状态同一行（16px）：名称 x26 宽 58 超出省略，状态 x88
               - label:
                   id: home_dev_b_name
-                  align: top_left
+                  align: left_mid
                   x: 26
-                  y: 6
-                  width: 118
+                  width: 58
                   long_mode: DOT
-                  text: "设备2"
+                  text: "Nova12"
                   text_font: ui_font_medium
                   text_color: 0xFFFFFF
               - label:
                   id: home_dev_b_state
-                  align: bottom_left
-                  x: 26
-                  y: -6
+                  align: left_mid
+                  x: 88
                   text: "--"
-                  text_font: ui_font_small
+                  text_font: ui_font_medium
                   text_color: 0x757575
 
         # ============ 底部四键 TAB（四页共用，见 ui/tab_bar.yaml） ============
@@ -852,10 +848,10 @@ interval:
           };
           set_dev_state(id(home_dev_a_state), id(ha_device_a_online));
           set_dev_state(id(home_dev_b_state), id(ha_device_b_online));
-          // 名称：HA 下发优先（device_a_name / device_b_name），留空回退到「设备1 / 设备2」
+          // 名称：HA 下发优先（device_a_name / device_b_name），留空回退到「Nova13 / Nova12」
           if (id(home_dev_a_name))
             lv_label_set_text(id(home_dev_a_name),
-                              id(hd_device_a_name).empty() ? "设备1" : id(hd_device_a_name).c_str());
+                              id(hd_device_a_name).empty() ? "Nova13" : id(hd_device_a_name).c_str());
           if (id(home_dev_b_name))
             lv_label_set_text(id(home_dev_b_name),
-                              id(hd_device_b_name).empty() ? "设备2" : id(hd_device_b_name).c_str());
+                              id(hd_device_b_name).empty() ? "Nova12" : id(hd_device_b_name).c_str());
