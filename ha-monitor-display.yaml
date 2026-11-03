@@ -2,7 +2,7 @@
 # 版本：v2.0 NOTIFY（2026-11-01，开发中）
 #   新增第四页「通知」：MQTT 单条全屏 + 上下切换 + 正文滚动
 #     · 字库 ui_font_notify：GB2312 一级 3755 字全量（≈310KB flash）
-#     · 数据：home/ha-monitor-display/notify → 8 槽环形缓冲（ui/notify_store.h）
+#     · 数据：home/ha-monitor-display/notify → 8 槽环形缓冲（include/notify_store.h）
 #     · 导航改四键 TAB，抽成 ui/tab_bar.yaml 四页共用
 #   上一定版：v1.1.1（2026-11-01，续航优化，已出包）
 # ==========================================================
@@ -28,10 +28,10 @@ packages:
 esphome:
   name: ha-monitor-display
   friendly_name: HA Monitor Display
-  # v2.0 NOTIFY：通知环形缓冲与截断逻辑（8 槽，见 ui/notify_store.h）
+  # v2.0 NOTIFY：通知环形缓冲与截断逻辑（8 槽，见 include/notify_store.h）
   includes:
-    - ui/notify_store.h
-    - ui/notify_charset.h      # notify_store.h 里 #include "notify_charset.h"，
+    - include/notify_store.h
+    - include/notify_charset.h      # notify_store.h 里 #include "notify_charset.h"，
                                # 必须一并登记，否则构建目录 src/ui/ 下没有这个文件
 
   # v2.1 远程控制通道：开机等 WiFi/MQTT 连上后回发一次状态帧，
@@ -231,7 +231,7 @@ mqtt:
   #   MQTT 主题精确匹配，上面的数据帧订阅收不到子主题，两条互不干扰。
   #   载荷优先按 JSON {title,message,ts} 解析（Node-RED 子流程的格式）；
   #   不是 JSON 就整段当正文，HA 原生 mqtt.publish 发纯文本也能上屏。
-  #   入库统一走 ns_notify（ui/notify_store.h）：8 槽环形 + UTF-8 安全截断 + 重复丢弃。
+  #   入库统一走 ns_notify（include/notify_store.h）：8 槽环形 + UTF-8 安全截断 + 重复丢弃。
   # ==========================================================
   on_message:
     - topic: home/ha-monitor-display/notify

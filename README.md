@@ -71,7 +71,8 @@ web_password: your-web-password
 /config/esphome/
 ├── ha-monitor-display.yaml      主配置
 ├── ui/                          page_dashboard / page_network / page_system / page_notify
-│                                tab_bar / ui_common / notify_store.h / notify_charset.h
+│                                tab_bar / ui_common
+├── include/                     notify_store.h / notify_charset.h
 └── fonts/                       NotoSansSC-SemiBold.ttf + materialdesignicons-webfont.ttf
 /config/packages/
 ├── monitor_display_push.yaml    HA 侧 5 秒推送自动化
@@ -95,19 +96,15 @@ ESPHome 里 Install（USB 首次，之后可 OTA）；在 HA 里重载自动化�
 
 ```
 ha-monitor-display.yaml     主配置（板型 / WiFi / MQTT / API / 屏 / 触摸 / 休眠 / LVGL 全局）
-ui_common.yaml              字体、globals、公共控件              → ui/
-page_dashboard.yaml         家庭页                              → ui/
-page_network.yaml           网络页                              → ui/
-page_system.yaml            系统页                              → ui/
-page_notify.yaml            通知页（v2.0）                      → ui/
-tab_bar.yaml                四键底部导航（v2.0）                → ui/
-notify_store.h              通知环形缓冲 / 折行 / 清洗（v2.0）  → ui/
-notify_charset.h            通知字库表（GB2312 一级，v2.0）     → ui/
-ha/monitor_display_push.yaml    HA 推送自动化（MQTT 版专用）      → /config/packages/
-ha/monitor_display_control.yaml HA 远程控制（v2.1）              → /config/packages/
+ui/                         四个页面 + ui_common（字体/globals/公共件）+ tab_bar 底部导航
+include/                    notify_store.h 通知环形缓冲/折行/清洗 + notify_charset.h 通知字库表（v2.0）
+ha/                         HA 侧配置包（→ /config/packages/）：
+                              monitor_display_push.yaml     5 秒推送自动化（MQTT 版专用）
+                              monitor_display_control.yaml  远程控制 5 实体（v2.1）
 fonts/                      中文字体 + MDI 图标字体
-项目外网MQTT方案说明.md      外网 MQTT/TLS 方案与踩坑
-硬件焊接接线指南.md          接线 / 排针 / 焊接注意事项
+docs/                       方案文档：v2.0 NOTIFY 方案 / 外网 MQTT/TLS 方案与踩坑 / NR 屏幕推送子流程导出
+hardware/                   硬件焊接接线指南 + 整机照片（正面 / 背面）
+releases/                   历史发布包（GitHub Release 已挂对应 zip）
 CHANGELOG.md                更新日志
 ```
 

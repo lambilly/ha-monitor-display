@@ -28,7 +28,7 @@ mqtt:
       icon: mdi:monitor
       command_topic: home/ha-monitor-display/cmd/light
       state_topic: esphome/ha-monitor-display/state
-      value_template: "{{ 'ON' if value_json.light else 'OFF' }}"
+      state_value_template: "{{ 'ON' if value_json.light else 'OFF' }}"
       payload_on: "ON"
       payload_off: "OFF"
       retain: true
