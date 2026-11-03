@@ -176,7 +176,7 @@
       </tr>
       <tr>
         <td>WiFi / MQTT 服务器 / 各类密码</td>
-        <td><code>secrets.yaml</code><br>→ 覆盖 ESPHome 的 <code>/config/esphome/secrets.yaml</code></td>
+        <td><code>secrets.yaml</code><br>→ 把 9 行<b>合并</b>进 ESPHome 的 <code>/config/esphome/secrets.yaml</code><br><span style="color:var(--warn)">勿整份覆盖：该文件被所有设备共用</span></td>
         <td><span class="tag-yes">需要</span></td>
         <td>ESPHome 里对设备点 <b>INSTALL</b> 重新编译烧录（可先 VALIDATE），设备重启后生效</td>
       </tr>
@@ -274,7 +274,7 @@
       <div>
         <div class="bar"><b style="font-size:13px">① secrets.yaml</b><span class="sp"></span>
           <button data-cp="out_secrets">复制</button><button data-dl="out_secrets" data-fn="secrets.yaml">下载</button></div>
-        <p class="hint" style="margin:0 0 4px">覆盖 ESPHome 目录的 <code style="font-family:var(--mono)">secrets.yaml</code>（<code style="font-family:var(--mono)">/config/esphome/</code>）→ <b>需重新编译烧录</b>。</p>
+        <p class="hint" style="margin:0 0 4px"><b>不要整份覆盖</b>：HA 的 <code style="font-family:var(--mono)">secrets.yaml</code> 被所有 ESPHome 设备共用，整份替换会删掉其他项目的键。请把这 9 行<b>合并</b>进现有文件（同名键就地替换）→ <b>需重新编译烧录</b>。</p>
         <pre id="out_secrets"></pre>
       </div>
       <div>
@@ -289,7 +289,7 @@
       <summary>部署与生效方式（点开看）</summary>
       <ol>
         <li><b>只换实体</b>：下载 <b>monitor_display_push.yaml</b> 覆盖 HA 的 <code>/config/packages/</code> → 开发者工具 → YAML → 「自动化」重新加载，几秒后屏幕刷新，<b>不需要重新烧录</b>。</li>
-        <li><b>改 WiFi / MQTT / 密码</b>：下载 <b>secrets.yaml</b> 覆盖 ESPHome 的 <code>/config/esphome/secrets.yaml</code> → ESPHome 里 INSTALL 重新编译烧录（可先 VALIDATE），<b>需要重新烧录</b>。</li>
+        <li><b>改 WiFi / MQTT / 密码</b>：把生成的 9 行<b>合并</b>进 <code>/config/esphome/secrets.yaml</code>（该文件被所有设备共用，<b>不要整份覆盖</b>）→ ESPHome 里 INSTALL 重新编译烧录（可先 VALIDATE），<b>需要重新烧录</b>。</li>
         <li><b>首次安装设备</b>：两份都要替换并烧录，之后日常调整只走第 1 条。</li>
         <li>替换前建议把旧文件复制一份留底，填错可从本页重新生成。</li>
       </ol>
@@ -711,8 +711,10 @@ function buildSlotBlock(getVal){
   return lines.join("\n");
 }
 function buildSecrets(get){
-  const L = ["# HA Monitor Display —— secrets.yaml",
-             "# 由配置生成器输出；此文件含明文密码，勿提交到任何仓库！",""];
+  const L = ["# HA Monitor Display —— secrets 片段（仅本设备的 9 个键）",
+             "# 由配置生成器输出；此文件含明文密码，勿提交到任何仓库！",
+             "# ⚠ 不要整份覆盖 /config/esphome/secrets.yaml：该文件被所有 ESPHome 设备共用，",
+             "#   整份替换会删掉其他项目的键。请把下面 9 行合并进现有文件（同名键就地替换）。",""];
   for (const k of SECRET_KEYS){
     const v = (get(k)||"").trim();
     if (k === "mqtt_port"){                       // 端口必须是数字，不能加引号
