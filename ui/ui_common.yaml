@@ -326,6 +326,14 @@ globals:
     type: bool
     restore_value: false
     initial_value: "false"
+  # 唤醒保持期截止时刻（millis 基准，0 = 无保持）。
+  #   熄屏巡检依赖 LVGL 的「无输入时间」，而亮屏本身不是输入事件——
+  #   通知唤醒时该值往往早已超过熄屏阈值，1s 巡检会立刻把屏又关掉，
+  #   表现为「通知来了闪一下就熄」。wake_screen 里写这里来跳过巡检。
+  - id: ui_hold_until
+    type: uint32_t
+    restore_value: false
+    initial_value: "0"
   # 默认亮度 60%（v1.1.1 续航优化）：开机点亮与熄屏恢复都取此值；
   # 用户在系统页滑块或 HA 灯实体上调过亮度后，熄屏恢复仍按用户值。
   - id: ui_saved_brightness
@@ -446,6 +454,9 @@ interval:
           if (!id(lvgl_ready)) return;
           if (id(ui_screen_off)) return;
           if (!id(ui_auto_sleep_enabled)) return;
+
+          // 唤醒保持期内不熄屏（有符号差值比较，millis() 回绕也正确）
+          if (id(ui_hold_until) != 0 && (int32_t) (millis() - id(ui_hold_until)) < 0) return;
 
           uint32_t idle_ms = lv_disp_get_inactive_time(NULL);
           uint32_t sleep_ms = (uint32_t) (id(sleep_timeout_number).state * 1000.0f);

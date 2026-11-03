@@ -1465,7 +1465,15 @@ script:
   - id: wake_screen
     mode: single
     then:
-      - lambda: id(ui_screen_off) = false;
+      - lambda: |-
+          // 唤醒后设保持期（默认 15s，熄屏超时更短则按更短的来）。
+          //   亮屏不产生触摸输入，LVGL 的「无输入时间」不会归零，
+          //   若它已超过阈值，1s 巡检会当场把屏关回去（通知闪一下就灭）。
+          uint32_t hold = 15000;
+          const uint32_t tmo = (uint32_t) (id(sleep_timeout_number).state * 1000.0f);
+          if (tmo > 0 && tmo < hold) hold = tmo;
+          id(ui_hold_until) = millis() + hold;
+          id(ui_screen_off) = false;
       - light.turn_on:
           id: lcd_backlight
           brightness: !lambda |-

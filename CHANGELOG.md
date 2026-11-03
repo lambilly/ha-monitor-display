@@ -6,6 +6,32 @@
 - **API 线**：`HA Monitor Display API v0.9.0`（ESPHome Native API 拉取，前身版本）
 - **通知线**：`HA Monitor Display Notify v2.0`（开发中）
 
+## [未发布] — 2026-11-03（修复：通知唤醒后屏幕闪一下就熄）
+
+**现象**：打开「通知亮屏」（Notify Wake Screen）后，来通知时屏幕亮一下就立刻熄灭，
+根本看不清通知内容。
+
+**根因**：熄屏巡检（`ui/ui_common.yaml`，每秒一次）判断依据是 LVGL 的「无输入时间」
+`lv_disp_get_inactive_time()`，而**亮屏本身不是输入事件**——通知唤醒时这个值往往
+早已超过熄屏阈值（默认 60s），于是下一秒巡检就判定"该睡了"，把刚点亮的背光关掉。
+
+**修复**：新增 `ui_hold_until`（millis 截止时刻），`wake_screen` 里写入
+`now + 15s`（熄屏超时更短时按更短的来），巡检在保持期内直接跳过。
+所有唤醒入口（通知、`cmd/light`、`cmd/wake`、面板开关）统一受益——此前从 HA
+点亮屏幕同样会立刻被巡检关掉。
+
+### 行为
+
+- 来通知 → 亮屏并保持 **15 秒**（期间无触摸）→ 自动熄屏
+- 期间触摸屏幕会继续按正常规则计时，不会被打断
+- 保持时长是常量 `hold = 15000`（`wake_screen` 内），要改成别的秒数直接改这一处
+
+### 验证
+
+- `esphome config`：Configuration is valid（exit 0），生成代码含 `ui_hold_until`
+  判断与 `hold = 15000`
+- `millis()` 在本项目已有多处使用（`ha_data_last_ms`、通知页滚动暂停），编译风险低
+
 ## [未发布] — 2026-11-03（生成器可用性修正）
 
 ### Fixed（配置生成器 `tools/monitor-display-generator.html`）
