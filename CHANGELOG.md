@@ -6,6 +6,18 @@
 - **API 线**：`HA Monitor Display API v0.9.0`（ESPHome Native API 拉取，前身版本）
 - **通知线**：`HA Monitor Display Notify v2.0`（开发中）
 
+## [未发布] — 2026-11-04（生成器移动端适配）
+
+- `tools/monitor-display-generator.html` 兼顾手机显示布局，四项改动：
+  ① `≤720px` 槽位行「键名/输入框」由左右两列改上下堆叠，输入框加大触控热区；
+  ② 「使用前必读」4 列表格包进 `.tbl-wrap` 横向滚动容器（窄屏不再挤压爆版，`min-width:620px`）；
+  ③ 屏幕模拟图格内字号改 container query 跟随容器缩放（`.screen` 已有 `container-type:inline-size`，
+     ≤400px 时标签 10px / 值 9px / TAB 12px / 备注 9px），手机 ~350px 宽不再挤出版；
+  ④ `.card h2` 改 flex 布局（顺带修复了标题右侧「已填 x/51」「清空/载入示例」按钮的
+     `margin-left:auto` 此前不生效、不右对齐的问题）
+- 回归：生成输出与 `ha/monitor_display_push.yaml` SLOT 字典 51/51 键零差异；HTML 标签配平通过
+- 桌面端布局不受影响（改动全部收在 ≤720px 断点与容器查询内，仅 h2 flex 全局生效）
+
 ## [未发布] — 2026-11-03（OTA 显式加密，消除 Dashboard「需要加密OTA」提示）
 
 - `ota:` 使用**空的 `encryption:` 块（bare block）**：编译时自动继承 `api:` 的 `api_key`

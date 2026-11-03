@@ -37,8 +37,9 @@
   .card.c2 h2 .n{background:#16a34a}
   .card.c3 h2 .n{background:#d97706}
   .card.c3 .grp{background:#fff}
+  .card h2{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
   .card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
-              border-radius:50%;background:var(--acc);color:#fff;font-size:12px}
+              border-radius:50%;background:var(--acc);color:#fff;font-size:12px;flex:none}
   .hint{color:var(--sub);font-size:12.5px;margin:2px 0 10px}
   code{font-family:var(--mono);font-size:.92em;line-height:inherit}
   /* 必读要点：等距三条，行高与间距统一 */
@@ -53,6 +54,29 @@
   .card.c1 .grid{grid-template-columns:1fr 1fr}
   .card.c1 .grid>p{grid-column:1/-1}
   @media (max-width:720px){.card.c1 .grid{grid-template-columns:1fr}}
+  /* ===== 移动端适配（≤720px：槽位上下堆叠、间距收紧、触控热区加大） ===== */
+  @media (max-width:720px){
+    header{padding:14px 12px}
+    .subbar{padding:8px 12px}
+    .wrap{padding:10px;gap:12px}
+    .card{padding:12px;margin-bottom:12px}
+    .slot{grid-template-columns:1fr;gap:3px;padding:6px 0}
+    .slot input{font-size:13px;padding:9px 10px}
+    button{padding:8px 12px}
+    .out pre{font-size:11px}
+    .toast{bottom:14px;max-width:92vw;text-align:center}
+  }
+  /* 必读表格列宽固定，窄屏时横向滚动而不是挤压爆版 */
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  @media (max-width:720px){ table.howto{min-width:620px} }
+  /* 模拟图格内字号跟随容器宽度缩放（.screen 已设 container-type:inline-size），
+     手机上模拟图约 350px 宽，固定 12px 会挤出版 */
+  @container (max-width:400px){
+    .mk-cell{font-size:10px;line-height:1.05;padding:0}
+    .mk-cell .v{font-size:9px}
+    .mk-tab{font-size:12px}
+    .mk-note{font-size:9px}
+  }
   .f{display:flex;flex-direction:column;gap:3px}
   .f label{font-size:12.5px;color:var(--sub)}
   .f label b{color:var(--txt);font-weight:600}
@@ -174,6 +198,7 @@
       <div><span class="n">2</span><span>固件与 HA 事先约定了 51 个固定的数据键名，相当于 51 个「信箱」：<b>键名永远不用改</b>，你只需决定「每个信箱收哪个 HA 实体的数据」。数据流向为 <code>HA 实体 → 自动化每 5 秒打包 JSON → MQTT → 屏幕</code>；实体 ID 只写在 HA 自动化里，不会进入固件，所以日后更换实体，只需重新生成推送包并在 HA 里重新加载自动化。</span></div>
       <div><span class="n">3</span><span>操作顺序：左侧 <b>① 基础配置</b> 填连接参数 → <b>② 连接 HA</b>（可选）拉取实体列表辅助填写 → <b>③ 槽位实体</b> 逐项填入 entity_id；右侧可实时查看屏幕版面与生成结果。</span></div>
     </div>
+    <div class="tbl-wrap">
     <table class="howto">
       <tr><th style="width:150px">你改了什么</th><th>替换哪个文件</th><th style="width:110px">要重新编译烧录吗</th><th>如何生效</th></tr>
       <tr>
@@ -195,6 +220,7 @@
         <td>按仓库 README 完成首次烧录，之后日常调整只走第一行</td>
       </tr>
     </table>
+    </div>
     <ul class="hint" style="margin:0;padding-left:18px">
       <li><b>下载的文件在浏览器的"下载"文件夹</b>（Windows 在 <code style="font-family:var(--mono)">C:\Users\你的用户名\Downloads</code>），同名文件重复下载会自动加 (1) 后缀，注意别拿错旧版。</li>
       <li>替换前建议把旧文件复制一份留底；填错了随时可从本页重新生成，最坏情况也只是个别字段显示 <b>--</b> 或 <b>unknown</b>，不会损坏任何东西。</li>
