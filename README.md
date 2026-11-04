@@ -135,13 +135,13 @@ ESP32 mqtt.on_json_message ─▶ hd_* globals ─▶ LVGL 三页刷新
 屏幕被带到公司/酒店时，**Native API 那条控制线会断**（HA 连不到设备，设备没有公网 IP），
 而 MQTT 是设备主动往外连，所以数据一直好、控制全废。v2.1 把这 5 项也挂到 MQTT 上：
 
-| HA 实体（`ha/monitor_display_control.yaml`） | 下发主题 | 取值 |
+| HA 实体（`ha/monitor_display_control.yaml`，挂在 MQTT 集成「HA Monitor Display 远程控制」设备下） | 下发主题 | 取值 |
 | -- | -- | -- |
-| 屏幕-远程开关 | `.../cmd/light` | `ON` / `OFF`（开=唤醒到上次亮度） |
-| 屏幕-远程亮度 | `.../cmd/bright` | 10 ~ 100 (%) |
-| 屏幕-远程熄屏超时 | `.../cmd/sleep` | 15 ~ 900 (s) |
-| 屏幕-远程自动休眠 | `.../cmd/autosleep` | `ON` / `OFF` |
-| 屏幕-远程通知亮屏 | `.../cmd/wake` | `ON` / `OFF` |
+| HMD Screen Power | `.../cmd/light` | `ON` / `OFF`（开=唤醒到上次亮度） |
+| HMD Brightness | `.../cmd/bright` | 10 ~ 100 (%) |
+| HMD Sleep Timeout | `.../cmd/sleep` | 15 ~ 900 (s) |
+| HMD Auto Sleep | `.../cmd/autosleep` | `ON` / `OFF` |
+| HMD Notify Wake | `.../cmd/wake` | `ON` / `OFF` |
 
 设备把当前值 retain 回发到 `esphome/ha-monitor-display/state`：
 
