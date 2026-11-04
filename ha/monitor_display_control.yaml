@@ -53,7 +53,6 @@ mqtt:
       step: 5
       mode: slider
       unit_of_measurement: "%"
-      entity_category: config
       retain: true
       qos: 1
       device:
@@ -72,7 +71,6 @@ mqtt:
       step: 5
       mode: box
       unit_of_measurement: "s"
-      entity_category: config
       retain: true
       qos: 1
       device:
@@ -89,7 +87,6 @@ mqtt:
       value_template: "{{ 'ON' if value_json.autosleep else 'OFF' }}"
       payload_on: "ON"
       payload_off: "OFF"
-      entity_category: config
       retain: true
       qos: 1
       device:
@@ -105,7 +102,6 @@ mqtt:
       value_template: "{{ 'ON' if value_json.wake else 'OFF' }}"
       payload_on: "ON"
       payload_off: "OFF"
-      entity_category: config
       retain: true
       qos: 1
       device:
