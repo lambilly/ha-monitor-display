@@ -19,16 +19,16 @@
 # ==========================================================
 type: vertical-stack
 cards:
-  # ---------- 行1：屏幕亮度（整行） ----------
-  - type: custom:mushroom-template-card
+  # ---------- 行1：屏幕亮度（整行，带拉动条） ----------
+  # mushroom-number-card 的 slider 模式是蘑菇卡里唯一原生滑块；
+  # 拖动即下发（约 1s 节流），屏幕亮度会跟着实时变——对调亮度来说正好。
+  - type: custom:mushroom-number-card
     entity: number.hmd_remote_brightness
+    name: 屏幕亮度
     icon: mdi:brightness-percent
-    primary: 屏幕亮度
-    secondary: |
-      {{ states(entity) | int(0) ~ '%' if states(entity) not in ['unknown','unavailable'] else '--' }}
-    color: amber
-    tap_action:
-      action: more-info
+    icon_color: amber
+    display_mode: slider
+    layout: horizontal
 
   # ---------- 行2~3：其余 4 个，2 列 ----------
   - type: grid
