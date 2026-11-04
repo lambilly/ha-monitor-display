@@ -1,0 +1,13 @@
+﻿Ref,Qty,Value,Package,Note
+U1,1,IP5406,ESOP8 (SOP-8 w/ thermal pad 3.9x4.9),IP5407 / IP5406T also fit (same pinout)
+L1,1,1uH / 4A,5x5 or 6x6 mm shielded,<0.05 ohm DCR; "1R0" marking on the original module
+C1,1,22uF / 10V,0805 X5R (0603 ok),VIN decoupling - close to U1 pin 1
+C2,1,10uF / 10V,0805 X5R,BAT decoupling - close to L1 pad 2
+C3,1,22uF / 10V,0805 X5R,VOUT bulk
+C4,1,22uF / 10V,0805 X5R,VOUT bulk
+C5,1,100nF / 16V,0603 X7R,VOUT high-frequency bypass
+J1,1,2.54mm 6P THT,1x6 pin header / 6 through-hole pads,Same pinout + position as the IP5306 module
+J2,1,2.54mm 4P THT,1x4 pin header,DCP / KEY / LED1 / LED2 spare header
+J3,1,PH2.0 2P right-angle socket,PH2.0-2P (2.0mm pitch, body overhangs the edge),Battery pack plugs straight in; pin1=BAT pin2=GND
+J4,1,2.54mm 2P THT,1x2 pin header (both pins on the 2.54 grid),External ON/OFF switch; fit jumper cap for always-on
+JP1,1,Jumper cap 2.54mm,-,Optional: shorts J4 when no switch is used

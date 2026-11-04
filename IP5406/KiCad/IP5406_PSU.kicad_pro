@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "filename": "IP5406_PSU.kicad_pro",
+    "version": 3
+  },
+  "sheets": [
+    [
+      "8f3c2a10-1111-4222-8333-abcdef012345",
+      ""
+    ]
+  ],
+  "text_variables": {},
+  "board": {
+    "design_settings": {
+      "defaults": {},
+      "drc_exclusions": [],
+      "meta": {
+        "version": 2
+      },
+      "rule_severities": {
+        "silk_edge_clearance": "warning",
+        "silk_over_copper": "warning",
+        "silk_overlap": "warning",
+        "text_height": "warning",
+        "text_thickness": "warning",
+        "solder_mask_bridge": "error"
+      },
+      "rules": {
+        "min_copper_edge_clearance": 0.2,
+        "min_clearance": 0.2,
+        "min_hole_clearance": 0.25,
+        "min_hole_to_hole": 0.5,
+        "min_silk_clearance": 0.0,
+        "min_text_height": 0.6,
+        "min_text_thickness": 0.08,
+        "solder_mask_to_copper_clearance": 0.0
+      }
+    }
+  },
+  "schematic": {
+    "legacy_lib_dir": "",
+    "legacy_lib_list": []
+  }
+}

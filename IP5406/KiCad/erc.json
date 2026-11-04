@@ -1,0 +1,292 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-11-03T12:39:34",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.6",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/8f3c2a10-1111-4222-8333-abcdef012345",
+            "violations": [
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 C1 [C]",
+                            "pos": {
+                                "x": 0.635,
+                                "y": 0.5588
+                            },
+                            "uuid": "39ea99f3-9a0b-4e29-963b-01a61e21f746"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 C2 [C]",
+                            "pos": {
+                                "x": 0.635,
+                                "y": 0.762
+                            },
+                            "uuid": "8c261686-427c-4679-a96f-0bb2c54f072d"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 U1 [IP5406]",
+                            "pos": {
+                                "x": 1.3589,
+                                "y": 0.889
+                            },
+                            "uuid": "46265337-43d8-4aa8-bcbd-7638a28c0a6a"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 J1 [Conn_01x06]",
+                            "pos": {
+                                "x": 1.3589,
+                                "y": 1.3716
+                            },
+                            "uuid": "81c1018e-fa27-49f7-98f7-318a42aa9a09"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 J2 [Conn_01x04]",
+                            "pos": {
+                                "x": 1.3589,
+                                "y": 1.7272
+                            },
+                            "uuid": "2509b6a4-e87d-4671-b5f2-f76ef8089c22"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Symbol pin or wire end off connection grid",
+                    "items": [
+                        {
+                            "description": "水平线, 长度 0.0762 mm",
+                            "pos": {
+                                "x": 1.4351,
+                                "y": 0.87207
+                            },
+                            "uuid": "e8b008af-f1e0-4797-ac03-047c1f60a8fd"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "endpoint_off_grid"
+                },
+                {
+                    "description": "Symbol pin or wire end off connection grid",
+                    "items": [
+                        {
+                            "description": "Symbol U1 引脚 7 [SW, Passive, Line]",
+                            "pos": {
+                                "x": 1.4351,
+                                "y": 0.90593
+                            },
+                            "uuid": "a77bc43e-0e64-41d8-b02e-ec301e9085b3"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "endpoint_off_grid"
+                },
+                {
+                    "description": "Symbol pin or wire end off connection grid",
+                    "items": [
+                        {
+                            "description": "水平线, 长度 0.0762 mm",
+                            "pos": {
+                                "x": 1.4351,
+                                "y": 0.90593
+                            },
+                            "uuid": "d40e6e10-63cd-489c-9795-7024e8aef3d6"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "endpoint_off_grid"
+                },
+                {
+                    "description": "Symbol pin or wire end off connection grid",
+                    "items": [
+                        {
+                            "description": "水平线, 长度 0.0762 mm",
+                            "pos": {
+                                "x": 1.84785,
+                                "y": 0.5588
+                            },
+                            "uuid": "1f8feb4d-e919-4025-9f7d-346b61c79e9b"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "endpoint_off_grid"
+                },
+                {
+                    "description": "Symbol pin or wire end off connection grid",
+                    "items": [
+                        {
+                            "description": "Symbol L1 引脚 1 [SW, Passive, Line]",
+                            "pos": {
+                                "x": 1.84785,
+                                "y": 0.5588
+                            },
+                            "uuid": "2937788a-f21f-4a4e-8e00-8f521dc1b66c"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "endpoint_off_grid"
+                },
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 L1 [L]",
+                            "pos": {
+                                "x": 1.905,
+                                "y": 0.5588
+                            },
+                            "uuid": "c7585c3b-5868-47dd-af78-15569e3a9026"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 C3 [C]",
+                            "pos": {
+                                "x": 1.905,
+                                "y": 0.762
+                            },
+                            "uuid": "41b95b2b-c3f3-44a6-98f6-374bc690329e"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 C4 [C]",
+                            "pos": {
+                                "x": 1.905,
+                                "y": 0.9652
+                            },
+                            "uuid": "10c0aa79-f497-4259-afd1-e2058467357c"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 C5 [C]",
+                            "pos": {
+                                "x": 1.905,
+                                "y": 1.1684
+                            },
+                            "uuid": "ce6e912c-9bc3-4d0f-af3f-d27cd2929c84"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Symbol pin or wire end off connection grid",
+                    "items": [
+                        {
+                            "description": "水平线, 长度 0.0762 mm",
+                            "pos": {
+                                "x": 1.96215,
+                                "y": 0.5588
+                            },
+                            "uuid": "306d3056-8c14-4fe8-9eec-15312b3bf452"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "endpoint_off_grid"
+                },
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 J4 [Conn_01x02]",
+                            "pos": {
+                                "x": 2.4003,
+                                "y": 0.9652
+                            },
+                            "uuid": "a6a15970-e73c-483a-a01a-9734f5bad6fd"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "当前配置不包含符号库 'IP5406_Lib'",
+                    "items": [
+                        {
+                            "description": "符号 J3 [Conn_01x02]",
+                            "pos": {
+                                "x": 2.4003,
+                                "y": 1.1684
+                            },
+                            "uuid": "5b1d81c9-92ce-473f-b2ec-c48abba51468"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                }
+            ]
+        }
+    ],
+    "source": "IP5406_PSU.kicad_sch"
+}

@@ -109,6 +109,9 @@ hardware/                   硬件焊接接线指南 + 整机照片（正面 / �
 tools/                      monitor-display-generator.html  3.0 配置生成器（单文件，
                               放 /config/www/ 经 /local/ 打开；填 MQTT/WiFi + 选 51 槽位
                               实体 → 输出 secrets.yaml 与填好的推送包，支持连 HA 拉实体）
+IP5406/                     5V UPS 电源板子项目（KiCad 工程 + BOM + 下单指引）：
+                              25×16mm、IP5406 常开输出、拔插即换 IP5306 模块；
+                              工程由 KiCad/gen_kicad.py 生成，改需求改脚本别手改 PCB
 releases/                   历史发布包（GitHub Release 已挂对应 zip）
 CHANGELOG.md                更新日志
 ```

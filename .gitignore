@@ -1,5 +1,7 @@
 # 发布包与二进制产物（用 git tag 代替）
 *.zip
+# 例外：IP5406 送板 Gerber 是可直接上传嘉立创的交付物，必须入库
+!IP5406/KiCad/*_Gerber_JLC.zip
 
 # 工具与缓存
 .workbuddy/

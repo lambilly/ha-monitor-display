@@ -1,0 +1,1111 @@
+(export
+	(version "E")
+	(design
+		(source "D:\\IP5406电源模块\\KiCad\\IP5406_PSU.kicad_sch")
+		(date "2026-11-03T12:39:25")
+		(tool "Eeschema 10.0.6")
+		(sheet
+			(number "1")
+			(name "/")
+			(tstamps "/")
+			(title_block
+				(title "IP5406 5V UPS Power Board")
+				(company)
+				(rev "1.5")
+				(date "2026-11-03")
+				(source "IP5406_PSU.kicad_sch")
+				(comment
+					(number "1")
+					(value "25.0x16.0mm (same as IP5306 module); J1 6P 1:1 pin-compatible")
+				)
+				(comment
+					(number "2")
+					(value "Row pitch 22.86mm = 9x2.54mm; J4 on the 2.54 grid; PH2.0 battery socket")
+				)
+				(comment
+					(number "3")
+					(value "")
+				)
+				(comment
+					(number "4")
+					(value "")
+				)
+				(comment
+					(number "5")
+					(value "")
+				)
+				(comment
+					(number "6")
+					(value "")
+				)
+				(comment
+					(number "7")
+					(value "")
+				)
+				(comment
+					(number "8")
+					(value "")
+				)
+				(comment
+					(number "9")
+					(value "")
+				)
+			)
+		)
+	)
+	(components
+		(comp
+			(ref "C1")
+			(value "22uF")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "C")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "39ea99f3-9a0b-4e29-963b-01a61e21f746")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C2")
+			(value "10uF")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "C")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "8c261686-427c-4679-a96f-0bb2c54f072d")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C3")
+			(value "22uF")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "C")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "41b95b2b-c3f3-44a6-98f6-374bc690329e")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C4")
+			(value "22uF")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "C")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "10c0aa79-f497-4259-afd1-e2058467357c")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C5")
+			(value "100nF")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "C")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "ce6e912c-9bc3-4d0f-af3f-d27cd2929c84")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J1")
+			(value "IN/OUT 6PAD")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "Conn_01x06")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "81c1018e-fa27-49f7-98f7-318a42aa9a09")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "6")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "1")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J2")
+			(value "SPARE 4P")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "Conn_01x04")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "2509b6a4-e87d-4671-b5f2-f76ef8089c22")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "1")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J3")
+			(value "PH2.0 BAT")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "Conn_01x02")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "5b1d81c9-92ce-473f-b2ec-c48abba51468")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J4")
+			(value "SW JUMPER")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "Conn_01x02")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "a6a15970-e73c-483a-a01a-9734f5bad6fd")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "L1")
+			(value "1uH/4A")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "L")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "c7585c3b-5868-47dd-af78-15569e3a9026")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "U1")
+			(value "IP5406")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "IP5406_Lib")
+				(part "IP5406")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "IP5406_PSU")
+			)
+			(property
+				(name "Sheetfile")
+				(value "IP5406_PSU.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "46265337-43d8-4aa8-bcbd-7638a28c0a6a")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "9")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "6")
+						)
+						(pin
+							(num "7")
+						)
+						(pin
+							(num "8")
+						)
+					)
+				)
+			)
+		)
+	)
+	(groups)
+	(variants)
+	(libparts
+		(libpart
+			(lib "IP5406_Lib")
+			(part "C")
+			(fields
+				(field
+					(name "Reference") "C")
+				(field
+					(name "Value") "C")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "IP5406_Lib")
+			(part "Conn_01x02")
+			(fields
+				(field
+					(name "Reference") "J")
+				(field
+					(name "Value") "J")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "A")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "B")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "IP5406_Lib")
+			(part "Conn_01x04")
+			(fields
+				(field
+					(name "Reference") "J")
+				(field
+					(name "Value") "J")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "DCP")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "KEY")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "LED1")
+					(type "passive")
+				)
+				(pin
+					(num "4")
+					(name "LED2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "IP5406_Lib")
+			(part "Conn_01x06")
+			(fields
+				(field
+					(name "Reference") "J")
+				(field
+					(name "Value") "J")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "OUT-5V")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "BAT")
+					(type "passive")
+				)
+				(pin
+					(num "4")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "5")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "6")
+					(name "VIN")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "IP5406_Lib")
+			(part "IP5406")
+			(fields
+				(field
+					(name "Reference") "U")
+				(field
+					(name "Value") "U")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "VIN")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "DCP")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "KEY")
+					(type "passive")
+				)
+				(pin
+					(num "4")
+					(name "LED1")
+					(type "passive")
+				)
+				(pin
+					(num "5")
+					(name "LED2")
+					(type "passive")
+				)
+				(pin
+					(num "6")
+					(name "BAT")
+					(type "passive")
+				)
+				(pin
+					(num "7")
+					(name "SW")
+					(type "passive")
+				)
+				(pin
+					(num "8")
+					(name "VOUT")
+					(type "passive")
+				)
+				(pin
+					(num "9")
+					(name "GND")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "IP5406_Lib")
+			(part "L")
+			(fields
+				(field
+					(name "Reference") "L")
+				(field
+					(name "Value") "L")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "SW")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "BAT")
+					(type "passive")
+				)
+			)
+		)
+	)
+	(libraries)
+	(nets
+		(net
+			(code "1")
+			(name "/BAT")
+			(class "Default")
+			(node
+				(ref "C2")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J1")
+				(pin "3")
+				(pinfunction "BAT_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "J3")
+				(pin "1")
+				(pinfunction "A_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "L1")
+				(pin "2")
+				(pinfunction "BAT_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "6")
+				(pinfunction "BAT_6")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "2")
+			(name "/DCP")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "1")
+				(pinfunction "DCP_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "2")
+				(pinfunction "DCP_2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "3")
+			(name "/GND")
+			(class "Default")
+			(node
+				(ref "C1")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C2")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C3")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C4")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C5")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "J1")
+				(pin "2")
+				(pinfunction "GND_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "J1")
+				(pin "4")
+				(pinfunction "GND_4")
+				(pintype "passive")
+			)
+			(node
+				(ref "J1")
+				(pin "5")
+				(pinfunction "GND_5")
+				(pintype "passive")
+			)
+			(node
+				(ref "J3")
+				(pin "2")
+				(pinfunction "B_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "9")
+				(pinfunction "GND_9")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "4")
+			(name "/KEY")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "2")
+				(pinfunction "KEY_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "3")
+				(pinfunction "KEY_3")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "5")
+			(name "/LED1")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "3")
+				(pinfunction "LED1_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "4")
+				(pinfunction "LED1_4")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "6")
+			(name "/LED2")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "4")
+				(pinfunction "LED2_4")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "5")
+				(pinfunction "LED2_5")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "7")
+			(name "/OUT_SW")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "1")
+				(pinfunction "OUT-5V_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J4")
+				(pin "2")
+				(pinfunction "B_2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "8")
+			(name "/SW")
+			(class "Default")
+			(node
+				(ref "L1")
+				(pin "1")
+				(pinfunction "SW_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "7")
+				(pinfunction "SW_7")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "9")
+			(name "/VIN")
+			(class "Default")
+			(node
+				(ref "C1")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J1")
+				(pin "6")
+				(pinfunction "VIN_6")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "1")
+				(pinfunction "VIN_1")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "10")
+			(name "/VOUT")
+			(class "Default")
+			(node
+				(ref "C3")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C4")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C5")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J4")
+				(pin "1")
+				(pinfunction "A_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "8")
+				(pinfunction "VOUT_8")
+				(pintype "passive")
+			)
+		)
+	)
+)
