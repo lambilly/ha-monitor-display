@@ -129,14 +129,14 @@
   .screen{position:relative;aspect-ratio:480/320;background:#0f0f0f;border:6px solid #22262e;
           border-radius:12px;container-type:inline-size;overflow:hidden;
           box-shadow:0 6px 18px rgba(15,23,42,.22)}
-  .mk-card{position:absolute;background:#1e1e1e;border-radius:6px}
+  .mk-card{position:absolute;background:#1e1e1e;border-radius:6px;border:1px solid rgba(255,255,255,.28)}
   .mk-cell{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;
-           border:1px dashed rgba(255,255,255,.22);border-radius:5px;color:#e8eef6;
+           border:1px dashed transparent;border-radius:5px;color:#e8eef6;
            font-size:12px;line-height:1.05;text-align:center;cursor:pointer;
            transition:background .15s,border-color .15s;padding:0 1px;overflow:hidden}
   .mk-cell:hover{background:rgba(37,99,235,.42);border-color:#7aa9ff;border-style:solid}
   .mk-cell.hit{background:rgba(220,38,38,.55);border:1px solid #ff8f8f;color:#fff}
-  .mk-cell.empty{color:#7d8798;border-style:dotted}
+  .mk-cell.empty{color:#7d8798}
   .mk-cell .v{font-size:11px;color:#9aa6b8;margin-top:1px;max-width:100%;overflow:hidden;
               white-space:nowrap;text-overflow:ellipsis}
   .mk-cell.empty .v{display:none}
@@ -148,7 +148,7 @@
            color:#8a94a6;font-size:11px;text-align:center;line-height:1.5;padding:0 6%}
   .legend{font-size:12px;color:var(--sub);line-height:1.6}
   .legend span{display:inline-block;width:10px;height:10px;border-radius:3px;
-               border:1px dashed rgba(0,0,0,.35);margin:0 4px 0 10px;vertical-align:-1px}
+               border:1px solid rgba(0,0,0,.45);margin:0 4px 0 10px;vertical-align:-1px}
   .legend span.hl{background:rgba(220,38,38,.55);border:1px solid #ff8f8f}
   /* 底部输出区（两列） */
   section.outputs{margin:14px 0 30px}
@@ -296,7 +296,7 @@
       <div class="screen" id="mk_2" hidden></div>
       <div class="screen" id="mk_3" hidden></div>
     </div>
-    <p class="legend" style="margin:10px 0 0">虚线框＝可填槽位；<span class="hl"></span>红框＝正在编辑的槽位。格内灰字为已填实体，悬停看全名；留空的框显示为暗色。
+    <p class="legend" style="margin:10px 0 0"><span></span>白框＝屏幕上的一个格子（与真机 1:1，一格内可含多个槽位）；格内文字＝该格的槽位（点击定位到输入框）；<span class="hl"></span>红框＝正在编辑的槽位。悬停看已填实体全名；未填槽位显示为暗色。
       右列两格「在线设备」各含两个槽位（状态 + 显示名），屏幕上名称与在线状态排在同一行（与原版一致）。
       点左侧任意槽位输入框，右侧会自动切到它所在的页面。「通知」页由消息触发、不使用槽位。</p>
   </div>
