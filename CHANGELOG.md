@@ -6,6 +6,15 @@
 - **API 线**：`HA Monitor Display API v0.9.0`（ESPHome Native API 拉取，前身版本）
 - **通知线**：`HA Monitor Display Notify v2.0`（开发中）
 
+## [未发布] — 2026-11-04（v3.3：通知亮屏直跳通知页）
+
+- 关屏状态下收到通知：由「只唤醒背光、停在原页面」改为 **先切 `notify_page` 再唤醒**
+  （`wake_screen` 的 15s 保持不变），用户抬眼就能看到通知内容，不必再摸一下 TAB
+- 条件加 `lvgl_ready` 守卫（开机瞬间的 retain 通知不会在 LVGL 未就绪时切页）；
+  屏亮着时不抢当前页面（避免正看家居页被顶走）
+- `notify_page` 的 `on_load` 自动置 `ui_current_page=4` 并清未读，TAB 高亮由既有 200ms 巡检同步
+- 实现要点：`lvgl.page.show` 必须走动作队列，不能在 MQTT 回调的 lambda 里直接 `lv_scr_load`
+
 ## [未发布] — 2026-11-04（并入 IP5406 电源板子项目）
 
 - 原独立目录 `D:\IP5406电源模块` 整体并入主项目 **`IP5406/`**（69 个文件，md5 逐个校验无损，
