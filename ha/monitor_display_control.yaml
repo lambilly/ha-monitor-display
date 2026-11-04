@@ -15,9 +15,12 @@
 #
 # 注意：
 #   · 这 5 个实体和设备原生 API 出来的那 5 个是**两套**。在局域网时
-#     两套都能用；出门后只有这套能用。名字带 HMD 前缀便于区分，
-#     且故意挂在独立的「HA Monitor Display 远程控制」设备下（MQTT 集成），
-#     与 ESPHome 设备分开——外网通道就是它存在的意义。
+#     两套都能用；出门后只有这套能用。
+#   · 设备名固定为「HMD Remote」，实体名不带前缀——HA 会把设备名并进实体
+#     显示名与 entity_id，最终得到 number.hmd_remote_brightness 这类干净结果，
+#     同时与 ESPHome 那台设备的实体天然区分开。
+#   · 故意挂在独立设备下（MQTT 集成），与 ESPHome 设备分开——
+#     外网通道就是它存在的意义。
 #   · cmd 主题 retain，所以设备重启/重连会重放最后一次下发的值，
 #     即「重启后以 HA 侧为准」。
 #   · unique_id 稳定不可改；display name 改动只影响显示与 entity_id 生成。
@@ -26,7 +29,7 @@
 mqtt:
   light:
     # 屏幕开关：开 = 唤醒到上次亮度（不是满亮）；关 = 熄屏（记住当前亮度）
-    - name: "HMD Screen Power"
+    - name: "Screen Power"
       unique_id: hmd_remote_light
       icon: mdi:monitor
       command_topic: home/ha-monitor-display/cmd/light
@@ -38,11 +41,11 @@ mqtt:
       qos: 1
       device:
         identifiers: [ha_monitor_display_remote]
-        name: "HA Monitor Display 远程控制"
+        name: "HMD Remote"
 
   number:
     # 亮度百分比（设备端限制 10~100，低于 10 会被钳到 10）
-    - name: "HMD Brightness"
+    - name: "Brightness"
       unique_id: hmd_remote_brightness
       icon: mdi:brightness-percent
       command_topic: home/ha-monitor-display/cmd/bright
@@ -57,10 +60,10 @@ mqtt:
       qos: 1
       device:
         identifiers: [ha_monitor_display_remote]
-        name: "HA Monitor Display 远程控制"
+        name: "HMD Remote"
 
     # 熄屏超时（秒），设备端范围 15~900
-    - name: "HMD Sleep Timeout"
+    - name: "Sleep Timeout"
       unique_id: hmd_remote_sleep
       icon: mdi:timer-outline
       command_topic: home/ha-monitor-display/cmd/sleep
@@ -75,11 +78,11 @@ mqtt:
       qos: 1
       device:
         identifiers: [ha_monitor_display_remote]
-        name: "HA Monitor Display 远程控制"
+        name: "HMD Remote"
 
   switch:
     # 自动休眠总开关（关掉 = 常亮，适合演示/调试）
-    - name: "HMD Auto Sleep"
+    - name: "Auto Sleep"
       unique_id: hmd_remote_autosleep
       icon: mdi:sleep
       command_topic: home/ha-monitor-display/cmd/autosleep
@@ -91,10 +94,10 @@ mqtt:
       qos: 1
       device:
         identifiers: [ha_monitor_display_remote]
-        name: "HA Monitor Display 远程控制"
+        name: "HMD Remote"
 
     # 收到通知时是否点亮屏幕（默认关，省电优先）
-    - name: "HMD Notify Wake"
+    - name: "Notify Wake"
       unique_id: hmd_remote_notify_wake
       icon: mdi:bell-ring
       command_topic: home/ha-monitor-display/cmd/wake
@@ -106,4 +109,4 @@ mqtt:
       qos: 1
       device:
         identifiers: [ha_monitor_display_remote]
-        name: "HA Monitor Display 远程控制"
+        name: "HMD Remote"

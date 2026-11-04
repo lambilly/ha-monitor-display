@@ -135,13 +135,16 @@ ESP32 mqtt.on_json_message ─▶ hd_* globals ─▶ LVGL 三页刷新
 屏幕被带到公司/酒店时，**Native API 那条控制线会断**（HA 连不到设备，设备没有公网 IP），
 而 MQTT 是设备主动往外连，所以数据一直好、控制全废。v2.1 把这 5 项也挂到 MQTT 上：
 
-| HA 实体（`ha/monitor_display_control.yaml`，挂在 MQTT 集成「HA Monitor Display 远程控制」设备下） | 下发主题 | 取值 |
-| -- | -- | -- |
-| HMD Screen Power | `.../cmd/light` | `ON` / `OFF`（开=唤醒到上次亮度） |
-| HMD Brightness | `.../cmd/bright` | 10 ~ 100 (%) |
-| HMD Sleep Timeout | `.../cmd/sleep` | 15 ~ 900 (s) |
-| HMD Auto Sleep | `.../cmd/autosleep` | `ON` / `OFF` |
-| HMD Notify Wake | `.../cmd/wake` | `ON` / `OFF` |
+设备名固定 **HMD Remote**（MQTT 集成），实体名不带前缀——HA 会把设备名并进 entity_id，
+最终得到 `number.hmd_remote_brightness` 这类干净结果，同时与 ESPHome 设备天然区分。
+
+| HA 实体（`ha/monitor_display_control.yaml`） | entity_id | 下发主题 | 取值 |
+| -- | -- | -- | -- |
+| Screen Power | `light.hmd_remote_<...>` | `.../cmd/light` | `ON` / `OFF`（开=唤醒到上次亮度） |
+| Brightness | `number.hmd_remote_<...>` | `.../cmd/bright` | 10 ~ 100 (%) |
+| Sleep Timeout | `number.hmd_remote_<...>` | `.../cmd/sleep` | 15 ~ 900 (s) |
+| Auto Sleep | `switch.hmd_remote_<...>` | `.../cmd/autosleep` | `ON` / `OFF` |
+| Notify Wake | `switch.hmd_remote_<...>` | `.../cmd/wake` | `ON` / `OFF` |
 
 设备把当前值 retain 回发到 `esphome/ha-monitor-display/state`：
 
