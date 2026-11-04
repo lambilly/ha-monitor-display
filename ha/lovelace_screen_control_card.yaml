@@ -1,56 +1,52 @@
 # ==========================================================
-# HMD Remote —— 屏幕远程控制卡片（Mushroom 风格）
+# HMD Remote —— 屏幕远程控制卡片（2 列网格 · 对齐概览页既有样式）
 # ----------------------------------------------------------
-# 5 个 MQTT 实体 → 4 张卡片：
-#   ① 屏幕开关                    light.hmd_remote_screen_power
-#   ② 亮度（滑块）                 number.hmd_remote_brightness    10~100% step5
-#   ③ 熄屏超时                     number.hmd_remote_sleep_timeout  15~900s step5
-#   ④ 自动休眠 / 通知亮屏（两列）   switch.*
+# 目标样式（用户 11-04 指定）：与「外出中 / 离家模式 / Nova13」那批卡一致——
+#   圆形图标在左，标题在上、状态小字在下，两列排布，最多三行。
+# 5 个实体 → 2 列 × 3 行：
+#   行1  屏幕(点按开关)        | 亮度(点按弹滑块)
+#   行2  熄屏超时(点按弹输入框) | 自动休眠(点按开关)
+#   行3  通知亮屏(点按开关)     | （空）
 #
-# 风格对齐本机其他卡片：mushroom-template-card 为主、is_state 模板控
-# icon 与 color、icon_tap_action 走 perform-action、两列用 horizontal-stack。
+# 实体（真机已确认的 entity_id）：
+#   light.hmd_remote_screen_power / number.hmd_remote_brightness /
+#   number.hmd_remote_sleep_timeout / switch.hmd_remote_auto_sleep /
+#   switch.hmd_remote_notify_wake
 #
-# 用法：概览页 → 右上铅笔 → 添加卡片 → 手动 → 粘贴整段。
-#
-# 说明：
-#   · entity_id 由「设备名 HMD Remote + 实体名」生成，已在真机确认：
-#       light.hmd_remote_screen_power / number.hmd_remote_brightness /
-#       number.hmd_remote_sleep_timeout / switch.hmd_remote_auto_sleep /
-#       switch.hmd_remote_notify_wake
-#   · 这 5 个实体走 MQTT，设备带出门也能操作（HA 连不到设备时依然可用）。
-#   · ⚠️ 与旧 entities 卡的差异：mushroom 的滑块是「拖动即下发」，
-#     拖动过程中屏幕会跟着变（有约 1s 延迟）。若嫌闪烁，把亮度那张卡
-#     换成 template-card + more-info（点击在弹窗里拖，松手才下发）。
+# 用法：概览页 → 铅笔 → 添加卡片 → 手动 → 粘贴整段。
 # ==========================================================
-type: vertical-stack
+type: grid
+columns: 2
+square: false
 cards:
-  # ---------- ① 屏幕开关 ----------
+  # ---------- 行1 左：屏幕开关 ----------
   - type: custom:mushroom-template-card
     entity: light.hmd_remote_screen_power
     icon: |
       {{ 'mdi:monitor' if is_state(entity, 'on') else 'mdi:monitor-off' }}
     primary: 屏幕
     secondary: |
-      {{ ('已点亮 · ' ~ states('number.hmd_remote_brightness') ~ '%') if is_state(entity, 'on') else '已熄屏' }}
+      {{ ('已点亮 · ' ~ states('number.hmd_remote_brightness') | int(0) ~ '%') if is_state(entity, 'on') else '已熄屏' }}
     color: |
       {{ 'green' if is_state(entity, 'on') else 'grey' }}
-    icon_tap_action:
+    tap_action:
       action: perform-action
       perform_action: light.toggle
       target:
         entity_id: light.hmd_remote_screen_power
 
-  # ---------- ② 亮度 ----------
-  - type: custom:mushroom-number-card
+  # ---------- 行1 右：亮度（点按弹滑块，松手才下发，不闪烁） ----------
+  - type: custom:mushroom-template-card
     entity: number.hmd_remote_brightness
-    name: 亮度
     icon: mdi:brightness-percent
-    icon_color: amber
-    display_mode: slider
+    primary: 亮度
+    secondary: |
+      {{ states(entity) | int(0) ~ '%' if states(entity) not in ['unknown','unavailable'] else '--' }}
+    color: amber
+    tap_action:
+      action: more-info
 
-  # ---------- ③ 熄屏超时 ----------
-  # 15~900 秒跨度太大，滑块一格 5 秒、一像素十几秒，拖动极难对准；
-  # 改成显示当前值 + 点击 more-info 用输入框精确改。
+  # ---------- 行2 左：熄屏超时（15~900s 跨度大，点按弹输入框精确改） ----------
   - type: custom:mushroom-template-card
     entity: number.hmd_remote_sleep_timeout
     icon: mdi:timer-sand
@@ -59,57 +55,37 @@ cards:
       {% set s = states(entity) | int(0) %}
       {% if s % 60 == 0 %}{{ s // 60 }} 分钟{% elif s < 60 %}{{ s }} 秒{% else %}{{ s // 60 }} 分 {{ s % 60 }} 秒{% endif %}
     color: amber
-    icon_tap_action:
+    tap_action:
       action: more-info
 
-  # ---------- ④ 两个开关并排 ----------
-  - type: horizontal-stack
-    cards:
-      - type: custom:mushroom-template-card
-        entity: switch.hmd_remote_auto_sleep
-        icon: |
-          {{ 'mdi:sleep' if is_state(entity, 'on') else 'mdi:sleep-off' }}
-        primary: 自动休眠
-        secondary: |
-          {{ '开启' if is_state(entity, 'on') else '关闭' }}
-        color: |
-          {{ 'green' if is_state(entity, 'on') else 'red' }}
-        vertical: true
-        icon_tap_action:
-          action: perform-action
-          perform_action: switch.toggle
-          target:
-            entity_id: switch.hmd_remote_auto_sleep
+  # ---------- 行2 右：自动休眠 ----------
+  - type: custom:mushroom-template-card
+    entity: switch.hmd_remote_auto_sleep
+    icon: |
+      {{ 'mdi:sleep' if is_state(entity, 'on') else 'mdi:sleep-off' }}
+    primary: 自动休眠
+    secondary: |
+      {{ '开启' if is_state(entity, 'on') else '关闭' }}
+    color: |
+      {{ 'green' if is_state(entity, 'on') else 'grey' }}
+    tap_action:
+      action: perform-action
+      perform_action: switch.toggle
+      target:
+        entity_id: switch.hmd_remote_auto_sleep
 
-      - type: custom:mushroom-template-card
-        entity: switch.hmd_remote_notify_wake
-        icon: |
-          {{ 'mdi:bell-ring' if is_state(entity, 'on') else 'mdi:bell-off' }}
-        primary: 通知亮屏
-        secondary: |
-          {{ '开启' if is_state(entity, 'on') else '关闭' }}
-        color: |
-          {{ 'orange' if is_state(entity, 'on') else 'grey' }}
-        vertical: true
-        icon_tap_action:
-          action: perform-action
-          perform_action: switch.toggle
-          target:
-            entity_id: switch.hmd_remote_notify_wake
-
-# ==========================================================
-# 可选变体
-# ----------------------------------------------------------
-# 【拼成一张无缝卡】外面包一层 stack-in-card：
-#
-# type: custom:stack-in-card
-# mode: vertical
-# cards:
-#   - （即上面 cards: 下的 4 项，去掉 type: vertical-stack 那行）
-#
-# 【加分组标题】在最前面插一张：
-#
-# - type: custom:mushroom-title-card
-#   title: HMD Remote
-#   subtitle: 屏幕远程控制 · 外网可用
-# ==========================================================
+  # ---------- 行3 左：通知亮屏 ----------
+  - type: custom:mushroom-template-card
+    entity: switch.hmd_remote_notify_wake
+    icon: |
+      {{ 'mdi:bell-ring' if is_state(entity, 'on') else 'mdi:bell-off' }}
+    primary: 通知亮屏
+    secondary: |
+      {{ '开启' if is_state(entity, 'on') else '关闭' }}
+    color: |
+      {{ 'orange' if is_state(entity, 'on') else 'grey' }}
+    tap_action:
+      action: perform-action
+      perform_action: switch.toggle
+      target:
+        entity_id: switch.hmd_remote_notify_wake
