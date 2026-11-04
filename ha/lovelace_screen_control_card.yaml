@@ -1,0 +1,29 @@
+# ==========================================================
+# HA Monitor Display —— 远程控制卡片（Lovelace 片段）
+# ----------------------------------------------------------
+# 用法：概览 → 右上角编辑 → 添加卡片 → 底部「手动」/ 或右上「原始配置编辑器」
+#       把下面 entities: 起的整段粘进去。
+#
+# 说明：
+#   · entity_id 由「设备名 HMD Remote + 实体名」生成，已在真机确认：
+#       light.hmd_remote_screen_power / number.hmd_remote_brightness /
+#       number.hmd_remote_sleep_timeout / switch.hmd_remote_auto_sleep /
+#       switch.hmd_remote_notify_wake
+#   · 这 5 个实体走 MQTT，设备带出门也能操作（HA 连不到设备时依然可用）。
+#   · 亮度滑块松手才下发，拖动过程中不会刷屏。
+# ==========================================================
+type: entities
+title: HMD Remote
+state_color: true
+show_header_toggle: false
+entities:
+  - entity: light.hmd_remote_screen_power
+    name: 屏幕
+  - entity: number.hmd_remote_brightness
+    name: 亮度
+  - entity: number.hmd_remote_sleep_timeout
+    name: 熄屏超时
+  - entity: switch.hmd_remote_auto_sleep
+    name: 自动休眠
+  - entity: switch.hmd_remote_notify_wake
+    name: 通知亮屏
