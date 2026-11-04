@@ -304,11 +304,21 @@ mqtt:
               ESP_LOGI("notify", "全文:\n%s", mm.c_str());
             }
 
-            // 通知亮屏：默认关（省电），需要时在 HA 里打开开关
-            // 注意：id(switch) 是对象指针（永不为空），开关状态要读 .state
-            if (id(notify_wake_on_msg).state && id(ui_screen_off)) {
-              id(wake_screen).execute();
-            }
+            // 通知亮屏与跳页见下方动作链（v3.3）：这里只管入库
+        # ==========================================================
+        # 通知亮屏并直跳通知页（v3.3）
+        #   以前只唤醒背光，15 秒里停在原页面，用户得先摸一下 TAB 才看得见通知。
+        #   现在：关屏状态下收到通知 → 切 notify_page + 唤醒（保持 15s，见 wake_screen）。
+        #   · 条件里带 ui_screen_off：屏亮着时不抢页面，避免用户正看家居页被顶走；
+        #   · lvgl.page.show 必须走动作队列，不能在 MQTT 回调的 lambda 里直接 lv_scr_load；
+        #   · notify_page 的 on_load 会自动置 ui_current_page=4 并清未读，TAB 高亮同步。
+        # ==========================================================
+        - if:
+            condition:
+              lambda: 'return id(notify_wake_on_msg).state && id(ui_screen_off) && id(lvgl_ready);'
+            then:
+              - lvgl.page.show: notify_page
+              - script.execute: wake_screen
 
     # ==========================================================
     # v2.1 远程控制通道（屏幕带出门后仍可控制）
