@@ -6,6 +6,15 @@
 - **API 线**：`HA Monitor Display API v0.9.0`（ESPHome Native API 拉取，前身版本）
 - **通知线**：`HA Monitor Display Notify v2.0`（开发中）
 
+## [未发布] — 2026-11-04（远程控制实体英文化）
+
+- MQTT 远程控制 5 实体改英文名（HMD 前缀）：HMD Screen Power / HMD Brightness /
+  HMD Sleep Timeout / HMD Auto Sleep / HMD Notify Wake，entity_id 随之生成干净值
+  （如 `number.hmd_brightness`）；**unique_id 不变**（hmd_remote_*），HA 里已有自定义不丢
+- 保持挂在 MQTT 集成独立设备「HA Monitor Display 远程控制」下——外网通道单独一台设备
+  是清晰边界，不与 ESPHome 设备合并
+- README 远程控制对照表同步更新
+
 ## [未发布] — 2026-11-04（v3.3：通知亮屏直跳通知页）
 
 - 关屏状态下收到通知：由「只唤醒背光、停在原页面」改为 **先切 `notify_page` 再唤醒**
