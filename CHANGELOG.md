@@ -6,6 +6,16 @@
 - **API 线**：`HA Monitor Display API v0.9.0`（ESPHome Native API 拉取，前身版本）
 - **通知线**：`HA Monitor Display Notify v2.0`（开发中）
 
+## [未发布] — 2026-11-04（并入 IP5406 电源板子项目）
+
+- 原独立目录 `D:\IP5406电源模块` 整体并入主项目 **`IP5406/`**（69 个文件，md5 逐个校验无损，
+  旧目录已删除；后续电源升级事项统一在本仓库研究）
+- 入库 51 个文件：KiCad 工程（`gen_kicad.py` 为单一事实来源）+ Gerber 送板包 + BOM +
+  设计方案 / 采购下单指引 / 项目交接
+- `.gitignore`：新增 `!IP5406/KiCad/*_Gerber_JLC.zip` 例外（根规则 `*.zip` 会误伤送板包）；
+  `IP5406/.gitignore` 忽略 KiCad `.history/`、`*.bak`、`*.kicad_prl`
+- `IP5406/项目交接.md` 路径引用更新为 `D:\HA Monitor Display\IP5406`；README 目录结构补 `IP5406/`
+
 ## [未发布] — 2026-11-04（生成器移动端适配）
 
 - `tools/monitor-display-generator.html` 兼顾手机显示布局，四项改动：
