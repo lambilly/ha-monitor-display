@@ -19,8 +19,11 @@
   Sleep Timeout / Auto Sleep / Notify Wake）——HA 会把设备名并进 entity_id，
   得到 `number.hmd_remote_brightness` 这类干净结果
 - README 远程控制对照表同步更新
-- 已部署 `W://packages//monitor_display_control.yaml`（4229B，md5 e5613e3f… 双端一致；
-  旧版备份 `.workbuddy/prod-backup-20261104-0834/`，md5 aabb1360…）
+- 已部署 `W://packages//monitor_display_control.yaml`（md5 9f6e3b7d… 双端一致；
+  旧版备份 `.workbuddy/prod-backup-20261104-0834/` 与 `-0841/`）
+- **2026-11-04 实测通过（设备在外网、HA 连不到设备 6053 的真实场景）**：
+  远程改亮度生效、远程改熄屏超时后按新值熄屏、远程关屏/唤醒均正常，状态回读同步
+  → 确认「命令下发 + 设备执行 + retain 回读」三环全通，v2.1 远程通道达成设计目标
 
 ## [未发布] — 2026-11-04（v3.3：通知亮屏直跳通知页）
 
