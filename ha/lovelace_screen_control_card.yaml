@@ -1,12 +1,14 @@
 # ==========================================================
-# HMD Remote —— 屏幕远程控制卡片（2 列网格 · 对齐概览页既有样式）
+# HMD Remote —— 屏幕远程控制卡片（亮度整行 + 其余 2×2）
 # ----------------------------------------------------------
-# 目标样式（用户 11-04 指定）：与「外出中 / 离家模式 / Nova13」那批卡一致——
-#   圆形图标在左，标题在上、状态小字在下，两列排布，最多三行。
-# 5 个实体 → 2 列 × 3 行：
-#   行1  屏幕(点按开关)        | 亮度(点按弹滑块)
-#   行2  熄屏超时(点按弹输入框) | 自动休眠(点按开关)
-#   行3  通知亮屏(点按开关)     | （空）
+# 布局（用户 11-04 指定）：
+#   行1  屏幕亮度（整行跨两列，点按弹滑块）
+#   行2  屏幕开关        | 通知亮屏
+#   行3  熄屏超时        | 自动休眠
+#
+# 样式对齐概览页既有卡：mushroom-template-card（圆图标在左、
+# 标题在上、状态小字在下），配色开=绿/关=灰、数值=amber。
+# 标题统一四字。
 #
 # 实体（真机已确认的 entity_id）：
 #   light.hmd_remote_screen_power / number.hmd_remote_brightness /
@@ -15,77 +17,80 @@
 #
 # 用法：概览页 → 铅笔 → 添加卡片 → 手动 → 粘贴整段。
 # ==========================================================
-type: grid
-columns: 2
-square: false
+type: vertical-stack
 cards:
-  # ---------- 行1 左：屏幕开关 ----------
-  - type: custom:mushroom-template-card
-    entity: light.hmd_remote_screen_power
-    icon: |
-      {{ 'mdi:monitor' if is_state(entity, 'on') else 'mdi:monitor-off' }}
-    primary: 屏幕
-    secondary: |
-      {{ ('已点亮 · ' ~ states('number.hmd_remote_brightness') | int(0) ~ '%') if is_state(entity, 'on') else '已熄屏' }}
-    color: |
-      {{ 'green' if is_state(entity, 'on') else 'grey' }}
-    tap_action:
-      action: perform-action
-      perform_action: light.toggle
-      target:
-        entity_id: light.hmd_remote_screen_power
-
-  # ---------- 行1 右：亮度（点按弹滑块，松手才下发，不闪烁） ----------
+  # ---------- 行1：屏幕亮度（整行） ----------
   - type: custom:mushroom-template-card
     entity: number.hmd_remote_brightness
     icon: mdi:brightness-percent
-    primary: 亮度
+    primary: 屏幕亮度
     secondary: |
       {{ states(entity) | int(0) ~ '%' if states(entity) not in ['unknown','unavailable'] else '--' }}
     color: amber
     tap_action:
       action: more-info
 
-  # ---------- 行2 左：熄屏超时（15~900s 跨度大，点按弹输入框精确改） ----------
-  - type: custom:mushroom-template-card
-    entity: number.hmd_remote_sleep_timeout
-    icon: mdi:timer-sand
-    primary: 熄屏超时
-    secondary: |
-      {% set s = states(entity) | int(0) %}
-      {% if s % 60 == 0 %}{{ s // 60 }} 分钟{% elif s < 60 %}{{ s }} 秒{% else %}{{ s // 60 }} 分 {{ s % 60 }} 秒{% endif %}
-    color: amber
-    tap_action:
-      action: more-info
+  # ---------- 行2~3：其余 4 个，2 列 ----------
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      # 行2 左：屏幕开关
+      - type: custom:mushroom-template-card
+        entity: light.hmd_remote_screen_power
+        icon: |
+          {{ 'mdi:monitor' if is_state(entity, 'on') else 'mdi:monitor-off' }}
+        primary: 屏幕开关
+        secondary: |
+          {{ ('已点亮 · ' ~ states('number.hmd_remote_brightness') | int(0) ~ '%') if is_state(entity, 'on') else '已熄屏' }}
+        color: |
+          {{ 'green' if is_state(entity, 'on') else 'grey' }}
+        tap_action:
+          action: perform-action
+          perform_action: light.toggle
+          target:
+            entity_id: light.hmd_remote_screen_power
 
-  # ---------- 行2 右：自动休眠 ----------
-  - type: custom:mushroom-template-card
-    entity: switch.hmd_remote_auto_sleep
-    icon: |
-      {{ 'mdi:sleep' if is_state(entity, 'on') else 'mdi:sleep-off' }}
-    primary: 自动休眠
-    secondary: |
-      {{ '开启' if is_state(entity, 'on') else '关闭' }}
-    color: |
-      {{ 'green' if is_state(entity, 'on') else 'grey' }}
-    tap_action:
-      action: perform-action
-      perform_action: switch.toggle
-      target:
-        entity_id: switch.hmd_remote_auto_sleep
+      # 行2 右：通知亮屏
+      - type: custom:mushroom-template-card
+        entity: switch.hmd_remote_notify_wake
+        icon: |
+          {{ 'mdi:bell-ring' if is_state(entity, 'on') else 'mdi:bell-off' }}
+        primary: 通知亮屏
+        secondary: |
+          {{ '开启' if is_state(entity, 'on') else '关闭' }}
+        color: |
+          {{ 'orange' if is_state(entity, 'on') else 'grey' }}
+        tap_action:
+          action: perform-action
+          perform_action: switch.toggle
+          target:
+            entity_id: switch.hmd_remote_notify_wake
 
-  # ---------- 行3 左：通知亮屏 ----------
-  - type: custom:mushroom-template-card
-    entity: switch.hmd_remote_notify_wake
-    icon: |
-      {{ 'mdi:bell-ring' if is_state(entity, 'on') else 'mdi:bell-off' }}
-    primary: 通知亮屏
-    secondary: |
-      {{ '开启' if is_state(entity, 'on') else '关闭' }}
-    color: |
-      {{ 'orange' if is_state(entity, 'on') else 'grey' }}
-    tap_action:
-      action: perform-action
-      perform_action: switch.toggle
-      target:
-        entity_id: switch.hmd_remote_notify_wake
+      # 行3 左：熄屏超时（15~900s 跨度大，点按弹输入框精确改）
+      - type: custom:mushroom-template-card
+        entity: number.hmd_remote_sleep_timeout
+        icon: mdi:timer-sand
+        primary: 熄屏超时
+        secondary: |
+          {% set s = states(entity) | int(0) %}
+          {% if s % 60 == 0 %}{{ s // 60 }} 分钟{% elif s < 60 %}{{ s }} 秒{% else %}{{ s // 60 }} 分 {{ s % 60 }} 秒{% endif %}
+        color: amber
+        tap_action:
+          action: more-info
+
+      # 行3 右：自动休眠
+      - type: custom:mushroom-template-card
+        entity: switch.hmd_remote_auto_sleep
+        icon: |
+          {{ 'mdi:sleep' if is_state(entity, 'on') else 'mdi:sleep-off' }}
+        primary: 自动休眠
+        secondary: |
+          {{ '开启' if is_state(entity, 'on') else '关闭' }}
+        color: |
+          {{ 'green' if is_state(entity, 'on') else 'grey' }}
+        tap_action:
+          action: perform-action
+          perform_action: switch.toggle
+          target:
+            entity_id: switch.hmd_remote_auto_sleep
