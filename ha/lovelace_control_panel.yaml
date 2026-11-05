@@ -42,9 +42,9 @@ views:
           style: |
             ha-card {
               padding: 0 !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -93,9 +93,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.huo_dong_gui_ji
@@ -116,25 +116,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(255,183,77,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: sensor.ju_jia_mo_shi
         icon: mdi:home-heart
@@ -154,9 +139,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: switch.voice_broadcast
@@ -176,9 +161,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -226,9 +211,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: cover.quan_wu_chuang_lian
@@ -248,25 +233,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         icon: mdi:snowflake-off
         primary: 空调全关
@@ -291,9 +261,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: vacuum.ding_dang
@@ -313,9 +283,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -363,9 +333,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
         tap_action:
           action: navigate
@@ -416,9 +386,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.maze_wateronev3_tp_f8e644_daily_water_usage
@@ -438,9 +408,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -489,25 +459,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(179,157,255,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 1
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: sensor.wo_de_jia_bi_ya_di_distance
         icon: mdi:car-electric
@@ -527,9 +482,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -578,9 +533,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.zhi_hui_ting_che_che_liang_xin_xi
@@ -600,25 +555,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(179,157,255,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.lam_nova13
         icon: mdi:cellphone
@@ -637,9 +577,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: binary_sensor.su_nova12
@@ -659,9 +599,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -702,9 +642,9 @@ views:
           style: |
             ha-card {
               padding: 0 !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -752,9 +692,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.tasmota_energy_today
@@ -774,25 +714,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(255,213,79,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: sensor.maze_wateronev3_tp_f8e644_daily_water_usage
         icon: mdi:water
@@ -811,9 +736,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.ri_yong_qi_liang
@@ -833,9 +758,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -883,9 +808,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.yue_yong_dian_liang
@@ -905,25 +830,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(179,157,255,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: sensor.zuo_ri_dian_fei
         icon: mdi:history
@@ -942,9 +852,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.shi_shi_dian_jie
@@ -964,9 +874,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -1012,9 +922,9 @@ views:
         card_mod:
           style: |
             ha-card {
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -1062,9 +972,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.tasmota_energy_current
@@ -1084,9 +994,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -1134,9 +1044,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.maze_wateronev3_tp_f8e644_tds
@@ -1156,25 +1066,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(79,216,250,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: sensor.maze_wateronev3_tp_f8e644_tdsin
         icon: mdi:water-opacity
@@ -1193,9 +1088,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.maze_wateronev3_tp_f8e644_tdsout
@@ -1215,9 +1110,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -1265,9 +1160,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.208907213270301_realtime_power
@@ -1287,25 +1182,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: sensor.210006724901473_realtime_power
         icon: mdi:air-conditioner
@@ -1324,9 +1204,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: sensor.210006724901502_realtime_power
@@ -1346,9 +1226,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -1421,9 +1301,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: climate.208907215082288_climate
@@ -1443,9 +1323,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -1506,9 +1386,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: cover.sonoff_100237ed13
@@ -1528,9 +1408,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -1591,9 +1471,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: cover.lumi_hmcn02_ecb8_curtain
@@ -1613,9 +1493,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: climate.208907213270301_climate
@@ -1635,9 +1515,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -1698,9 +1578,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: cover.ciwo_curtain
@@ -1720,9 +1600,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: climate.210006724901473_climate
@@ -1742,9 +1622,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -1805,9 +1685,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: cover.shufang_curtain
@@ -1827,9 +1707,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: climate.210006724901502_climate
@@ -1849,9 +1729,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -1912,9 +1792,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: cover.yang_tai_chuang_lian
@@ -1934,9 +1814,9 @@ views:
               --mush-card-secondary-line-height: 13px;
               --mush-icon-size: 28px;
               padding: 5px 7px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -2001,9 +1881,9 @@ views:
                 --mush-card-secondary-line-height: 13px;
                 --mush-icon-size: 28px;
                 padding: 5px 7px !important;
-                background: transparent !important;
-                border: none !important;
-                border-radius: 0 !important;
+                background: var(--ha-card-background, #1c1c1e) !important;
+                border: 1px solid var(--divider-color, #2a2a2a) !important;
+                border-radius: 12px !important;
                 box-shadow: none !important;
       card_mod:
         style: |-
@@ -2064,9 +1944,9 @@ views:
                 --mush-card-secondary-line-height: 13px;
                 --mush-icon-size: 28px;
                 padding: 5px 7px !important;
-                background: transparent !important;
-                border: none !important;
-                border-radius: 0 !important;
+                background: var(--ha-card-background, #1c1c1e) !important;
+                border: 1px solid var(--divider-color, #2a2a2a) !important;
+                border-radius: 12px !important;
                 box-shadow: none !important;
       card_mod:
         style: |-
@@ -2127,9 +2007,9 @@ views:
                 --mush-card-secondary-line-height: 13px;
                 --mush-icon-size: 28px;
                 padding: 5px 7px !important;
-                background: transparent !important;
-                border: none !important;
-                border-radius: 0 !important;
+                background: var(--ha-card-background, #1c1c1e) !important;
+                border: 1px solid var(--divider-color, #2a2a2a) !important;
+                border-radius: 12px !important;
                 box-shadow: none !important;
       card_mod:
         style: |-
@@ -2190,9 +2070,9 @@ views:
                 --mush-card-secondary-line-height: 13px;
                 --mush-icon-size: 28px;
                 padding: 5px 7px !important;
-                background: transparent !important;
-                border: none !important;
-                border-radius: 0 !important;
+                background: var(--ha-card-background, #1c1c1e) !important;
+                border: 1px solid var(--divider-color, #2a2a2a) !important;
+                border-radius: 12px !important;
                 box-shadow: none !important;
       card_mod:
         style: |-
@@ -2253,9 +2133,9 @@ views:
                 --mush-card-secondary-line-height: 13px;
                 --mush-icon-size: 28px;
                 padding: 5px 7px !important;
-                background: transparent !important;
-                border: none !important;
-                border-radius: 0 !important;
+                background: var(--ha-card-background, #1c1c1e) !important;
+                border: 1px solid var(--divider-color, #2a2a2a) !important;
+                border-radius: 12px !important;
                 box-shadow: none !important;
       card_mod:
         style: |-
@@ -2299,25 +2179,25 @@ views:
       cards:
       - type: custom:html-template-card
         content: |-
-          <div style="padding:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:12px;background:var(--ha-card-background,#1c1c1e);border:1px solid var(--divider-color,#2a2a2a)"><span style="font-size:13.5px">大门监控</span><span style="font-size:12.5px;color:{% set s = states('camera.da_men_jian_kong') %}{{ '#FF5252' if s in ['unavailable','unknown',''] else '#59D98B' }}">{% set s = states('camera.da_men_jian_kong') %}{% set off = s in ['unavailable','unknown',''] %}{{ '离线' if off else '在线' }}</span></div></div>
+          <div style="padding:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px"><span style="font-size:13.5px">大门监控</span><span style="font-size:12.5px;color:{% set s = states('camera.da_men_jian_kong') %}{{ '#FF5252' if s in ['unavailable','unknown',''] else '#59D98B' }}">{% set s = states('camera.da_men_jian_kong') %}{% set off = s in ['unavailable','unknown',''] %}{{ '离线' if off else '在线' }}</span></div></div>
         card_mod:
           style: |
             ha-card {
               padding: 0 !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:html-template-card
         content: |-
-          <div style="padding:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:12px;background:var(--ha-card-background,#1c1c1e);border:1px solid var(--divider-color,#2a2a2a)"><span style="font-size:13.5px">后门监控</span><span style="font-size:12.5px;color:{% set s = states('camera.hou_men_jian_kong') %}{{ '#FF5252' if s in ['unavailable','unknown',''] else '#59D98B' }}">{% set s = states('camera.hou_men_jian_kong') %}{% set off = s in ['unavailable','unknown',''] %}{{ '离线' if off else '在线' }}</span></div></div>
+          <div style="padding:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px"><span style="font-size:13.5px">后门监控</span><span style="font-size:12.5px;color:{% set s = states('camera.hou_men_jian_kong') %}{{ '#FF5252' if s in ['unavailable','unknown',''] else '#59D98B' }}">{% set s = states('camera.hou_men_jian_kong') %}{% set off = s in ['unavailable','unknown',''] %}{{ '离线' if off else '在线' }}</span></div></div>
         card_mod:
           style: |
             ha-card {
               padding: 0 !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -2365,9 +2245,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: binary_sensor.gas_alarm_sensor_gas_alarm
@@ -2387,25 +2267,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(255,82,82,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.18c23c2f9184_water_leak
         icon: mdi:water-alert
@@ -2424,9 +2289,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: binary_sensor.maze_wateronev3_tp_f8e644_water
@@ -2446,9 +2311,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -2496,9 +2361,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaecd80bcc_contact
@@ -2518,25 +2383,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(89,217,139,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec92af35_contact
         icon: mdi:window-open-variant
@@ -2555,9 +2405,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec92af38_contact
@@ -2577,9 +2427,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
@@ -2627,9 +2477,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec830af5_contact
@@ -2649,25 +2499,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaecaacf62_contact
         icon: mdi:door-open
@@ -2686,9 +2521,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaecab36c0_contact
@@ -2708,25 +2543,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec8a8821_contact
         icon: mdi:door-open
@@ -2745,9 +2565,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec8d0598_contact
@@ -2767,25 +2587,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec8a3d86_contact
         icon: mdi:door-open
@@ -2804,9 +2609,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec8d2481_contact
@@ -2826,25 +2631,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec8d1bf9_contact
         icon: mdi:door-open
@@ -2863,9 +2653,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec8a568f_contact
@@ -2885,25 +2675,10 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
-      card_mod:
-        style: |
-          ha-card {
-            padding: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-    - type: grid
-      columns: 2
-      square: false
-      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaecabbe5f_contact
         icon: mdi:door-open
@@ -2922,9 +2697,9 @@ views:
               --mush-card-secondary-line-height: 14px;
               --mush-icon-size: 34px;
               padding: 8px 10px !important;
-              background: transparent !important;
-              border: none !important;
-              border-radius: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
               box-shadow: none !important;
     card_mod:
       style: |-
