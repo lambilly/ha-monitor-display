@@ -1429,7 +1429,186 @@ views:
   cards:
   - type: custom:html-template-card
     content: |-
+      <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:0 6px 0">监控</div></div>
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:12px;background:var(--ha-card-background,#1c1c1e);border:1px solid var(--divider-color,#2a2a2a)"><span style="font-size:13.5px">大门监控</span><span style="font-size:12.5px;color:{% set s = states('camera.da_men_jian_kong') %}{{ '#FF5252' if s in ['unavailable','unknown',''] else '#59D98B' }}">{% set s = states('camera.da_men_jian_kong') %}{% set off = s in ['unavailable','unknown',''] %}{{ '离线' if off else '在线' }}</span></div></div>
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:12px;background:var(--ha-card-background,#1c1c1e);border:1px solid var(--divider-color,#2a2a2a)"><span style="font-size:13.5px">后门监控</span><span style="font-size:12.5px;color:{% set s = states('camera.hou_men_jian_kong') %}{{ '#FF5252' if s in ['unavailable','unknown',''] else '#59D98B' }}">{% set s = states('camera.hou_men_jian_kong') %}{% set off = s in ['unavailable','unknown',''] %}{{ '离线' if off else '在线' }}</span></div></div>
+  - type: custom:html-template-card
+    content: |-
       <div style="padding:8px 8px 6px"><div style="font-size:14px;line-height:1.6">{% set d = expand('binary_sensor.e4aaec82f917_contact', 'binary_sensor.e4aaec830af5_contact', 'binary_sensor.e4aaecaacf62_contact', 'binary_sensor.e4aaecab36c0_contact', 'binary_sensor.e4aaec8a8821_contact', 'binary_sensor.e4aaec8d0598_contact', 'binary_sensor.e4aaec8a3d86_contact', 'binary_sensor.e4aaec8d2481_contact', 'binary_sensor.e4aaec8d1bf9_contact', 'binary_sensor.e4aaec8a568f_contact', 'binary_sensor.e4aaecabbe5f_contact') %}{% set a = expand('binary_sensor.18c23c2c8f38_smoke', 'binary_sensor.gas_alarm_sensor_gas_alarm', 'binary_sensor.18c23c2f9184_water_leak', 'binary_sensor.maze_wateronev3_tp_f8e644_water') %}{% set dn = d | selectattr('state','eq','on') | list | count %}{% set an = a | selectattr('state','eq','on') | list | count %}{% if dn + an == 0 %}<span style="color:#59D98B;font-weight:600">● 一切正常</span><div style="font-size:12.5px;opacity:.65;margin-top:2px">{{ d | count }} 处门 / 窗已闭合，{{ a | count }} 项环境告警无触发</div>{% else %}<span style="color:#FF5252;font-weight:600">● {{ dn + an }} 处需要留意</span><div style="font-size:12.5px;opacity:.65;margin-top:2px">{% if dn %}门窗 {{ dn }} 处未关{% endif %}{% if an %} · 环境告警 {{ an }} 项{% endif %}</div>{% endif %}</div></div>
+  - type: custom:html-template-card
+    content: |-
+      <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:2px 6px 0">环境告警</div></div>
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+    - type: custom:mushroom-template-card
+      entity: binary_sensor.18c23c2c8f38_smoke
+      icon: mdi:smoke-detector-variant
+      primary: 烟感
+      secondary: "{{ '告警' if is_state('binary_sensor.18c23c2c8f38_smoke','on') else '正常' }} · 厨房"
+      multiline_secondary: true
+      color: "{{ 'red' if is_state('binary_sensor.18c23c2c8f38_smoke','on') else 'green' }}"
+      icon_tap_action:
+        action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
+    - type: custom:mushroom-template-card
+      entity: binary_sensor.gas_alarm_sensor_gas_alarm
+      icon: mdi:fire-alert
+      primary: 燃气
+      secondary: "{{ '告警' if is_state('binary_sensor.gas_alarm_sensor_gas_alarm','on') else '正常' }} · 水房"
+      multiline_secondary: true
+      color: "{{ 'red' if is_state('binary_sensor.gas_alarm_sensor_gas_alarm','on') else 'green' }}"
+      icon_tap_action:
+        action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
+    - type: custom:mushroom-template-card
+      entity: binary_sensor.18c23c2f9184_water_leak
+      icon: mdi:water-alert
+      primary: 水浸
+      secondary: "{{ '告警' if is_state('binary_sensor.18c23c2f9184_water_leak','on') else '正常' }} · 水房"
+      multiline_secondary: true
+      color: "{{ 'red' if is_state('binary_sensor.18c23c2f9184_water_leak','on') else 'green' }}"
+      icon_tap_action:
+        action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
+    - type: custom:mushroom-template-card
+      entity: binary_sensor.maze_wateronev3_tp_f8e644_water
+      icon: mdi:pipe-leak
+      primary: 水质漏水
+      secondary: "{{ '告警' if is_state('binary_sensor.maze_wateronev3_tp_f8e644_water','on') else '正常' }} · 阳台"
+      multiline_secondary: true
+      color: "{{ 'red' if is_state('binary_sensor.maze_wateronev3_tp_f8e644_water','on') else 'green' }}"
+      icon_tap_action:
+        action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
+  - type: custom:html-template-card
+    content: |-
+      <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:4px 6px 0">窗 · 帘 · 4</div></div>
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+    - type: custom:mushroom-template-card
+      entity: binary_sensor.e4aaec8a2f3e_contact
+      icon: mdi:window-open-variant
+      primary: 水房窗
+      secondary: "{{ '开' if is_state('binary_sensor.e4aaec8a2f3e_contact','on') else '关' }}"
+      multiline_secondary: true
+      color: "{{ 'red' if is_state('binary_sensor.e4aaec8a2f3e_contact','on') else 'grey' }}"
+      icon_tap_action:
+        action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
+    - type: custom:mushroom-template-card
+      entity: binary_sensor.e4aaecd80bcc_contact
+      icon: mdi:window-open-variant
+      primary: 阳台窗
+      secondary: "{{ '开' if is_state('binary_sensor.e4aaecd80bcc_contact','on') else '关' }}"
+      multiline_secondary: true
+      color: "{{ 'red' if is_state('binary_sensor.e4aaecd80bcc_contact','on') else 'grey' }}"
+      icon_tap_action:
+        action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
+    - type: custom:mushroom-template-card
+      entity: binary_sensor.e4aaec92af35_contact
+      icon: mdi:window-open-variant
+      primary: 书房帘
+      secondary: "{{ '开' if is_state('binary_sensor.e4aaec92af35_contact','on') else '关' }}"
+      multiline_secondary: true
+      color: "{{ 'red' if is_state('binary_sensor.e4aaec92af35_contact','on') else 'grey' }}"
+      icon_tap_action:
+        action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
+    - type: custom:mushroom-template-card
+      entity: binary_sensor.e4aaec92af38_contact
+      icon: mdi:window-open-variant
+      primary: 次卧帘
+      secondary: "{{ '开' if is_state('binary_sensor.e4aaec92af38_contact','on') else '关' }}"
+      multiline_secondary: true
+      color: "{{ 'red' if is_state('binary_sensor.e4aaec92af38_contact','on') else 'grey' }}"
+      icon_tap_action:
+        action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: custom:html-template-card
     content: |-
       <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:4px 6px 0">门 · 11</div></div>
@@ -1646,182 +1825,3 @@ views:
             --mush-icon-size: 34px;
             padding: 8px 10px !important;
           }
-  - type: custom:html-template-card
-    content: |-
-      <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:4px 6px 0">窗 · 帘 · 4</div></div>
-  - type: grid
-    columns: 2
-    square: false
-    cards:
-    - type: custom:mushroom-template-card
-      entity: binary_sensor.e4aaec8a2f3e_contact
-      icon: mdi:window-open-variant
-      primary: 水房窗
-      secondary: "{{ '开' if is_state('binary_sensor.e4aaec8a2f3e_contact','on') else '关' }}"
-      multiline_secondary: true
-      color: "{{ 'red' if is_state('binary_sensor.e4aaec8a2f3e_contact','on') else 'grey' }}"
-      icon_tap_action:
-        action: more-info
-      card_mod:
-        style: |-
-          ha-card {
-            --mush-card-primary-font-size: 13.5px;
-            --mush-card-primary-line-height: 17px;
-            --mush-card-secondary-font-size: 11.5px;
-            --mush-card-secondary-line-height: 14px;
-            --mush-icon-size: 34px;
-            padding: 8px 10px !important;
-          }
-    - type: custom:mushroom-template-card
-      entity: binary_sensor.e4aaecd80bcc_contact
-      icon: mdi:window-open-variant
-      primary: 阳台窗
-      secondary: "{{ '开' if is_state('binary_sensor.e4aaecd80bcc_contact','on') else '关' }}"
-      multiline_secondary: true
-      color: "{{ 'red' if is_state('binary_sensor.e4aaecd80bcc_contact','on') else 'grey' }}"
-      icon_tap_action:
-        action: more-info
-      card_mod:
-        style: |-
-          ha-card {
-            --mush-card-primary-font-size: 13.5px;
-            --mush-card-primary-line-height: 17px;
-            --mush-card-secondary-font-size: 11.5px;
-            --mush-card-secondary-line-height: 14px;
-            --mush-icon-size: 34px;
-            padding: 8px 10px !important;
-          }
-    - type: custom:mushroom-template-card
-      entity: binary_sensor.e4aaec92af35_contact
-      icon: mdi:window-open-variant
-      primary: 书房帘
-      secondary: "{{ '开' if is_state('binary_sensor.e4aaec92af35_contact','on') else '关' }}"
-      multiline_secondary: true
-      color: "{{ 'red' if is_state('binary_sensor.e4aaec92af35_contact','on') else 'grey' }}"
-      icon_tap_action:
-        action: more-info
-      card_mod:
-        style: |-
-          ha-card {
-            --mush-card-primary-font-size: 13.5px;
-            --mush-card-primary-line-height: 17px;
-            --mush-card-secondary-font-size: 11.5px;
-            --mush-card-secondary-line-height: 14px;
-            --mush-icon-size: 34px;
-            padding: 8px 10px !important;
-          }
-    - type: custom:mushroom-template-card
-      entity: binary_sensor.e4aaec92af38_contact
-      icon: mdi:window-open-variant
-      primary: 次卧帘
-      secondary: "{{ '开' if is_state('binary_sensor.e4aaec92af38_contact','on') else '关' }}"
-      multiline_secondary: true
-      color: "{{ 'red' if is_state('binary_sensor.e4aaec92af38_contact','on') else 'grey' }}"
-      icon_tap_action:
-        action: more-info
-      card_mod:
-        style: |-
-          ha-card {
-            --mush-card-primary-font-size: 13.5px;
-            --mush-card-primary-line-height: 17px;
-            --mush-card-secondary-font-size: 11.5px;
-            --mush-card-secondary-line-height: 14px;
-            --mush-icon-size: 34px;
-            padding: 8px 10px !important;
-          }
-  - type: custom:html-template-card
-    content: |-
-      <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:4px 6px 0">环境告警</div></div>
-  - type: grid
-    columns: 2
-    square: false
-    cards:
-    - type: custom:mushroom-template-card
-      entity: binary_sensor.18c23c2c8f38_smoke
-      icon: mdi:smoke-detector-variant
-      primary: 烟感
-      secondary: "{{ '告警' if is_state('binary_sensor.18c23c2c8f38_smoke','on') else '正常' }} · 厨房"
-      multiline_secondary: true
-      color: "{{ 'red' if is_state('binary_sensor.18c23c2c8f38_smoke','on') else 'green' }}"
-      icon_tap_action:
-        action: more-info
-      card_mod:
-        style: |-
-          ha-card {
-            --mush-card-primary-font-size: 13.5px;
-            --mush-card-primary-line-height: 17px;
-            --mush-card-secondary-font-size: 11.5px;
-            --mush-card-secondary-line-height: 14px;
-            --mush-icon-size: 34px;
-            padding: 8px 10px !important;
-          }
-    - type: custom:mushroom-template-card
-      entity: binary_sensor.gas_alarm_sensor_gas_alarm
-      icon: mdi:fire-alert
-      primary: 燃气
-      secondary: "{{ '告警' if is_state('binary_sensor.gas_alarm_sensor_gas_alarm','on') else '正常' }} · 水房"
-      multiline_secondary: true
-      color: "{{ 'red' if is_state('binary_sensor.gas_alarm_sensor_gas_alarm','on') else 'green' }}"
-      icon_tap_action:
-        action: more-info
-      card_mod:
-        style: |-
-          ha-card {
-            --mush-card-primary-font-size: 13.5px;
-            --mush-card-primary-line-height: 17px;
-            --mush-card-secondary-font-size: 11.5px;
-            --mush-card-secondary-line-height: 14px;
-            --mush-icon-size: 34px;
-            padding: 8px 10px !important;
-          }
-    - type: custom:mushroom-template-card
-      entity: binary_sensor.18c23c2f9184_water_leak
-      icon: mdi:water-alert
-      primary: 水浸
-      secondary: "{{ '告警' if is_state('binary_sensor.18c23c2f9184_water_leak','on') else '正常' }} · 水房"
-      multiline_secondary: true
-      color: "{{ 'red' if is_state('binary_sensor.18c23c2f9184_water_leak','on') else 'green' }}"
-      icon_tap_action:
-        action: more-info
-      card_mod:
-        style: |-
-          ha-card {
-            --mush-card-primary-font-size: 13.5px;
-            --mush-card-primary-line-height: 17px;
-            --mush-card-secondary-font-size: 11.5px;
-            --mush-card-secondary-line-height: 14px;
-            --mush-icon-size: 34px;
-            padding: 8px 10px !important;
-          }
-    - type: custom:mushroom-template-card
-      entity: binary_sensor.maze_wateronev3_tp_f8e644_water
-      icon: mdi:pipe-leak
-      primary: 水质漏水
-      secondary: "{{ '告警' if is_state('binary_sensor.maze_wateronev3_tp_f8e644_water','on') else '正常' }} · 阳台"
-      multiline_secondary: true
-      color: "{{ 'red' if is_state('binary_sensor.maze_wateronev3_tp_f8e644_water','on') else 'green' }}"
-      icon_tap_action:
-        action: more-info
-      card_mod:
-        style: |-
-          ha-card {
-            --mush-card-primary-font-size: 13.5px;
-            --mush-card-primary-line-height: 17px;
-            --mush-card-secondary-font-size: 11.5px;
-            --mush-card-secondary-line-height: 14px;
-            --mush-icon-size: 34px;
-            padding: 8px 10px !important;
-          }
-  - type: custom:html-template-card
-    content: |-
-      <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:4px 6px 0">监控</div></div>
-  - type: grid
-    columns: 2
-    square: false
-    cards:
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:12px;background:var(--ha-card-background,#1c1c1e);border:1px solid var(--divider-color,#2a2a2a)"><span style="font-size:13.5px">大门监控</span><span style="font-size:12.5px;color:{% set s = states('camera.da_men_jian_kong') %}{{ '#FF5252' if s in ['unavailable','unknown',''] else '#59D98B' }}">{% set s = states('camera.da_men_jian_kong') %}{% set off = s in ['unavailable','unknown',''] %}{{ '离线' if off else '在线' }}</span></div></div>
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:12px;background:var(--ha-card-background,#1c1c1e);border:1px solid var(--divider-color,#2a2a2a)"><span style="font-size:13.5px">后门监控</span><span style="font-size:12.5px;color:{% set s = states('camera.hou_men_jian_kong') %}{{ '#FF5252' if s in ['unavailable','unknown',''] else '#59D98B' }}">{% set s = states('camera.hou_men_jian_kong') %}{% set off = s in ['unavailable','unknown',''] %}{{ '离线' if off else '在线' }}</span></div></div>
