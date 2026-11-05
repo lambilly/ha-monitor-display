@@ -22,7 +22,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">今日头条</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">今日头条</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -61,7 +61,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFB74D">家居</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFB74D">家居</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -179,7 +179,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">快捷</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">快捷</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -301,7 +301,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">安防</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">安防</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -354,7 +354,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">今日</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">今日</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -426,7 +426,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">车辆</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">车辆</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -500,7 +500,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">出行 · 手机</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">出行 · 手机</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -622,7 +622,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">本月费用</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">本月费用</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -661,7 +661,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">今日</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">今日</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -777,7 +777,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">本月</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">本月</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -893,7 +893,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">功率趋势</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">功率趋势</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -941,7 +941,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">电气</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">电气</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -1013,7 +1013,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">净水</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">净水</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -1129,7 +1129,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">空调能耗</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">空调能耗</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -1279,7 +1279,7 @@ views:
         entity: light.ke_ting_deng_guang
         icon: mdi:lightbulb-group
         primary: 灯
-        secondary: "{% set n = (state_attr('light.ke_ting_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.ke_ting_deng_guang','on') else '关' }}"
+        secondary: "{{ '开' if is_state('light.ke_ting_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.ke_ting_deng_guang','on') else '#757575' }}"
         icon_tap_action:
@@ -1364,7 +1364,7 @@ views:
         entity: light.can_ting_deng_guang
         icon: mdi:lightbulb-group
         primary: 灯
-        secondary: "{% set n = (state_attr('light.can_ting_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.can_ting_deng_guang','on') else '关' }}"
+        secondary: "{{ '开' if is_state('light.can_ting_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.can_ting_deng_guang','on') else '#757575' }}"
         icon_tap_action:
@@ -1449,7 +1449,7 @@ views:
         entity: light.zhu_wo_deng_guang
         icon: mdi:lightbulb-group
         primary: 灯
-        secondary: "{% set n = (state_attr('light.zhu_wo_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.zhu_wo_deng_guang','on') else '关' }}"
+        secondary: "{{ '开' if is_state('light.zhu_wo_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.zhu_wo_deng_guang','on') else '#757575' }}"
         icon_tap_action:
@@ -1556,7 +1556,7 @@ views:
         entity: light.ci_wo_deng_guang
         icon: mdi:lightbulb-group
         primary: 灯
-        secondary: "{% set n = (state_attr('light.ci_wo_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.ci_wo_deng_guang','on') else '关' }}"
+        secondary: "{{ '开' if is_state('light.ci_wo_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.ci_wo_deng_guang','on') else '#757575' }}"
         icon_tap_action:
@@ -1663,7 +1663,7 @@ views:
         entity: light.shu_fang_deng_guang
         icon: mdi:lightbulb-group
         primary: 灯
-        secondary: "{% set n = (state_attr('light.shu_fang_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.shu_fang_deng_guang','on') else '关' }}"
+        secondary: "{{ '开' if is_state('light.shu_fang_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.shu_fang_deng_guang','on') else '#757575' }}"
         icon_tap_action:
@@ -1770,7 +1770,7 @@ views:
         entity: light.yang_tai_deng_guang
         icon: mdi:lightbulb-group
         primary: 灯
-        secondary: "{% set n = (state_attr('light.yang_tai_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.yang_tai_deng_guang','on') else '关' }}"
+        secondary: "{{ '开' if is_state('light.yang_tai_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.yang_tai_deng_guang','on') else '#757575' }}"
         icon_tap_action:
@@ -1859,7 +1859,7 @@ views:
           entity: light.chu_fang_deng_guang
           icon: mdi:lightbulb-group
           primary: 灯
-          secondary: "{% set n = (state_attr('light.chu_fang_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.chu_fang_deng_guang','on') else '关' }}"
+          secondary: "{{ '开' if is_state('light.chu_fang_deng_guang','on') else '关' }}"
           multiline_secondary: true
           color: "{{ '#FFB74D' if is_state('light.chu_fang_deng_guang','on') else '#757575' }}"
           icon_tap_action:
@@ -1922,7 +1922,7 @@ views:
           entity: light.zhu_wei_deng_guang
           icon: mdi:lightbulb-group
           primary: 灯
-          secondary: "{% set n = (state_attr('light.zhu_wei_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.zhu_wei_deng_guang','on') else '关' }}"
+          secondary: "{{ '开' if is_state('light.zhu_wei_deng_guang','on') else '关' }}"
           multiline_secondary: true
           color: "{{ '#FFB74D' if is_state('light.zhu_wei_deng_guang','on') else '#757575' }}"
           icon_tap_action:
@@ -1985,7 +1985,7 @@ views:
           entity: light.gong_wei_deng_guang
           icon: mdi:lightbulb-group
           primary: 灯
-          secondary: "{% set n = (state_attr('light.gong_wei_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.gong_wei_deng_guang','on') else '关' }}"
+          secondary: "{{ '开' if is_state('light.gong_wei_deng_guang','on') else '关' }}"
           multiline_secondary: true
           color: "{{ '#FFB74D' if is_state('light.gong_wei_deng_guang','on') else '#757575' }}"
           icon_tap_action:
@@ -2048,7 +2048,7 @@ views:
           entity: light.shui_fang_deng_switch
           icon: mdi:lightbulb-group
           primary: 灯
-          secondary: "{% set n = (state_attr('light.shui_fang_deng_switch','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.shui_fang_deng_switch','on') else '关' }}"
+          secondary: "{{ '开' if is_state('light.shui_fang_deng_switch','on') else '关' }}"
           multiline_secondary: true
           color: "{{ '#FFB74D' if is_state('light.shui_fang_deng_switch','on') else '#757575' }}"
           icon_tap_action:
@@ -2111,7 +2111,7 @@ views:
           entity: light.ji_gui_qian_deng_switch
           icon: mdi:lightbulb-group
           primary: 灯
-          secondary: "{% set n = (state_attr('light.ji_gui_qian_deng_switch','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.ji_gui_qian_deng_switch','on') else '关' }}"
+          secondary: "{{ '开' if is_state('light.ji_gui_qian_deng_switch','on') else '关' }}"
           multiline_secondary: true
           color: "{{ '#FFB74D' if is_state('light.ji_gui_qian_deng_switch','on') else '#757575' }}"
           icon_tap_action:
@@ -2148,7 +2148,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">总概</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">总概</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -2187,7 +2187,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">监控</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">监控</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -2237,7 +2237,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">环境告警</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">环境告警</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -2353,7 +2353,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#59D98B">窗 · 帘</span><span style="font-size:11.5px;opacity:.5;line-height:17px">4 处</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#59D98B">窗 · 帘</span><span style="font-size:11.5px;opacity:.5;line-height:17px">4 处</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -2469,7 +2469,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">门</span><span style="font-size:11.5px;opacity:.5;line-height:17px">11 处</span></div></div>
+        <div style="padding:10px 9px 8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">门</span><span style="font-size:11.5px;opacity:.5;line-height:17px">11 处</span></div></div>
       card_mod:
         style: |
           ha-card {
