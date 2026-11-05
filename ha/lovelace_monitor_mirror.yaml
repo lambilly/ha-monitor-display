@@ -28,6 +28,9 @@ views:
           .c5{padding:0 5px;gap:2px}
           .c5 .m,.c5 .s{font-size:9px}
           .c5 ha-icon{display:block;align-self:center;line-height:0;margin:0;padding:0}
+          /* 图标尺寸 = 所在文字字号（10px 基准，五格/风扇列 9px） */
+          .hmd ha-icon{--mdc-icon-size:10px !important}
+          .c5 ha-icon,.c9 ha-icon{--mdc-icon-size:9px !important}
           .c9{padding:0 8px;gap:1px}
           .c9 .m,.c9 .s{font-size:9px}
           .col{flex-direction:column;align-items:stretch;padding:0;gap:0}
@@ -343,7 +346,7 @@ views:
               {'eid':'switch.hmd_remote_auto_sleep','ic':'sleep','nm':'休眠','col':'#5AA9FF','kind':'sw'},
               {'eid':'switch.hmd_remote_notify_wake','ic':'bell-ring','nm':'亮屏','col':'#59D98B','kind':'sw'}] %}
           {% for grp in [hctl[:2], hctl[2:]] %}
-          <div class="row g{{ grp | length }}">
+          <div class="row g{{ grp | length }}{% if loop.first %} pgap{% endif %}">
             {% for it in grp %}
             {% set sv = states(it.eid) %}
             {% if it.kind == 'sw' %}
