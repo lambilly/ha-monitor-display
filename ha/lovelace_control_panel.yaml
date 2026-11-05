@@ -12,6 +12,11 @@ views:
   - type: custom:html-template-card
     content: |-
       <div style="padding:6px 4px 2px"><div style="font-size:21px;font-weight:600;line-height:1.3">{% set g = state_attr('sensor.zhong_wen_shi_jian','greet') %}{{ user }}，{{ g.helloWord }}</div><div style="font-size:12.5px;opacity:.62;margin-top:3px">{% set s = state_attr('sensor.zhong_wen_shi_jian','solar') %}{% set l = state_attr('sensor.zhong_wen_shi_jian','lunar') %}{% set wm = {'clear-night': '晴夜', 'cloudy': '多云', 'exceptional': '极端', 'fog': '雾', 'hail': '冰雹', 'lightning': '雷雨', 'lightning-rainy': '雷阵雨', 'partlycloudy': '多云', 'pouring': '暴雨', 'rainy': '雨', 'snowy': '雪', 'snowy-rainy': '雨夹雪', 'sunny': '晴', 'windy': '大风', 'windy-variant': '大风'} %}{{ s.date_cn }} {{ s.week_cn }} · {{ l.date }} · {{ wm.get(states('weather.tian_qi'), states('weather.tian_qi')) }} {{ state_attr('weather.tian_qi','temperature') | round(0) | int }}°C</div></div>
+    card_mod:
+      style: |-
+        ha-card {
+          padding: 0 !important;
+        }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -21,6 +26,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -35,6 +41,7 @@ views:
         card_mod:
           style: |
             ha-card {
+              padding: 0 !important;
               background: transparent !important;
               border: none !important;
               border-radius: 0 !important;
@@ -58,6 +65,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -112,6 +120,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(255,183,77,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: sensor.ju_jia_mo_shi
         icon: mdi:home-heart
@@ -176,6 +199,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -228,6 +252,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         icon: mdi:snowflake-off
         primary: 空调全关
@@ -297,6 +336,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -349,6 +389,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -420,6 +461,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -451,6 +493,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(179,157,255,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 1
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: sensor.wo_de_jia_bi_ya_di_distance
         icon: mdi:car-electric
@@ -493,6 +550,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -546,6 +604,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(179,157,255,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.lam_nova13
         icon: mdi:cellphone
@@ -613,6 +686,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -627,6 +701,7 @@ views:
         card_mod:
           style: |
             ha-card {
+              padding: 0 !important;
               background: transparent !important;
               border: none !important;
               border-radius: 0 !important;
@@ -650,6 +725,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -702,6 +778,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(255,213,79,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: sensor.maze_wateronev3_tp_f8e644_daily_water_usage
         icon: mdi:water
@@ -765,6 +856,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -817,6 +909,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(179,157,255,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: sensor.zuo_ri_dian_fei
         icon: mdi:history
@@ -880,6 +987,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -927,6 +1035,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -998,6 +1107,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -1050,6 +1160,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(79,216,250,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: sensor.maze_wateronev3_tp_f8e644_tdsin
         icon: mdi:water-opacity
@@ -1113,6 +1238,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -1165,6 +1291,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: sensor.210006724901473_realtime_power
         icon: mdi:air-conditioner
@@ -1226,6 +1367,11 @@ views:
   - type: custom:html-template-card
     content: |-
       <div style="padding:0"><div style="font-size:12.5px;opacity:.6;padding:2px 6px 0">点标题开关灯组 · 点图标看全部设备</div></div>
+    card_mod:
+      style: |-
+        ha-card {
+          padding: 0 !important;
+        }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -2128,6 +2274,11 @@ views:
   - type: custom:html-template-card
     content: |-
       <div style="padding:8px 8px 6px"><div style="font-size:14px;line-height:1.6">{% set d = expand('binary_sensor.e4aaec82f917_contact', 'binary_sensor.e4aaec830af5_contact', 'binary_sensor.e4aaecaacf62_contact', 'binary_sensor.e4aaecab36c0_contact', 'binary_sensor.e4aaec8a8821_contact', 'binary_sensor.e4aaec8d0598_contact', 'binary_sensor.e4aaec8a3d86_contact', 'binary_sensor.e4aaec8d2481_contact', 'binary_sensor.e4aaec8d1bf9_contact', 'binary_sensor.e4aaec8a568f_contact', 'binary_sensor.e4aaecabbe5f_contact') %}{% set a = expand('binary_sensor.18c23c2c8f38_smoke', 'binary_sensor.gas_alarm_sensor_gas_alarm', 'binary_sensor.18c23c2f9184_water_leak', 'binary_sensor.maze_wateronev3_tp_f8e644_water') %}{% set dn = d | selectattr('state','eq','on') | list | count %}{% set an = a | selectattr('state','eq','on') | list | count %}{% if dn + an == 0 %}<span style="color:#59D98B;font-weight:600">● 一切正常</span><div style="font-size:12.5px;opacity:.65;margin-top:2px">{{ d | count }} 处门 / 窗已闭合，{{ a | count }} 项环境告警无触发</div>{% else %}<span style="color:#FF5252;font-weight:600">● {{ dn + an }} 处需要留意</span><div style="font-size:12.5px;opacity:.65;margin-top:2px">{% if dn %}门窗 {{ dn }} 处未关{% endif %}{% if an %} · 环境告警 {{ an }} 项{% endif %}</div>{% endif %}</div></div>
+    card_mod:
+      style: |-
+        ha-card {
+          padding: 0 !important;
+        }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -2137,6 +2288,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -2151,6 +2303,7 @@ views:
         card_mod:
           style: |
             ha-card {
+              padding: 0 !important;
               background: transparent !important;
               border: none !important;
               border-radius: 0 !important;
@@ -2161,6 +2314,7 @@ views:
         card_mod:
           style: |
             ha-card {
+              padding: 0 !important;
               background: transparent !important;
               border: none !important;
               border-radius: 0 !important;
@@ -2184,6 +2338,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -2236,6 +2391,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(255,82,82,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.18c23c2f9184_water_leak
         icon: mdi:water-alert
@@ -2299,6 +2469,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -2351,6 +2522,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(89,217,139,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec92af35_contact
         icon: mdi:window-open-variant
@@ -2414,6 +2600,7 @@ views:
       card_mod:
         style: |
           ha-card {
+            padding: 0 !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
@@ -2466,6 +2653,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaecaacf62_contact
         icon: mdi:door-open
@@ -2510,6 +2712,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec8a8821_contact
         icon: mdi:door-open
@@ -2554,6 +2771,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec8a3d86_contact
         icon: mdi:door-open
@@ -2598,6 +2830,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaec8d1bf9_contact
         icon: mdi:door-open
@@ -2642,6 +2889,21 @@ views:
               border: none !important;
               border-radius: 0 !important;
               box-shadow: none !important;
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:6px 10px"><div style="height:1px;background:rgba(90,169,255,0.22)"></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 2
+      square: false
+      cards:
       - type: custom:mushroom-template-card
         entity: binary_sensor.e4aaecabbe5f_contact
         icon: mdi:door-open
