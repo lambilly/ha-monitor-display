@@ -11,7 +11,7 @@ views:
         content: |
           <style>
 
-          :host,ha-card{margin:0;padding:0;border:none;box-shadow:none;background:transparent;width:100%}
+          :host,ha-card{margin:0 !important;padding:0 !important;border:none;box-shadow:none;background:transparent;width:100%}
           .hmd{width:min(100vw,430px);max-width:none;margin-left:calc(50% - min(50vw,215px));margin-right:calc(50% - min(50vw,215px));background:#0F0F0F;border-radius:0;box-sizing:border-box;
             padding:3px 6px 2px;display:flex;flex-direction:column;gap:5px;
             font-family:"PingFang SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;color:#FFF;font-size:10px}
