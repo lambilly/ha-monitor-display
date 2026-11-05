@@ -18,6 +18,7 @@ views:
           .hmd *{box-sizing:border-box;min-width:0}
           .row{display:grid;gap:5px}
           .pgap{margin-top:19px}
+          .pbot{margin-bottom:19px}
           .g2{grid-template-columns:1fr 1fr}
           .g3{grid-template-columns:1fr 1fr 1fr}
           .g4{grid-template-columns:repeat(4,1fr)}
@@ -30,6 +31,10 @@ views:
           .c5 ha-icon{display:block;align-self:center;line-height:0;margin:0;padding:0}
           /* 图标尺寸 = 所在文字字号（10px 基准，五格/风扇列 9px） */
           .hmd ha-icon{--mdc-icon-size:10px !important}
+          /* 每页第一行（页首行）字号与图标 14px */
+          .hd{font-size:14px}
+          .hd .m,.hd .s,.hd span{font-size:14px}
+          .hmd .hd ha-icon{--mdc-icon-size:14px !important}
           .c5 ha-icon,.c9 ha-icon{--mdc-icon-size:9px !important}
           .c9{padding:0 8px;gap:1px}
           .c9 .m,.c9 .s{font-size:9px}
@@ -52,7 +57,7 @@ views:
           {% set NIM = {'#4FD8FA \U000F001B#':'<ha-icon icon="mdi:air-conditioner" style="--mdc-icon-size:13px;color:#4FD8FA;vertical-align:-2px"></ha-icon>','#4FD8FA \U000F0290#':'<ha-icon icon="mdi:fridge" style="--mdc-icon-size:13px;color:#4FD8FA;vertical-align:-2px"></ha-icon>','#4FD8FA \U000F070D#':'<ha-icon icon="mdi:robot-vacuum" style="--mdc-icon-size:13px;color:#4FD8FA;vertical-align:-2px"></ha-icon>','#59D98B \U000F0079#':'<ha-icon icon="mdi:battery" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0114#':'<ha-icon icon="mdi:cash" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0210#':'<ha-icon icon="mdi:fan" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F034E#':'<ha-icon icon="mdi:map-marker" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0584#':'<ha-icon icon="mdi:wallet" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0595#':'<ha-icon icon="mdi:weather-partly-cloudy" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F059D#':'<ha-icon icon="mdi:weather-windy" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F05A9#':'<ha-icon icon="mdi:wifi" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F05E0#':'<ha-icon icon="mdi:check-circle" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0928#':'<ha-icon icon="mdi:wifi-strength-4" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0D43#':'<ha-icon icon="mdi:air-filter" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#5AA9FF ●#':'<span style="color:#5AA9FF">&#9679;</span>','#5AA9FF \U000F0004#':'<ha-icon icon="mdi:account" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F00ED#':'<ha-icon icon="mdi:calendar" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F010B#':'<ha-icon icon="mdi:car" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F011C#':'<ha-icon icon="mdi:cellphone" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F0150#':'<ha-icon icon="mdi:clock-outline" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F02DC#':'<ha-icon icon="mdi:home" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F0369#':'<ha-icon icon="mdi:message-text" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F04B9#':'<ha-icon icon="mdi:sofa" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F04DC#':'<ha-icon icon="mdi:store" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F058C#':'<ha-icon icon="mdi:water" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F058E#':'<ha-icon icon="mdi:water-percent" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F0597#':'<ha-icon icon="mdi:weather-rainy" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F072A#':'<ha-icon icon="mdi:washing-machine" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F09A0#':'<ha-icon icon="mdi:shower" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F0F92#':'<ha-icon icon="mdi:water-boiler" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#757575 ●#':'<span style="color:#757575">&#9679;</span>','#757575 \U000F0004#':'<ha-icon icon="mdi:account" style="--mdc-icon-size:13px;color:#757575;vertical-align:-2px"></ha-icon>','#757575 \U000F00B5#':'<ha-icon icon="mdi:blur" style="--mdc-icon-size:13px;color:#757575;vertical-align:-2px"></ha-icon>','#757575 \U000F0590#':'<ha-icon icon="mdi:weather-cloudy" style="--mdc-icon-size:13px;color:#757575;vertical-align:-2px"></ha-icon>','#757575 \U000F07E4#':'<ha-icon icon="mdi:molecule-co2" style="--mdc-icon-size:13px;color:#757575;vertical-align:-2px"></ha-icon>','#B39DFF \U000F000E#':'<ha-icon icon="mdi:account-multiple" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F029A#':'<ha-icon icon="mdi:gauge" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F02E3#':'<ha-icon icon="mdi:bed" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F0369#':'<ha-icon icon="mdi:message-text" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F04C3#':'<ha-icon icon="mdi:speaker" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F0594#':'<ha-icon icon="mdi:weather-night" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F0FEF#':'<ha-icon icon="mdi:credit-card" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#FF5252 ●#':'<span style="color:#FF5252">&#9679;</span>','#FF5252 \U000F0026#':'<ha-icon icon="mdi:alert" style="--mdc-icon-size:13px;color:#FF5252;vertical-align:-2px"></ha-icon>','#FF5252 \U000F0159#':'<ha-icon icon="mdi:close-circle" style="--mdc-icon-size:13px;color:#FF5252;vertical-align:-2px"></ha-icon>','#FF5252 \U000F0238#':'<ha-icon icon="mdi:fire" style="--mdc-icon-size:13px;color:#FF5252;vertical-align:-2px"></ha-icon>','#FF5252 \U000F02D1#':'<ha-icon icon="mdi:heart" style="--mdc-icon-size:13px;color:#FF5252;vertical-align:-2px"></ha-icon>','#FF5252 \U000F0438#':'<ha-icon icon="mdi:radiator" style="--mdc-icon-size:13px;color:#FF5252;vertical-align:-2px"></ha-icon>','#FFB74D ●#':'<span style="color:#FFB74D">&#9679;</span>','#FFB74D \U000F0176#':'<ha-icon icon="mdi:coffee" style="--mdc-icon-size:13px;color:#FFB74D;vertical-align:-2px"></ha-icon>','#FFB74D \U000F04B9#':'<ha-icon icon="mdi:sofa" style="--mdc-icon-size:13px;color:#FFB74D;vertical-align:-2px"></ha-icon>','#FFB74D \U000F050F#':'<ha-icon icon="mdi:thermometer" style="--mdc-icon-size:13px;color:#FFB74D;vertical-align:-2px"></ha-icon>','#FFB74D \U000F0F54#':'<ha-icon icon="mdi:home-thermometer" style="--mdc-icon-size:13px;color:#FFB74D;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0026#':'<ha-icon icon="mdi:alert" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F009A#':'<ha-icon icon="mdi:bell" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0241#':'<ha-icon icon="mdi:flash" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0335#':'<ha-icon icon="mdi:lightbulb" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0369#':'<ha-icon icon="mdi:message-text" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F04CE#':'<ha-icon icon="mdi:star" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0599#':'<ha-icon icon="mdi:weather-sunny" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F05A8#':'<ha-icon icon="mdi:white-balance-sunny" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0A72#':'<ha-icon icon="mdi:solar-power" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFFFFF ●#':'<span style="color:#FFFFFF">&#9679;</span>'} %}
           <div class="hmd">
           <!-- 行1 y5 h50：中文时间 | 天气 | 上证（涨红/跌绿/平白，三件套同步变色） -->
-          <div class="c" style="height:50px;gap:4px;justify-content:space-between">
+          <div class="c hd" style="height:50px;gap:4px;justify-content:space-between">
             <span class="m ell" style="min-width:0">{{ states('sensor.zhong_wen_shi_jian') }}</span>
             <div style="display:flex;align-items:center;gap:4px;flex:none">
               <ha-icon icon="mdi:weather-partly-cloudy" style="--mdc-icon-size:16px;color:#4FD8FA;flex:none"></ha-icon>
@@ -159,7 +164,7 @@ views:
             <div class="ti">通知</div>
           </div>
           <!-- 行1 y5 h50：外网IP | 已连接时长 -->
-          <div class="c pgap" style="height:50px;gap:4px">
+          <div class="c hd pgap" style="height:50px;gap:4px">
             <ha-icon icon="mdi:earth" style="--mdc-icon-size:16px;color:#4FD8FA;flex:none"></ha-icon>
             <span class="m ell">外网IP: {{ states('sensor.tp_link_smb_tl_r498gpm_ac_external_ip') }}</span>
             <ha-icon icon="mdi:clock-outline" style="--mdc-icon-size:16px;color:#59D98B;flex:none;margin-left:auto"></ha-icon>
@@ -234,7 +239,7 @@ views:
             <div class="ti">通知</div>
           </div>
           <!-- 行1 y5 h50：系统状态 | 运行时长（屏幕自身 uptime） -->
-          <div class="c pgap" style="height:50px;gap:4px">
+          <div class="c hd pgap" style="height:50px;gap:4px">
             <ha-icon icon="mdi:monitor-dashboard" style="--mdc-icon-size:16px;color:#4FD8FA;flex:none"></ha-icon>
             <span class="m ell">系统状态</span>
             <ha-icon icon="mdi:timer-outline" style="--mdc-icon-size:16px;color:#59D98B;flex:none;margin-left:auto"></ha-icon>
@@ -299,7 +304,7 @@ views:
             <div class="ti">通知</div>
           </div>
           <!-- 通知头 y5 h30：左 标题 | 中 当前时间 HH:MM | 右 相对时间 -->
-          <div class="cq pgap" style="height:30px;gap:4px;justify-content:space-between">
+          <div class="cq hd pgap" style="height:30px;gap:4px;justify-content:space-between">
             <div style="display:flex;align-items:center;gap:2px;flex:none">
               <ha-icon icon="mdi:bell" style="--mdc-icon-size:16px;color:#FFD54F;flex:none"></ha-icon>
               <span class="s ell">通知</span>
@@ -346,7 +351,7 @@ views:
               {'eid':'switch.hmd_remote_auto_sleep','ic':'sleep','nm':'休眠','col':'#5AA9FF','kind':'sw'},
               {'eid':'switch.hmd_remote_notify_wake','ic':'bell-ring','nm':'亮屏','col':'#59D98B','kind':'sw'}] %}
           {% for grp in [hctl[:2], hctl[2:]] %}
-          <div class="row g{{ grp | length }}{% if loop.first %} pgap{% endif %}">
+          <div class="row g{{ grp | length }}{% if loop.last %} pbot{% endif %}">
             {% for it in grp %}
             {% set sv = states(it.eid) %}
             {% if it.kind == 'sw' %}
