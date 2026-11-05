@@ -22,7 +22,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">今日头条</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">今日头条</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -61,7 +61,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFB74D">家居</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFB74D">家居</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -82,29 +82,6 @@ views:
         secondary: "{{ state_attr('sensor.family_home_count','family_count').family_home_list }}"
         multiline_secondary: true
         color: "{{ '#FFB74D' if (states('sensor.family_home_count')|int(0) > 0) else '#757575' }}"
-        icon_tap_action:
-          action: more-info
-        card_mod:
-          style: |
-            ha-card {
-              --mush-card-primary-font-size: 13.5px;
-              --mush-card-primary-line-height: 17px;
-              --mush-card-secondary-font-size: 11.5px;
-              --mush-card-secondary-line-height: 14px;
-              --mush-icon-size: 34px;
-              padding: 8px 10px !important;
-              background: var(--ha-card-background, #1c1c1e) !important;
-              border: 1px solid var(--divider-color, #2a2a2a) !important;
-              border-radius: 12px !important;
-              box-shadow: none !important;
-      - type: custom:mushroom-template-card
-        entity: sensor.huo_dong_gui_ji
-        icon: mdi:radar
-        primary: |-
-          {{ states("sensor.huo_dong_gui_ji") }}
-        secondary: "{% set t = state_attr('sensor.huo_dong_gui_ji','motion_time') %}{{ t | as_timestamp | timestamp_custom('%H:%M') if t else '最近没有走动' }}"
-        multiline_secondary: true
-        color: "{{ '#FFB74D' if (not is_state('sensor.huo_dong_gui_ji','未活动')) else '#757575' }}"
         icon_tap_action:
           action: more-info
         card_mod:
@@ -144,14 +121,36 @@ views:
               border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
-        entity: switch.voice_broadcast
-        icon: mdi:bullhorn
-        primary: 语音播报
-        secondary: "{{ '开' if is_state('switch.voice_broadcast','on') else '关' }}"
+        entity: binary_sensor.lam_nova13
+        icon: mdi:cellphone
+        primary: Nova13
+        secondary: "{{ '在线' if is_state('binary_sensor.lam_nova13','on') else '离线' }}"
         multiline_secondary: true
-        color: "{{ '#5AA9FF' if (is_state('switch.voice_broadcast','on')) else '#757575' }}"
+        color: "{{ '#4FD8FA' if (is_state('binary_sensor.lam_nova13','on')) else '#757575' }}"
         icon_tap_action:
-          action: toggle
+          action: more-info
+        card_mod:
+          style: |
+            ha-card {
+              --mush-card-primary-font-size: 13.5px;
+              --mush-card-primary-line-height: 17px;
+              --mush-card-secondary-font-size: 11.5px;
+              --mush-card-secondary-line-height: 14px;
+              --mush-icon-size: 34px;
+              padding: 8px 10px !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
+              box-shadow: none !important;
+      - type: custom:mushroom-template-card
+        entity: binary_sensor.su_nova12
+        icon: mdi:cellphone
+        primary: Nova12
+        secondary: "{{ '在线' if is_state('binary_sensor.su_nova12','on') else '离线' }}"
+        multiline_secondary: true
+        color: "{{ '#4FD8FA' if (is_state('binary_sensor.su_nova12','on')) else '#757575' }}"
+        icon_tap_action:
+          action: more-info
         card_mod:
           style: |
             ha-card {
@@ -180,7 +179,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">快捷</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">快捷</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -302,7 +301,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">安防</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">安防</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -355,7 +354,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">今日</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">今日</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -427,7 +426,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">车辆</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">车辆</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -501,7 +500,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">出行 · 手机</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">出行 · 手机</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -560,12 +559,13 @@ views:
               border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
-        entity: binary_sensor.lam_nova13
-        icon: mdi:cellphone
-        primary: Nova13
-        secondary: "{{ '在线' if is_state('binary_sensor.lam_nova13','on') else '离线' }}"
+        entity: sensor.huo_dong_gui_ji
+        icon: mdi:radar
+        primary: |-
+          {{ states("sensor.huo_dong_gui_ji") }}
+        secondary: "{% set t = state_attr('sensor.huo_dong_gui_ji','motion_time') %}{{ t | as_timestamp | timestamp_custom('%H:%M') if t else '最近没有走动' }}"
         multiline_secondary: true
-        color: "{{ '#4FD8FA' if (is_state('binary_sensor.lam_nova13','on')) else '#757575' }}"
+        color: "{{ '#FFB74D' if (not is_state('sensor.huo_dong_gui_ji','未活动')) else '#757575' }}"
         icon_tap_action:
           action: more-info
         card_mod:
@@ -582,14 +582,14 @@ views:
               border-radius: 12px !important;
               box-shadow: none !important;
       - type: custom:mushroom-template-card
-        entity: binary_sensor.su_nova12
-        icon: mdi:cellphone
-        primary: Nova12
-        secondary: "{{ '在线' if is_state('binary_sensor.su_nova12','on') else '离线' }}"
+        entity: switch.voice_broadcast
+        icon: mdi:bullhorn
+        primary: 语音播报
+        secondary: "{{ '开' if is_state('switch.voice_broadcast','on') else '关' }}"
         multiline_secondary: true
-        color: "{{ '#4FD8FA' if (is_state('binary_sensor.su_nova12','on')) else '#757575' }}"
+        color: "{{ '#5AA9FF' if (is_state('switch.voice_broadcast','on')) else '#757575' }}"
         icon_tap_action:
-          action: more-info
+          action: toggle
         card_mod:
           style: |
             ha-card {
@@ -622,7 +622,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">本月费用</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">本月费用</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -637,7 +637,7 @@ views:
       cards:
       - type: custom:html-template-card
         content: |-
-          <div style="padding:4px 6px"><div style="font-size:12.5px;line-height:1.7;opacity:.8">{{ state_attr('sensor.fei_yong_gai_kuang','message1') }}<br><span style="opacity:.7">{{ state_attr('sensor.fei_yong_gai_kuang','data_time') }}</span></div></div>
+          <div style="padding:6px 6px"><div style="font-size:12.5px;line-height:1.7;opacity:.8">{{ state_attr('sensor.fei_yong_gai_kuang','message1') }}</div></div>
         card_mod:
           style: |
             ha-card {
@@ -661,7 +661,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">今日</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FFD54F">今日</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -777,7 +777,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">本月</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#B39DFF">本月</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -893,7 +893,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">功率趋势</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">功率趋势</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -941,7 +941,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">电气</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">电气</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -1013,7 +1013,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">净水</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">净水</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -1129,7 +1129,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">空调能耗</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">空调能耗</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -1244,14 +1244,6 @@ views:
   path: rooms
   icon: mdi:floor-plan
   cards:
-  - type: custom:html-template-card
-    content: |-
-      <div style="padding:0"><div style="font-size:12.5px;opacity:.6;padding:2px 6px 0">点标题开关灯组 · 点图标看全部设备</div></div>
-    card_mod:
-      style: |-
-        ha-card {
-          padding: 0 !important;
-        }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -1263,7 +1255,7 @@ views:
       multiline_secondary: true
       color: "{{ '#FFB74D' if is_state('light.ke_ting_deng_guang','on') else '#757575' }}"
       icon_tap_action:
-        action: toggle
+        action: more-info
       card_mod:
         style: |
           ha-card {
@@ -1299,8 +1291,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1321,8 +1313,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1348,7 +1340,7 @@ views:
       multiline_secondary: true
       color: "{{ '#FFB74D' if is_state('light.can_ting_deng_guang','on') else '#757575' }}"
       icon_tap_action:
-        action: toggle
+        action: more-info
       card_mod:
         style: |
           ha-card {
@@ -1384,8 +1376,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1406,8 +1398,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1433,7 +1425,7 @@ views:
       multiline_secondary: true
       color: "{{ '#FFB74D' if is_state('light.zhu_wo_deng_guang','on') else '#757575' }}"
       icon_tap_action:
-        action: toggle
+        action: more-info
       card_mod:
         style: |
           ha-card {
@@ -1469,8 +1461,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1491,8 +1483,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1513,8 +1505,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1540,7 +1532,7 @@ views:
       multiline_secondary: true
       color: "{{ '#FFB74D' if is_state('light.ci_wo_deng_guang','on') else '#757575' }}"
       icon_tap_action:
-        action: toggle
+        action: more-info
       card_mod:
         style: |
           ha-card {
@@ -1576,8 +1568,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1598,8 +1590,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1620,8 +1612,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1647,7 +1639,7 @@ views:
       multiline_secondary: true
       color: "{{ '#FFB74D' if is_state('light.shu_fang_deng_guang','on') else '#757575' }}"
       icon_tap_action:
-        action: toggle
+        action: more-info
       card_mod:
         style: |
           ha-card {
@@ -1683,8 +1675,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1705,8 +1697,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1727,8 +1719,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1754,7 +1746,7 @@ views:
       multiline_secondary: true
       color: "{{ '#FFB74D' if is_state('light.yang_tai_deng_guang','on') else '#757575' }}"
       icon_tap_action:
-        action: toggle
+        action: more-info
       card_mod:
         style: |
           ha-card {
@@ -1790,8 +1782,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1812,8 +1804,8 @@ views:
               --mush-card-primary-line-height: 16px;
               --mush-card-secondary-font-size: 11px;
               --mush-card-secondary-line-height: 13px;
-              --mush-icon-size: 28px;
-              padding: 5px 7px !important;
+              --mush-icon-size: 22px;
+              padding: 4px 6px !important;
               background: var(--ha-card-background, #1c1c1e) !important;
               border: 1px solid var(--divider-color, #2a2a2a) !important;
               border-radius: 12px !important;
@@ -1843,7 +1835,7 @@ views:
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.chu_fang_deng_guang','on') else '#757575' }}"
         icon_tap_action:
-          action: toggle
+          action: more-info
         card_mod:
           style: |
             ha-card {
@@ -1879,8 +1871,8 @@ views:
                 --mush-card-primary-line-height: 16px;
                 --mush-card-secondary-font-size: 11px;
                 --mush-card-secondary-line-height: 13px;
-                --mush-icon-size: 28px;
-                padding: 5px 7px !important;
+                --mush-icon-size: 22px;
+                padding: 4px 6px !important;
                 background: var(--ha-card-background, #1c1c1e) !important;
                 border: 1px solid var(--divider-color, #2a2a2a) !important;
                 border-radius: 12px !important;
@@ -1902,11 +1894,11 @@ views:
         entity: light.zhu_wei_deng_guang
         icon: mdi:shower
         primary: 主卫
-        secondary: "{% set t = states('sensor.a4c1385bff0e_temperature') %}{{ (t | round(1) ~ '°C') if t not in ['unknown','unavailable'] else '--°C' }} · {% set h = states('sensor.a4c1385bff0e_humidity') %}{{ (h | round(0) | int ~ '%') if h not in ['unknown','unavailable'] else '--%' }} · {{ '有人' if is_state('binary_sensor.e0798dba5b63_motion','on') else '无人' }} · {{ '门开' if is_state('binary_sensor.e4aaec8d0598_contact','on') else '门关' }}"
+        secondary: "{% set t = states('sensor.a4c1385bff0e_temperature') %}{{ (t | round(1) ~ '°C') if t not in ['unknown','unavailable'] else '--°C' }} · {% set h = states('sensor.a4c1385bff0e_humidity') %}{{ (h | round(0) | int ~ '%') if h not in ['unknown','unavailable'] else '--%' }}"
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.zhu_wei_deng_guang','on') else '#757575' }}"
         icon_tap_action:
-          action: toggle
+          action: more-info
         card_mod:
           style: |
             ha-card {
@@ -1942,8 +1934,8 @@ views:
                 --mush-card-primary-line-height: 16px;
                 --mush-card-secondary-font-size: 11px;
                 --mush-card-secondary-line-height: 13px;
-                --mush-icon-size: 28px;
-                padding: 5px 7px !important;
+                --mush-icon-size: 22px;
+                padding: 4px 6px !important;
                 background: var(--ha-card-background, #1c1c1e) !important;
                 border: 1px solid var(--divider-color, #2a2a2a) !important;
                 border-radius: 12px !important;
@@ -1965,11 +1957,11 @@ views:
         entity: light.gong_wei_deng_guang
         icon: mdi:toilet
         primary: 公卫
-        secondary: "{% set t = states('sensor.a4c138b657de_temperature') %}{{ (t | round(1) ~ '°C') if t not in ['unknown','unavailable'] else '--°C' }} · {% set h = states('sensor.a4c138b657de_humidity') %}{{ (h | round(0) | int ~ '%') if h not in ['unknown','unavailable'] else '--%' }} · {{ '有人' if is_state('binary_sensor.187a3ec94481_motion','on') else '无人' }} · {{ '门开' if is_state('binary_sensor.e4aaec8a3d86_contact','on') else '门关' }}"
+        secondary: "{% set t = states('sensor.a4c138b657de_temperature') %}{{ (t | round(1) ~ '°C') if t not in ['unknown','unavailable'] else '--°C' }} · {% set h = states('sensor.a4c138b657de_humidity') %}{{ (h | round(0) | int ~ '%') if h not in ['unknown','unavailable'] else '--%' }}"
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.gong_wei_deng_guang','on') else '#757575' }}"
         icon_tap_action:
-          action: toggle
+          action: more-info
         card_mod:
           style: |
             ha-card {
@@ -2005,8 +1997,8 @@ views:
                 --mush-card-primary-line-height: 16px;
                 --mush-card-secondary-font-size: 11px;
                 --mush-card-secondary-line-height: 13px;
-                --mush-icon-size: 28px;
-                padding: 5px 7px !important;
+                --mush-icon-size: 22px;
+                padding: 4px 6px !important;
                 background: var(--ha-card-background, #1c1c1e) !important;
                 border: 1px solid var(--divider-color, #2a2a2a) !important;
                 border-radius: 12px !important;
@@ -2028,11 +2020,11 @@ views:
         entity: light.shui_fang_deng_switch
         icon: mdi:water-boiler
         primary: 水房
-        secondary: "{% set t = states('sensor.a4c138ca51ee_temperature') %}{{ (t | round(1) ~ '°C') if t not in ['unknown','unavailable'] else '--°C' }} · {% set h = states('sensor.a4c138ca51ee_humidity') %}{{ (h | round(0) | int ~ '%') if h not in ['unknown','unavailable'] else '--%' }} · {{ '有人' if is_state('binary_sensor.187a3ebfc161_motion','on') else '无人' }} · {{ '门开' if is_state('binary_sensor.e4aaec830af5_contact','on') else '门关' }}"
+        secondary: "{% set t = states('sensor.a4c138ca51ee_temperature') %}{{ (t | round(1) ~ '°C') if t not in ['unknown','unavailable'] else '--°C' }} · {% set h = states('sensor.a4c138ca51ee_humidity') %}{{ (h | round(0) | int ~ '%') if h not in ['unknown','unavailable'] else '--%' }}"
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.shui_fang_deng_switch','on') else '#757575' }}"
         icon_tap_action:
-          action: toggle
+          action: more-info
         card_mod:
           style: |
             ha-card {
@@ -2068,8 +2060,8 @@ views:
                 --mush-card-primary-line-height: 16px;
                 --mush-card-secondary-font-size: 11px;
                 --mush-card-secondary-line-height: 13px;
-                --mush-icon-size: 28px;
-                padding: 5px 7px !important;
+                --mush-icon-size: 22px;
+                padding: 4px 6px !important;
                 background: var(--ha-card-background, #1c1c1e) !important;
                 border: 1px solid var(--divider-color, #2a2a2a) !important;
                 border-radius: 12px !important;
@@ -2095,7 +2087,7 @@ views:
         multiline_secondary: true
         color: "{{ '#FFB74D' if is_state('light.ji_gui_qian_deng_switch','on') else '#757575' }}"
         icon_tap_action:
-          action: toggle
+          action: more-info
         card_mod:
           style: |
             ha-card {
@@ -2131,8 +2123,8 @@ views:
                 --mush-card-primary-line-height: 16px;
                 --mush-card-secondary-font-size: 11px;
                 --mush-card-secondary-line-height: 13px;
-                --mush-icon-size: 28px;
-                padding: 5px 7px !important;
+                --mush-icon-size: 22px;
+                padding: 4px 6px !important;
                 background: var(--ha-card-background, #1c1c1e) !important;
                 border: 1px solid var(--divider-color, #2a2a2a) !important;
                 border-radius: 12px !important;
@@ -2151,20 +2143,51 @@ views:
   path: security
   icon: mdi:shield-home-outline
   cards:
-  - type: custom:html-template-card
-    content: |-
-      <div style="padding:8px 8px 6px"><div style="font-size:14px;line-height:1.6">{% set d = expand('binary_sensor.e4aaec82f917_contact', 'binary_sensor.e4aaec830af5_contact', 'binary_sensor.e4aaecaacf62_contact', 'binary_sensor.e4aaecab36c0_contact', 'binary_sensor.e4aaec8a8821_contact', 'binary_sensor.e4aaec8d0598_contact', 'binary_sensor.e4aaec8a3d86_contact', 'binary_sensor.e4aaec8d2481_contact', 'binary_sensor.e4aaec8d1bf9_contact', 'binary_sensor.e4aaec8a568f_contact', 'binary_sensor.e4aaecabbe5f_contact') %}{% set a = expand('binary_sensor.18c23c2c8f38_smoke', 'binary_sensor.gas_alarm_sensor_gas_alarm', 'binary_sensor.18c23c2f9184_water_leak', 'binary_sensor.maze_wateronev3_tp_f8e644_water') %}{% set dn = d | selectattr('state','eq','on') | list | count %}{% set an = a | selectattr('state','eq','on') | list | count %}{% if dn + an == 0 %}<span style="color:#59D98B;font-weight:600">● 一切正常</span><div style="font-size:12.5px;opacity:.65;margin-top:2px">{{ d | count }} 处门 / 窗已闭合，{{ a | count }} 项环境告警无触发</div>{% else %}<span style="color:#FF5252;font-weight:600">● {{ dn + an }} 处需要留意</span><div style="font-size:12.5px;opacity:.65;margin-top:2px">{% if dn %}门窗 {{ dn }} 处未关{% endif %}{% if an %} · 环境告警 {{ an }} 项{% endif %}</div>{% endif %}</div></div>
+  - type: custom:stack-in-card
+    mode: vertical
+    cards:
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">总概</span></div></div>
+      card_mod:
+        style: |
+          ha-card {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+    - type: grid
+      columns: 1
+      square: false
+      cards:
+      - type: custom:html-template-card
+        content: |-
+          <div style="padding:8px 8px 6px"><div style="font-size:14px;line-height:1.6">{% set d = expand('binary_sensor.e4aaec82f917_contact', 'binary_sensor.e4aaec830af5_contact', 'binary_sensor.e4aaecaacf62_contact', 'binary_sensor.e4aaecab36c0_contact', 'binary_sensor.e4aaec8a8821_contact', 'binary_sensor.e4aaec8d0598_contact', 'binary_sensor.e4aaec8a3d86_contact', 'binary_sensor.e4aaec8d2481_contact', 'binary_sensor.e4aaec8d1bf9_contact', 'binary_sensor.e4aaec8a568f_contact', 'binary_sensor.e4aaecabbe5f_contact') %}{% set a = expand('binary_sensor.18c23c2c8f38_smoke', 'binary_sensor.gas_alarm_sensor_gas_alarm', 'binary_sensor.18c23c2f9184_water_leak', 'binary_sensor.maze_wateronev3_tp_f8e644_water') %}{% set dn = d | selectattr('state','eq','on') | list | count %}{% set an = a | selectattr('state','eq','on') | list | count %}{% if dn + an == 0 %}<span style="color:#59D98B;font-weight:600">● 一切正常</span><div style="font-size:12.5px;opacity:.65;margin-top:2px">{{ d | count }} 处门 / 窗已闭合，{{ a | count }} 项环境告警无触发</div>{% else %}<span style="color:#FF5252;font-weight:600">● {{ dn + an }} 处需要留意</span><div style="font-size:12.5px;opacity:.65;margin-top:2px">{% if dn %}门窗 {{ dn }} 处未关{% endif %}{% if an %} · 环境告警 {{ an }} 项{% endif %}</div>{% endif %}</div></div>
+        card_mod:
+          style: |
+            ha-card {
+              padding: 0 !important;
+              background: var(--ha-card-background, #1c1c1e) !important;
+              border: 1px solid var(--divider-color, #2a2a2a) !important;
+              border-radius: 12px !important;
+              box-shadow: none !important;
     card_mod:
       style: |-
         ha-card {
-          padding: 0 !important;
+          background: var(--ha-card-background, var(--card-background-color)) !important;
+          border: 1px solid rgba(255,82,82,0.42) !important;
+          border-left: 5px solid #FF5252 !important;
+          border-radius: 14px !important;
+          overflow: hidden;
+          box-shadow: 0 2px 10px rgba(0,0,0,.28) !important;
         }
   - type: custom:stack-in-card
     mode: vertical
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">监控</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#4FD8FA">监控</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -2214,7 +2237,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">环境告警</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#FF5252">环境告警</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -2330,7 +2353,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#59D98B">窗 · 帘</span><span style="font-size:11.5px;opacity:.5;line-height:17px">4 处</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#59D98B">窗 · 帘</span><span style="font-size:11.5px;opacity:.5;line-height:17px">4 处</span></div></div>
       card_mod:
         style: |
           ha-card {
@@ -2446,7 +2469,7 @@ views:
     cards:
     - type: custom:html-template-card
       content: |-
-        <div style="padding:4px 9px 3px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">门</span><span style="font-size:11.5px;opacity:.5;line-height:17px">11 处</span></div></div>
+        <div style="padding:7px 9px 5px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14.5px;font-weight:600;line-height:17px;color:#5AA9FF">门</span><span style="font-size:11.5px;opacity:.5;line-height:17px">11 处</span></div></div>
       card_mod:
         style: |
           ha-card {
