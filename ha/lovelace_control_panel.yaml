@@ -289,6 +289,10 @@ views:
             --mush-icon-size: 34px;
             padding: 8px 10px !important;
           }
+  - type: grid
+    columns: 2
+    square: false
+    cards:
     - type: custom:mushroom-template-card
       entity: sensor.wo_de_jia_dian_dong_che_distance
       icon: mdi:bicycle
@@ -312,12 +316,54 @@ views:
     - type: custom:mushroom-template-card
       entity: sensor.zhi_hui_ting_che_che_liang_xin_xi
       icon: mdi:parking
-      primary: "智慧停车 · {{ states('sensor.zhi_hui_ting_che_che_liang_xin_xi') }}"
-      secondary: "钱包 ¥{{ states('sensor.zhi_hui_ting_che_qian_bao_yu_e') }} · {{ states('sensor.zhi_hui_ting_che_dai_jiao_ding_dan') }} · 年卡 {{ states('sensor.zhi_hui_ting_che_nian_ka_xin_xi') }}"
+      primary: "停车 · {{ states('sensor.zhi_hui_ting_che_che_liang_xin_xi') }}"
+      secondary: "钱包 ¥{{ states('sensor.zhi_hui_ting_che_qian_bao_yu_e') }} · {{ states('sensor.zhi_hui_ting_che_dai_jiao_ding_dan') }}"
       multiline_secondary: true
       color: amber
       icon_tap_action:
-        action: navigate
+        action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+    - type: custom:mushroom-template-card
+      entity: binary_sensor.lam_nova13
+      icon: mdi:cellphone
+      primary: Nova13
+      secondary: "{{ '在线' if is_state('binary_sensor.lam_nova13','on') else '离线' }}"
+      multiline_secondary: true
+      color: "{{ '#59D98B' if is_state('binary_sensor.lam_nova13','on') else 'grey' }}"
+      icon_tap_action:
+        action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
+    - type: custom:mushroom-template-card
+      entity: binary_sensor.su_nova12
+      icon: mdi:cellphone
+      primary: Nova12
+      secondary: "{{ '在线' if is_state('binary_sensor.su_nova12','on') else '离线' }}"
+      multiline_secondary: true
+      color: "{{ '#59D98B' if is_state('binary_sensor.su_nova12','on') else 'grey' }}"
+      icon_tap_action:
+        action: more-info
       card_mod:
         style: |-
           ha-card {
