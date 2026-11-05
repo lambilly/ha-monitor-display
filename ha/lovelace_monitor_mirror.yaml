@@ -25,8 +25,9 @@ views:
           .r1{grid-template-columns:41.5fr 24fr 34.5fr}
           .c{background:#1E1E1E;border-radius:10px;border:1px solid #FFF;display:flex;align-items:center;justify-content:flex-start;text-align:left;
             overflow:hidden;padding:0 10px;gap:1px}
-          .c5{padding:0 5px;gap:1px}
+          .c5{padding:0 5px;gap:2px}
           .c5 .m,.c5 .s{font-size:9px}
+          .c5 ha-icon{display:block;align-self:center;line-height:0;margin:0;padding:0}
           .c9{padding:0 8px;gap:1px}
           .c9 .m,.c9 .s{font-size:9px}
           .col{flex-direction:column;align-items:stretch;padding:0;gap:0}
@@ -173,7 +174,7 @@ views:
                 {'eid':'sensor.asr_online_count','ic':'microphone-message','nm':'语音','col':'#59D98B'}] %}
             {% set n = states(cell.eid) | int(-1) %}
             <div class="c c5" style="height:41px;color:{% if n < 0 %}#757575{% elif n > 0 %}{{ cell.col }}{% else %}#FF5252{% endif %}">
-              <ha-icon icon="mdi:{{ cell.ic }}" style="--mdc-icon-size:15px;flex:none"></ha-icon>
+              <ha-icon icon="mdi:{{ cell.ic }}" style="--mdc-icon-size:12px;flex:none"></ha-icon>
               <span class="s ell">{{ cell.nm }}: {{ '--' if n < 0 else n }}</span>
             </div>
             {% endfor %}
@@ -213,12 +214,12 @@ views:
                   {'eid':'fan.fan_pwm_controller_fan_1','ic':'fan','nm':'前扇','col':'#FFB74D','t':'sensor.fan_pwm_controller_temperature','tc':'#FF5252'},
                   {'eid':'fan.fan_pwm_controller_fan_2','ic':'fan','nm':'后扇','col':'#B39DFF','t':'sensor.miaomiaoc_cn_blt_3_1f33gjhbc4k00_t2_temperature_p_2_1','tc':'#FFB74D'}] %}
               {% set p = state_attr(f.eid,'percentage') | int(0) %}
-              <div class="ln"><ha-icon icon="mdi:{{ f.ic }}" style="--mdc-icon-size:15px;color:{{ f.col }};flex:none"></ha-icon><span class="s ell">{{ f.nm }}:</span><ha-icon icon="mdi:fan" style="--mdc-icon-size:11px;flex:none;color:{% if is_state(f.eid,'off') %}#757575{% else %}{% if p > 80 %}#FF5252{% elif p > 50 %}#FFB74D{% else %}#59D98B{% endif %}{% endif %}"></ha-icon><span class="s ell" style="color:{% if is_state(f.eid,'off') %}#757575{% else %}{% if p > 80 %}#FF5252{% elif p > 50 %}#FFB74D{% else %}#59D98B{% endif %}{% endif %}">{% if is_state(f.eid,'off') %}停{% else %}{{ p }}%{% endif %}</span>{% set tv = states(f.t) | float(-999) %}<ha-icon icon="mdi:thermometer" style="--mdc-icon-size:11px;color:{{ f.tc }};flex:none;margin-left:2px"></ha-icon><span class="s ell" style="color:{% if tv > -999 %}#FFF{% else %}#757575{% endif %}">{% if tv > -999 %}{{ tv | round(0) | int }}℃{% else %}--{% endif %}</span></div>
+              <div class="ln"><ha-icon icon="mdi:{{ f.ic }}" style="--mdc-icon-size:15px;color:{{ f.col }};flex:none"></ha-icon><span class="s ell">{{ f.nm }}:</span><ha-icon icon="mdi:fan" style="--mdc-icon-size:11px;flex:none;color:{% if is_state(f.eid,'off') %}#757575{% else %}{% if p > 80 %}#FF5252{% elif p > 50 %}#FFB74D{% else %}#59D98B{% endif %}{% endif %}"></ha-icon><span class="s ell" style="color:{% if is_state(f.eid,'off') %}#757575{% else %}{% if p > 80 %}#FF5252{% elif p > 50 %}#FFB74D{% else %}#59D98B{% endif %}{% endif %}">{% if is_state(f.eid,'off') %}停{% else %}{{ p }}%{% endif %}</span>{% set tv = states(f.t) | float(-999) %}<span class="s ell" style="flex:none;margin-left:3px;color:{% if tv > -999 %}#FFF{% else %}#757575{% endif %}">{% if tv > -999 %}{{ tv | round(0) | int }}℃{% else %}--{% endif %}</span></div>
               {% endfor %}
               {% for sw in [
                   {'eid':'switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1','ic':'fan-chevron-down','nm':'进扇','col':'#59D98B','t':'sensor.miaomiaoc_cn_blt_3_1f308atcc4o01_t2_temperature_p_2_1','tc':'#FFD54F'},
                   {'eid':'switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2','ic':'fan-chevron-up','nm':'出扇','col':'#5AA9FF','t':'sensor.miaomiaoc_cn_blt_3_1fpsendsc4g01_t2_temperature_p_2_1','tc':'#59D98B'}] %}
-              <div class="ln"><ha-icon icon="mdi:{{ sw.ic }}" style="--mdc-icon-size:15px;color:{{ sw.col }};flex:none"></ha-icon><span class="s ell">{{ sw.nm }}:</span><ha-icon icon="mdi:fan" style="--mdc-icon-size:11px;flex:none;color:{{ '#59D98B' if is_state(sw.eid,'on') else '#757575' }}"></ha-icon><span class="s ell" style="color:{{ '#59D98B' if is_state(sw.eid,'on') else '#757575' }}">{{ '开' if is_state(sw.eid,'on') else '关' }}</span>{% set tv = states(sw.t) | float(-999) %}<ha-icon icon="mdi:thermometer" style="--mdc-icon-size:11px;color:{{ sw.tc }};flex:none;margin-left:2px"></ha-icon><span class="s ell" style="color:{% if tv > -999 %}#FFF{% else %}#757575{% endif %}">{% if tv > -999 %}{{ tv | round(0) | int }}℃{% else %}--{% endif %}</span></div>
+              <div class="ln"><ha-icon icon="mdi:{{ sw.ic }}" style="--mdc-icon-size:15px;color:{{ sw.col }};flex:none"></ha-icon><span class="s ell">{{ sw.nm }}:</span><ha-icon icon="mdi:fan" style="--mdc-icon-size:11px;flex:none;color:{{ '#59D98B' if is_state(sw.eid,'on') else '#757575' }}"></ha-icon><span class="s ell" style="color:{{ '#59D98B' if is_state(sw.eid,'on') else '#757575' }}">{{ '开' if is_state(sw.eid,'on') else '关' }}</span>{% set tv = states(sw.t) | float(-999) %}<span class="s ell" style="flex:none;margin-left:3px;color:{% if tv > -999 %}#FFF{% else %}#757575{% endif %}">{% if tv > -999 %}{{ tv | round(0) | int }}℃{% else %}--{% endif %}</span></div>
               {% endfor %}
             </div>
           </div>
@@ -288,37 +289,6 @@ views:
             </div>
           </div>
 
-          <!-- 屏幕控制 y：5 个远程实体（开关/亮度/超时/休眠/亮屏），只读镜像本页风格 -->
-          <div class="row g5">
-            {% for it in [
-                {'eid':'light.hmd_remote_screen_power','ic':'monitor','nm':'屏显','col':'#FFB74D','kind':'sw'},
-                {'eid':'number.hmd_remote_brightness','ic':'brightness-6','nm':'亮度','col':'#FFD54F','kind':'num'},
-                {'eid':'number.hmd_remote_sleep_timeout','ic':'timer-sand','nm':'超时','col':'#B39DFF','kind':'sec'},
-                {'eid':'switch.hmd_remote_auto_sleep','ic':'sleep','nm':'休眠','col':'#5AA9FF','kind':'sw'},
-                {'eid':'switch.hmd_remote_notify_wake','ic':'bell-ring','nm':'亮屏','col':'#59D98B','kind':'sw'}] %}
-            {% set sv = states(it.eid) %}
-            {% if it.kind == 'sw' %}
-              {% set ok = sv in ['on','off'] %}
-              {% set txt = '开' if sv == 'on' else ('关' if sv == 'off' else '--') %}
-              {% set onoff = sv == 'on' %}
-            {% elif it.kind == 'sec' %}
-              {% set n = sv | int(-1) %}
-              {% set ok = n >= 0 %}
-              {% set txt = ('--' if n < 0 else (((n // 60) ~ '分') if (n >= 60 and n % 60 == 0) else (n ~ '秒'))) %}
-              {% set onoff = true %}
-            {% else %}
-              {% set n = sv | int(-1) %}
-              {% set ok = n >= 0 %}
-              {% set txt = ('--' if n < 0 else ((n | string) ~ '%')) %}
-              {% set onoff = true %}
-            {% endif %}
-            <div class="c c5" style="height:41px">
-              <ha-icon icon="mdi:{{ it.ic }}" style="--mdc-icon-size:15px;color:{{ it.col }};flex:none"></ha-icon>
-              <span class="s ell">{{ it.nm }}: <span style="color:{% if not ok or not onoff %}#757575{% else %}{{ it.col }}{% endif %}">{{ txt }}</span></span>
-            </div>
-            {% endfor %}
-          </div>
-
           <div class="tab">
             <div class="ti">家居</div>
             <div class="ti">网络</div>
@@ -365,6 +335,40 @@ views:
             <div class="cq btn"><span class="s" style="color:#FFB74D">删除</span></div>
             <div class="cq btn"><span class="s" style="color:#FF5252">全部删除</span></div>
           </div>
+          <!-- 屏幕控制：5 个远程实体（屏显/亮度/超时/休眠/亮屏），分两行 2+3 -->
+          {% set hctl = [
+              {'eid':'light.hmd_remote_screen_power','ic':'monitor','nm':'屏显','col':'#FFB74D','kind':'sw'},
+              {'eid':'number.hmd_remote_brightness','ic':'brightness-6','nm':'亮度','col':'#FFD54F','kind':'num'},
+              {'eid':'number.hmd_remote_sleep_timeout','ic':'timer-sand','nm':'超时','col':'#B39DFF','kind':'sec'},
+              {'eid':'switch.hmd_remote_auto_sleep','ic':'sleep','nm':'休眠','col':'#5AA9FF','kind':'sw'},
+              {'eid':'switch.hmd_remote_notify_wake','ic':'bell-ring','nm':'亮屏','col':'#59D98B','kind':'sw'}] %}
+          {% for grp in [hctl[:2], hctl[2:]] %}
+          <div class="row g{{ grp | length }}">
+            {% for it in grp %}
+            {% set sv = states(it.eid) %}
+            {% if it.kind == 'sw' %}
+              {% set ok = sv in ['on','off'] %}
+              {% set txt = '开' if sv == 'on' else ('关' if sv == 'off' else '--') %}
+              {% set onoff = sv == 'on' %}
+            {% elif it.kind == 'sec' %}
+              {% set n = sv | int(-1) %}
+              {% set ok = n >= 0 %}
+              {% set txt = ('--' if n < 0 else (((n // 60) ~ '分') if (n >= 60 and n % 60 == 0) else (n ~ '秒'))) %}
+              {% set onoff = true %}
+            {% else %}
+              {% set n = sv | int(-1) %}
+              {% set ok = n >= 0 %}
+              {% set txt = ('--' if n < 0 else ((n | string) ~ '%')) %}
+              {% set onoff = true %}
+            {% endif %}
+            <div class="c" style="height:41px">
+              <ha-icon icon="mdi:{{ it.ic }}" style="--mdc-icon-size:16px;color:{{ it.col }};flex:none"></ha-icon>
+              <span class="m ell">{{ it.nm }}: <span style="color:{% if not ok or not onoff %}#757575{% else %}{{ it.col }}{% endif %}">{{ txt }}</span></span>
+            </div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+
 
           <div class="tab">
             <div class="ti">家居</div>
