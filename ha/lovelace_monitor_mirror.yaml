@@ -25,6 +25,10 @@ views:
           .r1{grid-template-columns:41.5fr 24fr 34.5fr}
           .c{background:#1E1E1E;border-radius:10px;border:1px solid #FFF;display:flex;align-items:center;justify-content:flex-start;text-align:left;
             overflow:hidden;padding:0 10px;gap:1px}
+          .c5{padding:0 5px;gap:1px}
+          .c5 .m,.c5 .s{font-size:9px}
+          .c9{padding:0 8px;gap:1px}
+          .c9 .m,.c9 .s{font-size:9px}
           .col{flex-direction:column;align-items:stretch;padding:0;gap:0}
           .ln{display:flex;align-items:center;flex:1 1 0;min-height:19px;padding:0 4px 0 6px;gap:2px;min-width:0}
           .ell{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -39,6 +43,9 @@ views:
           .cq{background:#2A2A2A;border-radius:10px;border:1px solid #FFF;display:flex;align-items:center;justify-content:flex-start;text-align:left;overflow:hidden;padding:0 10px;gap:2px}
           .btn{justify-content:center;height:32px;white-space:nowrap}
           </style>
+          {# 通知图标映射：NR 把 emoji 换成「#RRGGBB <MDI码点>#」内联色标（屏幕端 LVGL 解析），
+             网页端不认这个语法会显示成编码 → 这里按「颜色+码点」还原成 ha-icon。 #}
+          {% set NIM = {'#4FD8FA \U000F001B#':'<ha-icon icon="mdi:air-conditioner" style="--mdc-icon-size:13px;color:#4FD8FA;vertical-align:-2px"></ha-icon>','#4FD8FA \U000F0290#':'<ha-icon icon="mdi:fridge" style="--mdc-icon-size:13px;color:#4FD8FA;vertical-align:-2px"></ha-icon>','#4FD8FA \U000F070D#':'<ha-icon icon="mdi:robot-vacuum" style="--mdc-icon-size:13px;color:#4FD8FA;vertical-align:-2px"></ha-icon>','#59D98B \U000F0079#':'<ha-icon icon="mdi:battery" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0114#':'<ha-icon icon="mdi:cash" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0210#':'<ha-icon icon="mdi:fan" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F034E#':'<ha-icon icon="mdi:map-marker" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0584#':'<ha-icon icon="mdi:wallet" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0595#':'<ha-icon icon="mdi:weather-partly-cloudy" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F059D#':'<ha-icon icon="mdi:weather-windy" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F05A9#':'<ha-icon icon="mdi:wifi" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F05E0#':'<ha-icon icon="mdi:check-circle" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0928#':'<ha-icon icon="mdi:wifi-strength-4" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#59D98B \U000F0D43#':'<ha-icon icon="mdi:air-filter" style="--mdc-icon-size:13px;color:#59D98B;vertical-align:-2px"></ha-icon>','#5AA9FF ●#':'<span style="color:#5AA9FF">&#9679;</span>','#5AA9FF \U000F0004#':'<ha-icon icon="mdi:account" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F00ED#':'<ha-icon icon="mdi:calendar" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F010B#':'<ha-icon icon="mdi:car" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F011C#':'<ha-icon icon="mdi:cellphone" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F0150#':'<ha-icon icon="mdi:clock-outline" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F02DC#':'<ha-icon icon="mdi:home" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F0369#':'<ha-icon icon="mdi:message-text" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F04B9#':'<ha-icon icon="mdi:sofa" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F04DC#':'<ha-icon icon="mdi:store" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F058C#':'<ha-icon icon="mdi:water" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F058E#':'<ha-icon icon="mdi:water-percent" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F0597#':'<ha-icon icon="mdi:weather-rainy" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F072A#':'<ha-icon icon="mdi:washing-machine" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F09A0#':'<ha-icon icon="mdi:shower" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#5AA9FF \U000F0F92#':'<ha-icon icon="mdi:water-boiler" style="--mdc-icon-size:13px;color:#5AA9FF;vertical-align:-2px"></ha-icon>','#757575 ●#':'<span style="color:#757575">&#9679;</span>','#757575 \U000F0004#':'<ha-icon icon="mdi:account" style="--mdc-icon-size:13px;color:#757575;vertical-align:-2px"></ha-icon>','#757575 \U000F00B5#':'<ha-icon icon="mdi:blur" style="--mdc-icon-size:13px;color:#757575;vertical-align:-2px"></ha-icon>','#757575 \U000F0590#':'<ha-icon icon="mdi:weather-cloudy" style="--mdc-icon-size:13px;color:#757575;vertical-align:-2px"></ha-icon>','#757575 \U000F07E4#':'<ha-icon icon="mdi:molecule-co2" style="--mdc-icon-size:13px;color:#757575;vertical-align:-2px"></ha-icon>','#B39DFF \U000F000E#':'<ha-icon icon="mdi:account-multiple" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F029A#':'<ha-icon icon="mdi:gauge" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F02E3#':'<ha-icon icon="mdi:bed" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F0369#':'<ha-icon icon="mdi:message-text" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F04C3#':'<ha-icon icon="mdi:speaker" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F0594#':'<ha-icon icon="mdi:weather-night" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#B39DFF \U000F0FEF#':'<ha-icon icon="mdi:credit-card" style="--mdc-icon-size:13px;color:#B39DFF;vertical-align:-2px"></ha-icon>','#FF5252 ●#':'<span style="color:#FF5252">&#9679;</span>','#FF5252 \U000F0026#':'<ha-icon icon="mdi:alert" style="--mdc-icon-size:13px;color:#FF5252;vertical-align:-2px"></ha-icon>','#FF5252 \U000F0159#':'<ha-icon icon="mdi:close-circle" style="--mdc-icon-size:13px;color:#FF5252;vertical-align:-2px"></ha-icon>','#FF5252 \U000F0238#':'<ha-icon icon="mdi:fire" style="--mdc-icon-size:13px;color:#FF5252;vertical-align:-2px"></ha-icon>','#FF5252 \U000F02D1#':'<ha-icon icon="mdi:heart" style="--mdc-icon-size:13px;color:#FF5252;vertical-align:-2px"></ha-icon>','#FF5252 \U000F0438#':'<ha-icon icon="mdi:radiator" style="--mdc-icon-size:13px;color:#FF5252;vertical-align:-2px"></ha-icon>','#FFB74D ●#':'<span style="color:#FFB74D">&#9679;</span>','#FFB74D \U000F0176#':'<ha-icon icon="mdi:coffee" style="--mdc-icon-size:13px;color:#FFB74D;vertical-align:-2px"></ha-icon>','#FFB74D \U000F04B9#':'<ha-icon icon="mdi:sofa" style="--mdc-icon-size:13px;color:#FFB74D;vertical-align:-2px"></ha-icon>','#FFB74D \U000F050F#':'<ha-icon icon="mdi:thermometer" style="--mdc-icon-size:13px;color:#FFB74D;vertical-align:-2px"></ha-icon>','#FFB74D \U000F0F54#':'<ha-icon icon="mdi:home-thermometer" style="--mdc-icon-size:13px;color:#FFB74D;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0026#':'<ha-icon icon="mdi:alert" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F009A#':'<ha-icon icon="mdi:bell" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0241#':'<ha-icon icon="mdi:flash" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0335#':'<ha-icon icon="mdi:lightbulb" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0369#':'<ha-icon icon="mdi:message-text" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F04CE#':'<ha-icon icon="mdi:star" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0599#':'<ha-icon icon="mdi:weather-sunny" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F05A8#':'<ha-icon icon="mdi:white-balance-sunny" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFD54F \U000F0A72#':'<ha-icon icon="mdi:solar-power" style="--mdc-icon-size:13px;color:#FFD54F;vertical-align:-2px"></ha-icon>','#FFFFFF ●#':'<span style="color:#FFFFFF">&#9679;</span>'} %}
           <div class="hmd">
           <!-- 行1 y5 h50：中文时间 | 天气 | 上证（涨红/跌绿/平白，三件套同步变色） -->
           <div class="c" style="height:50px;gap:4px;justify-content:space-between">
@@ -108,10 +115,14 @@ views:
             <div class="c col" style="height:101px">
               <div class="ttl"><ha-icon icon="mdi:lightbulb-group" style="--mdc-icon-size:16px;color:#4FD8FA"></ha-icon><span>电器动态</span></div>
               <div class="hr"></div>
-              <div class="ln"><ha-icon icon="mdi:lightbulb-group" style="--mdc-icon-size:16px;color:#FFB74D;flex:none"></ha-icon><span class="s ell">电灯: {{ states('sensor.light_on_count') }}</span></div>
-              <div class="ln"><ha-icon icon="mdi:curtains" style="--mdc-icon-size:16px;color:#B39DFF;flex:none"></ha-icon><span class="s ell">窗帘: {{ states('sensor.curtain_closed_count') }}</span></div>
-              <div class="ln"><ha-icon icon="mdi:air-conditioner" style="--mdc-icon-size:16px;color:#59D98B;flex:none"></ha-icon><span class="s ell">空调: {{ states('sensor.climate_on_count') }}</span></div>
-              <div class="ln"><ha-icon icon="mdi:power-plug" style="--mdc-icon-size:16px;color:#5AA9FF;flex:none"></ha-icon><span class="s ell">电器: {{ states('sensor.equipment_on_count') }}</span></div>
+              {% for it in [
+                  {'eid':'sensor.light_on_count','ic':'lightbulb-group','nm':'电灯','tot':'36盏','col':'#FFB74D'},
+                  {'eid':'sensor.curtain_closed_count','ic':'curtains','nm':'窗帘','tot':'6幅','col':'#B39DFF'},
+                  {'eid':'sensor.climate_on_count','ic':'air-conditioner','nm':'空调','tot':'4台','col':'#59D98B'},
+                  {'eid':'sensor.equipment_on_count','ic':'power-plug','nm':'电器','tot':'20台','col':'#5AA9FF'}] %}
+              {% set v = states(it.eid) | int(-1) %}
+              <div class="ln"><ha-icon icon="mdi:{{ it.ic }}" style="--mdc-icon-size:16px;color:{{ it.col }};flex:none"></ha-icon><span class="s ell">{{ it.nm }}: {% if v < 0 %}<span style="color:#757575">--</span>{% else %}{{ v }}/{{ it.tot }}{% endif %}</span></div>
+              {% endfor %}
             </div>
             <div class="c col" style="height:101px">
               <div class="ttl"><ha-icon icon="mdi:lightning-bolt" style="--mdc-icon-size:16px;color:#4FD8FA"></ha-icon><span>今日能耗</span></div>
@@ -161,8 +172,8 @@ views:
                 {'eid':'sensor.device_monitor_count','ic':'devices','nm':'设备','col':'#5AA9FF'},
                 {'eid':'sensor.asr_online_count','ic':'microphone-message','nm':'语音','col':'#59D98B'}] %}
             {% set n = states(cell.eid) | int(-1) %}
-            <div class="c" style="height:41px;color:{% if n < 0 %}#757575{% elif n > 0 %}{{ cell.col }}{% else %}#FF5252{% endif %}">
-              <ha-icon icon="mdi:{{ cell.ic }}" style="--mdc-icon-size:16px;flex:none"></ha-icon>
+            <div class="c c5" style="height:41px;color:{% if n < 0 %}#757575{% elif n > 0 %}{{ cell.col }}{% else %}#FF5252{% endif %}">
+              <ha-icon icon="mdi:{{ cell.ic }}" style="--mdc-icon-size:15px;flex:none"></ha-icon>
               <span class="s ell">{{ cell.nm }}: {{ '--' if n < 0 else n }}</span>
             </div>
             {% endfor %}
@@ -173,9 +184,13 @@ views:
             <div class="c col" style="height:153px">
               <div class="ttl"><ha-icon icon="mdi:lan-connect" style="--mdc-icon-size:16px;color:#4FD8FA"></ha-icon><span>网络运行</span></div>
               <div class="hr"></div>
-              <div class="ln"><ha-icon icon="mdi:router" style="--mdc-icon-size:16px;color:#FFB74D;flex:none"></ha-icon><span class="s ell">路由在线: {{ states('sensor.router_online_count') }}</span></div>
-              <div class="ln"><ha-icon icon="mdi:remote" style="--mdc-icon-size:16px;color:#B39DFF;flex:none"></ha-icon><span class="s ell">控制设备: {{ states('sensor.device_control_count') }}</span></div>
-              <div class="ln"><ha-icon icon="mdi:laptop" style="--mdc-icon-size:16px;color:#59D98B;flex:none"></ha-icon><span class="s ell">终端在线: {{ states('sensor.terminal_online_count') }}</span></div>
+              {% for it in [
+                  {'eid':'sensor.router_online_count','ic':'router','nm':'路由在线','u':'台','col':'#FFB74D'},
+                  {'eid':'sensor.device_control_count','ic':'remote','nm':'控制设备','u':'个','col':'#B39DFF'},
+                  {'eid':'sensor.terminal_online_count','ic':'laptop','nm':'终端在线','u':'个','col':'#59D98B'}] %}
+              {% set v = states(it.eid) | int(-1) %}
+              <div class="ln"><ha-icon icon="mdi:{{ it.ic }}" style="--mdc-icon-size:16px;color:{{ it.col }};flex:none"></ha-icon><span class="s ell">{{ it.nm }}: {% if v < 0 %}<span style="color:#757575">--</span>{% else %}{{ v }}{{ it.u }}{% endif %}</span></div>
+              {% endfor %}
               {% set lb = states('sensor.low_battery_count') | int(-1) %}
               <div class="ln"><ha-icon icon="mdi:battery-alert" style="--mdc-icon-size:16px;color:#5AA9FF;flex:none"></ha-icon><span class="s ell">低电量数: {% if lb < 0 %}<span style="color:#757575">--</span>{% elif lb > 0 %}<span style="color:#FF5252">{{ lb }}个</span>{% else %}{{ lb }}个{% endif %}</span></div>
             </div>
@@ -191,19 +206,19 @@ views:
               {% set dn = states('sensor.lamnas_ws_download_throughput') | int(-1) %}
               <div class="ln"><ha-icon icon="mdi:download" style="--mdc-icon-size:16px;color:#5AA9FF;flex:none"></ha-icon><span class="s ell">下载: {% if dn < 0 %}<span style="color:#757575">--</span>{% elif dn >= 1048576 %}{{ (dn / 1048576) | round(2) }} MB/s{% elif dn >= 1024 %}{{ (dn / 1024) | round(1) }} KB/s{% else %}{{ dn }} B/s{% endif %}</span></div>
             </div>
-            <div class="c col" style="height:153px">
+            <div class="c c9 col" style="height:153px">
               <div class="ttl"><ha-icon icon="mdi:fan" style="--mdc-icon-size:16px;color:#4FD8FA"></ha-icon><span>风扇运行</span></div>
               <div class="hr"></div>
               {% for f in [
-                  {'eid':'fan.fan_pwm_controller_fan_1','ic':'fan','nm':'前扇','col':'#FFB74D'},
-                  {'eid':'fan.fan_pwm_controller_fan_2','ic':'fan','nm':'后扇','col':'#B39DFF'}] %}
+                  {'eid':'fan.fan_pwm_controller_fan_1','ic':'fan','nm':'前扇','col':'#FFB74D','t':'sensor.fan_pwm_controller_temperature','tc':'#FF5252'},
+                  {'eid':'fan.fan_pwm_controller_fan_2','ic':'fan','nm':'后扇','col':'#B39DFF','t':'sensor.miaomiaoc_cn_blt_3_1f33gjhbc4k00_t2_temperature_p_2_1','tc':'#FFB74D'}] %}
               {% set p = state_attr(f.eid,'percentage') | int(0) %}
-              <div class="ln"><ha-icon icon="mdi:{{ f.ic }}" style="--mdc-icon-size:16px;color:{{ f.col }};flex:none"></ha-icon><span class="s ell">{{ f.nm }}:</span><ha-icon icon="mdi:fan" style="--mdc-icon-size:12px;flex:none;color:{% if is_state(f.eid,'off') %}#757575{% else %}{% if p > 80 %}#FF5252{% elif p > 50 %}#FFB74D{% else %}#59D98B{% endif %}{% endif %}"></ha-icon><span class="s ell" style="color:{% if is_state(f.eid,'off') %}#757575{% else %}{% if p > 80 %}#FF5252{% elif p > 50 %}#FFB74D{% else %}#59D98B{% endif %}{% endif %}">{% if is_state(f.eid,'off') %}停{% else %}{{ p }}%{% endif %}</span></div>
+              <div class="ln"><ha-icon icon="mdi:{{ f.ic }}" style="--mdc-icon-size:15px;color:{{ f.col }};flex:none"></ha-icon><span class="s ell">{{ f.nm }}:</span><ha-icon icon="mdi:fan" style="--mdc-icon-size:11px;flex:none;color:{% if is_state(f.eid,'off') %}#757575{% else %}{% if p > 80 %}#FF5252{% elif p > 50 %}#FFB74D{% else %}#59D98B{% endif %}{% endif %}"></ha-icon><span class="s ell" style="color:{% if is_state(f.eid,'off') %}#757575{% else %}{% if p > 80 %}#FF5252{% elif p > 50 %}#FFB74D{% else %}#59D98B{% endif %}{% endif %}">{% if is_state(f.eid,'off') %}停{% else %}{{ p }}%{% endif %}</span>{% set tv = states(f.t) | float(-999) %}<ha-icon icon="mdi:thermometer" style="--mdc-icon-size:11px;color:{{ f.tc }};flex:none;margin-left:2px"></ha-icon><span class="s ell" style="color:{% if tv > -999 %}#FFF{% else %}#757575{% endif %}">{% if tv > -999 %}{{ tv | round(0) | int }}℃{% else %}--{% endif %}</span></div>
               {% endfor %}
               {% for sw in [
-                  {'eid':'switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1','ic':'fan-chevron-down','nm':'进扇','col':'#59D98B'},
-                  {'eid':'switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2','ic':'fan-chevron-up','nm':'出扇','col':'#5AA9FF'}] %}
-              <div class="ln"><ha-icon icon="mdi:{{ sw.ic }}" style="--mdc-icon-size:16px;color:{{ sw.col }};flex:none"></ha-icon><span class="s ell">{{ sw.nm }}:</span><ha-icon icon="mdi:fan" style="--mdc-icon-size:12px;flex:none;color:{{ '#59D98B' if is_state(sw.eid,'on') else '#757575' }}"></ha-icon><span class="s ell" style="color:{{ '#59D98B' if is_state(sw.eid,'on') else '#757575' }}">{{ '开' if is_state(sw.eid,'on') else '关' }}</span></div>
+                  {'eid':'switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_1','ic':'fan-chevron-down','nm':'进扇','col':'#59D98B','t':'sensor.miaomiaoc_cn_blt_3_1f308atcc4o01_t2_temperature_p_2_1','tc':'#FFD54F'},
+                  {'eid':'switch.ruo_dian_xiang_feng_shan_sonoff_1002b4248d_2','ic':'fan-chevron-up','nm':'出扇','col':'#5AA9FF','t':'sensor.miaomiaoc_cn_blt_3_1fpsendsc4g01_t2_temperature_p_2_1','tc':'#59D98B'}] %}
+              <div class="ln"><ha-icon icon="mdi:{{ sw.ic }}" style="--mdc-icon-size:15px;color:{{ sw.col }};flex:none"></ha-icon><span class="s ell">{{ sw.nm }}:</span><ha-icon icon="mdi:fan" style="--mdc-icon-size:11px;flex:none;color:{{ '#59D98B' if is_state(sw.eid,'on') else '#757575' }}"></ha-icon><span class="s ell" style="color:{{ '#59D98B' if is_state(sw.eid,'on') else '#757575' }}">{{ '开' if is_state(sw.eid,'on') else '关' }}</span>{% set tv = states(sw.t) | float(-999) %}<ha-icon icon="mdi:thermometer" style="--mdc-icon-size:11px;color:{{ sw.tc }};flex:none;margin-left:2px"></ha-icon><span class="s ell" style="color:{% if tv > -999 %}#FFF{% else %}#757575{% endif %}">{% if tv > -999 %}{{ tv | round(0) | int }}℃{% else %}--{% endif %}</span></div>
               {% endfor %}
             </div>
           </div>
@@ -224,15 +239,17 @@ views:
             <span class="m ell" style="flex:none">运行: {% if mins >= 1440 %}{{ '%d天%d小时' | format(mins // 1440, (mins % 1440) // 60) }}{% elif mins >= 60 %}{{ '%d小时%d分' | format(mins // 60, mins % 60) }}{% else %}{{ mins }}分钟{% endif %}</span>
           </div>
 
-          <!-- 行2 y58 h49：SSID | IP（屏幕自身 WiFi 信息） -->
+          <!-- 行2 y58 h49：SSID | IP（屏幕在外网时取不到 → 显示「公网 / 动态」而不是 unavailable） -->
           <div class="row g2">
+            {% set ssid = states('sensor.ha_monitor_display_wifi_ssid') %}
+            {% set ip = states('sensor.ha_monitor_display_ip_address') %}
             <div class="c" style="height:49px;gap:5px">
               <ha-icon icon="mdi:wifi" style="--mdc-icon-size:16px;color:#5AA9FF;flex:none"></ha-icon>
-              <span class="m ell">SSID: {{ states('sensor.ha_monitor_display_wifi_ssid') }}</span>
+              <span class="m ell">SSID: {% if ssid not in ['unknown','unavailable','','None'] %}{{ ssid }}{% else %}公网{% endif %}</span>
             </div>
             <div class="c" style="height:49px;gap:5px">
               <ha-icon icon="mdi:web" style="--mdc-icon-size:16px;color:#FFD54F;flex:none"></ha-icon>
-              <span class="m ell">IP: {{ states('sensor.ha_monitor_display_ip_address') }}</span>
+              <span class="m ell">IP: {% if ip not in ['unknown','unavailable','','None'] %}{{ ip }}{% else %}动态{% endif %}</span>
             </div>
           </div>
 
@@ -271,6 +288,37 @@ views:
             </div>
           </div>
 
+          <!-- 屏幕控制 y：5 个远程实体（开关/亮度/超时/休眠/亮屏），只读镜像本页风格 -->
+          <div class="row g5">
+            {% for it in [
+                {'eid':'light.hmd_remote_screen_power','ic':'monitor','nm':'屏显','col':'#FFB74D','kind':'sw'},
+                {'eid':'number.hmd_remote_brightness','ic':'brightness-6','nm':'亮度','col':'#FFD54F','kind':'num'},
+                {'eid':'number.hmd_remote_sleep_timeout','ic':'timer-sand','nm':'超时','col':'#B39DFF','kind':'sec'},
+                {'eid':'switch.hmd_remote_auto_sleep','ic':'sleep','nm':'休眠','col':'#5AA9FF','kind':'sw'},
+                {'eid':'switch.hmd_remote_notify_wake','ic':'bell-ring','nm':'亮屏','col':'#59D98B','kind':'sw'}] %}
+            {% set sv = states(it.eid) %}
+            {% if it.kind == 'sw' %}
+              {% set ok = sv in ['on','off'] %}
+              {% set txt = '开' if sv == 'on' else ('关' if sv == 'off' else '--') %}
+              {% set onoff = sv == 'on' %}
+            {% elif it.kind == 'sec' %}
+              {% set n = sv | int(-1) %}
+              {% set ok = n >= 0 %}
+              {% set txt = ('--' if n < 0 else (((n // 60) ~ '分') if (n >= 60 and n % 60 == 0) else (n ~ '秒'))) %}
+              {% set onoff = true %}
+            {% else %}
+              {% set n = sv | int(-1) %}
+              {% set ok = n >= 0 %}
+              {% set txt = ('--' if n < 0 else ((n | string) ~ '%')) %}
+              {% set onoff = true %}
+            {% endif %}
+            <div class="c c5" style="height:41px">
+              <ha-icon icon="mdi:{{ it.ic }}" style="--mdc-icon-size:15px;color:{{ it.col }};flex:none"></ha-icon>
+              <span class="s ell">{{ it.nm }}: <span style="color:{% if not ok or not onoff %}#757575{% else %}{{ it.col }}{% endif %}">{{ txt }}</span></span>
+            </div>
+            {% endfor %}
+          </div>
+
           <div class="tab">
             <div class="ti">家居</div>
             <div class="ti">网络</div>
@@ -302,7 +350,10 @@ views:
             {% else %}
             <div style="padding:10px 14px;width:100%;min-width:0">
               <div class="m" style="color:#4FD8FA;margin-bottom:6px">{{ state_attr('sensor.hmd_last_notify','title') or '' }}</div>
-              <div class="s" style="line-height:19px;color:#DDD;white-space:pre-wrap">{{ state_attr('sensor.hmd_last_notify','message') or n }}</div>
+              {% set ns = namespace(m=(state_attr('sensor.hmd_last_notify','message') or n)) %}
+              {% for k, v in NIM.items() %}{% set ns.m = ns.m | replace(k, v) %}{% endfor %}
+              {% set ns.m = ns.m | regex_replace(find='#[0-9A-Fa-f]{6} ?[\uE000-\uF8FF\U000F0000-\U000FFFFD\u25CF]#', replace='', ignorecase=False) %}
+              <div class="s" style="line-height:19px;color:#DDD;white-space:pre-wrap">{{ ns.m }}</div>
             </div>
             {% endif %}
           </div>
