@@ -104,7 +104,7 @@ views:
           {% endfor %}
 
           <!-- 行1 y5 h50：中文时间 | 天气 | 上证（涨红/跌绿/平白，三件套同步变色） -->
-          <div class="c hd" style="height:50px;gap:4px;justify-content:space-between">
+          <div class="c hd pgap" style="height:50px;gap:4px;justify-content:space-between">
             <span class="m ell" style="min-width:0">{{ states('sensor.zhong_wen_shi_jian') }}</span>
             <div style="display:flex;align-items:center;gap:4px;flex:none">
               <ha-icon icon="mdi:weather-partly-cloudy" style="--mdc-icon-size:16px;color:#4FD8FA;flex:none"></ha-icon>
