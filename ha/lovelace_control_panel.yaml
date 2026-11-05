@@ -24,9 +24,18 @@ views:
       secondary: "{{ state_attr('sensor.family_home_count','family_count').family_home_list }}"
       multiline_secondary: true
       color: "{{ 'amber' if states('sensor.family_home_count')|int(0) > 0 else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.huo_dong_gui_ji
       icon: mdi:radar
@@ -35,9 +44,18 @@ views:
       secondary: "{% set t = state_attr('sensor.huo_dong_gui_ji','motion_time') %}{{ t | as_timestamp | timestamp_custom('%H:%M') if t else '最近没有走动' }}"
       multiline_secondary: true
       color: "{{ 'amber' if not is_state('sensor.huo_dong_gui_ji','未活动') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.ju_jia_mo_shi
       icon: mdi:home-heart
@@ -46,9 +64,18 @@ views:
       secondary: "{{ state_attr('sensor.ju_jia_mo_shi','home_count') }} 人 · 音量 {{ state_attr('sensor.ju_jia_mo_shi','volume_percent') }}"
       multiline_secondary: true
       color: amber
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: switch.voice_broadcast
       icon: mdi:bullhorn
@@ -56,9 +83,18 @@ views:
       secondary: "{{ '开' if is_state('switch.voice_broadcast','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'amber' if is_state('switch.voice_broadcast','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: grid
     columns: 2
     square: false
@@ -70,9 +106,18 @@ views:
       secondary: "{{ state_attr('sensor.light_on_count','light_on_count') | default(states('sensor.light_on_count')) }} / {{ state_attr('sensor.light_on_count','light_all_count') }} 盏"
       multiline_secondary: true
       color: "{{ 'amber' if is_state('light.quan_wu_deng_guang','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: cover.quan_wu_chuang_lian
       icon: mdi:curtains
@@ -80,16 +125,24 @@ views:
       secondary: "{{ state_attr('sensor.curtain_closed_count','curtain_open_count') }} 开 · {{ state_attr('sensor.curtain_closed_count','curtain_closed_count') }} 关"
       multiline_secondary: true
       color: "{{ 'amber' if is_state('cover.quan_wu_chuang_lian','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       icon: mdi:snowflake-off
       primary: 空调全关
       secondary: "{{ states('sensor.climate_on_count') }} / {{ state_attr('sensor.climate_on_count','climate_all_count') }} 运行"
       multiline_secondary: true
       color: light-blue
-      vertical: true
       icon_tap_action:
         action: call-service
         service: climate.turn_off
@@ -99,6 +152,16 @@ views:
           - climate.208907213270301_climate
           - climate.210006724901473_climate
           - climate.210006724901502_climate
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: vacuum.ding_dang
       icon: mdi:robot-vacuum
@@ -106,9 +169,18 @@ views:
       secondary: "{% set vm = {'error':'异常','docked':'已回充','cleaning':'清扫中','returning':'返航中','idle':'待机','paused':'暂停','unavailable':'离线'} %}{{ vm.get(states('vacuum.ding_dang'), states('vacuum.ding_dang')) }} · {% set fm = {'quiet':'安静','normal':'标准','max':'强力','max_plus':'超强'} %}{{ fm.get(state_attr('vacuum.ding_dang','fan_speed'), state_attr('vacuum.ding_dang','fan_speed')) }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('vacuum.ding_dang','error') else 'amber' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: custom:mushroom-template-card
     icon: mdi:shield-home-outline
     primary: 安防
@@ -118,6 +190,16 @@ views:
     icon_tap_action:
       action: navigate
       navigation_path: /control/security
+    card_mod:
+      style: |-
+        ha-card {
+          --mush-card-primary-font-size: 13.5px;
+          --mush-card-primary-line-height: 17px;
+          --mush-card-secondary-font-size: 11.5px;
+          --mush-card-secondary-line-height: 14px;
+          --mush-icon-size: 34px;
+          padding: 8px 10px !important;
+        }
     tap_action:
       action: navigate
       navigation_path: /control/security
@@ -132,9 +214,18 @@ views:
       secondary: "¥ {{ states('sensor.jin_ri_dian_fei') }}"
       multiline_secondary: true
       color: amber
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.tasmota_energy_today
       icon: mdi:flash
@@ -142,9 +233,18 @@ views:
       secondary: "{{ states('sensor.tasmota_energy_today') | round(2) }} 度"
       multiline_secondary: true
       color: light-blue
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.maze_wateronev3_tp_f8e644_daily_water_usage
       icon: mdi:water
@@ -152,9 +252,18 @@ views:
       secondary: "{{ states('sensor.maze_wateronev3_tp_f8e644_daily_water_usage') | round(1) }} L"
       multiline_secondary: true
       color: cyan
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.ri_yong_qi_liang
       icon: mdi:fire
@@ -162,9 +271,18 @@ views:
       secondary: "{{ states('sensor.ri_yong_qi_liang') }} m³"
       multiline_secondary: true
       color: deep-orange
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: grid
     columns: 1
     square: false
@@ -173,22 +291,42 @@ views:
       entity: sensor.wo_de_jia_xuan_yi_distance
       icon: mdi:car
       primary: "轩逸 · {{ states('sensor.wo_de_jia_xuan_yi_distance') | round(2) }} km"
-      secondary: "{{ states('sensor.xuan_yi_che_liang_zhuang_tai') }} · {{ states('sensor.xuan_yi_ting_che_shi_chang') }} · 电瓶 {{ states('sensor.xuan_yi_dian_chi_dian_ya') }}V"
+      secondary: "{{ states('sensor.xuan_yi_che_liang_zhuang_tai') }} · 电瓶 {{ states('sensor.xuan_yi_dian_chi_dian_ya') }}V"
       multiline_secondary: true
       color: "{{ 'amber' if states('sensor.wo_de_jia_xuan_yi_distance')|float(9) > 0.3 else 'grey' }}"
       icon_tap_action:
         action: navigate
         navigation_path: /gaode_maps
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.wo_de_jia_bi_ya_di_distance
       icon: mdi:car-electric
       primary: "比亚迪 · {{ states('sensor.wo_de_jia_bi_ya_di_distance') | round(2) }} km"
-      secondary: "{{ states('sensor.byd_yuan_sheng_yu_dian_liang') }}% · 续航 {{ states('sensor.byd_yuan_sheng_yu_xu_hang') }}km · {{ states('sensor.byd_yuan_men_suo_zhuang_tai') }}"
+      secondary: "剩 {{ states('sensor.byd_yuan_sheng_yu_dian_liang') }}% · 续航 {{ states('sensor.byd_yuan_sheng_yu_xu_hang') }}km · {{ states('sensor.byd_yuan_men_suo_zhuang_tai') }}"
       multiline_secondary: true
       color: "{{ 'cyan' if states('sensor.wo_de_jia_bi_ya_di_distance')|float(9) > 0.3 else 'grey' }}"
       icon_tap_action:
         action: navigate
         navigation_path: /gaode_maps
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.wo_de_jia_dian_dong_che_distance
       icon: mdi:bicycle
@@ -199,6 +337,35 @@ views:
       icon_tap_action:
         action: navigate
         navigation_path: /gaode_maps
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
+    - type: custom:mushroom-template-card
+      entity: sensor.zhi_hui_ting_che_che_liang_xin_xi
+      icon: mdi:parking
+      primary: "智慧停车 · {{ states('sensor.zhi_hui_ting_che_che_liang_xin_xi') }}"
+      secondary: "钱包 ¥{{ states('sensor.zhi_hui_ting_che_qian_bao_yu_e') }} · {{ states('sensor.zhi_hui_ting_che_dai_jiao_ding_dan') }} · 年卡 {{ states('sensor.zhi_hui_ting_che_nian_ka_xin_xi') }}"
+      multiline_secondary: true
+      color: amber
+      icon_tap_action:
+        action: navigate
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: custom:html-template-card
     content: |-
       <div style="padding:4px 6px"><div style="font-size:12.5px;line-height:1.75;opacity:.8">{{ state_attr('sensor.gong_gong_xin_xi','fund').digest | replace('\n','<br>') }}<br>{{ state_attr('sensor.gong_gong_xin_xi','term').digest | replace('\n','<br>') }}<br>{{ state_attr('sensor.gong_gong_xin_xi','other').digest | replace('\n','<br>') }}</div></div>
@@ -221,6 +388,16 @@ views:
       color: "{{ 'amber' if is_state('light.ke_ting_deng_guang','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 2
       square: false
@@ -232,9 +409,18 @@ views:
         secondary: "{% set n = (state_attr('light.ke_ting_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.ke_ting_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.ke_ting_deng_guang','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
       - type: custom:mushroom-template-card
         entity: climate.208907215082288_climate
         icon: mdi:air-conditioner
@@ -242,9 +428,18 @@ views:
         secondary: "{% set m = {'off': '关', 'cool': '冷', 'heat': '热', 'dry': '除湿', 'fan_only': '送风', 'auto': '自动', 'unavailable': '离线'} %}{{ m.get(states('climate.208907215082288_climate'), states('climate.208907215082288_climate')) }}"
         multiline_secondary: true
         color: "{{ 'light-blue' if not is_state('climate.208907215082288_climate','off') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: more-info
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -257,6 +452,16 @@ views:
       color: "{{ 'amber' if is_state('light.can_ting_deng_guang','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 2
       square: false
@@ -268,9 +473,18 @@ views:
         secondary: "{% set n = (state_attr('light.can_ting_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.can_ting_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.can_ting_deng_guang','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
       - type: custom:mushroom-template-card
         entity: cover.sonoff_100237ed13
         icon: mdi:curtains
@@ -278,9 +492,18 @@ views:
         secondary: "{{ '关' if is_state('cover.sonoff_100237ed13','closed') else '开' }}"
         multiline_secondary: true
         color: "{{ 'amber' if not is_state('cover.sonoff_100237ed13','closed') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -293,6 +516,16 @@ views:
       color: "{{ 'amber' if is_state('light.chu_fang_deng_guang','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 1
       square: false
@@ -304,9 +537,18 @@ views:
         secondary: "{% set n = (state_attr('light.chu_fang_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.chu_fang_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.chu_fang_deng_guang','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -319,6 +561,16 @@ views:
       color: "{{ 'amber' if is_state('light.zhu_wo_deng_guang','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 3
       square: false
@@ -330,9 +582,18 @@ views:
         secondary: "{% set n = (state_attr('light.zhu_wo_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.zhu_wo_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.zhu_wo_deng_guang','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
       - type: custom:mushroom-template-card
         entity: cover.lumi_hmcn02_ecb8_curtain
         icon: mdi:curtains
@@ -340,9 +601,18 @@ views:
         secondary: "{{ '关' if is_state('cover.lumi_hmcn02_ecb8_curtain','closed') else '开' }}"
         multiline_secondary: true
         color: "{{ 'amber' if not is_state('cover.lumi_hmcn02_ecb8_curtain','closed') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
       - type: custom:mushroom-template-card
         entity: climate.208907213270301_climate
         icon: mdi:air-conditioner
@@ -350,9 +620,18 @@ views:
         secondary: "{% set m = {'off': '关', 'cool': '冷', 'heat': '热', 'dry': '除湿', 'fan_only': '送风', 'auto': '自动', 'unavailable': '离线'} %}{{ m.get(states('climate.208907213270301_climate'), states('climate.208907213270301_climate')) }}"
         multiline_secondary: true
         color: "{{ 'light-blue' if not is_state('climate.208907213270301_climate','off') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: more-info
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -365,6 +644,16 @@ views:
       color: "{{ 'amber' if is_state('light.ci_wo_deng_guang','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 3
       square: false
@@ -376,9 +665,18 @@ views:
         secondary: "{% set n = (state_attr('light.ci_wo_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.ci_wo_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.ci_wo_deng_guang','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
       - type: custom:mushroom-template-card
         entity: cover.ciwo_curtain
         icon: mdi:curtains
@@ -386,9 +684,18 @@ views:
         secondary: "{{ '关' if is_state('cover.ciwo_curtain','closed') else '开' }}"
         multiline_secondary: true
         color: "{{ 'amber' if not is_state('cover.ciwo_curtain','closed') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
       - type: custom:mushroom-template-card
         entity: climate.210006724901473_climate
         icon: mdi:air-conditioner
@@ -396,9 +703,18 @@ views:
         secondary: "{% set m = {'off': '关', 'cool': '冷', 'heat': '热', 'dry': '除湿', 'fan_only': '送风', 'auto': '自动', 'unavailable': '离线'} %}{{ m.get(states('climate.210006724901473_climate'), states('climate.210006724901473_climate')) }}"
         multiline_secondary: true
         color: "{{ 'light-blue' if not is_state('climate.210006724901473_climate','off') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: more-info
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -411,6 +727,16 @@ views:
       color: "{{ 'amber' if is_state('light.shu_fang_deng_guang','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 3
       square: false
@@ -422,9 +748,18 @@ views:
         secondary: "{% set n = (state_attr('light.shu_fang_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.shu_fang_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.shu_fang_deng_guang','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
       - type: custom:mushroom-template-card
         entity: cover.shufang_curtain
         icon: mdi:curtains
@@ -432,9 +767,18 @@ views:
         secondary: "{{ '关' if is_state('cover.shufang_curtain','closed') else '开' }}"
         multiline_secondary: true
         color: "{{ 'amber' if not is_state('cover.shufang_curtain','closed') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
       - type: custom:mushroom-template-card
         entity: climate.210006724901502_climate
         icon: mdi:air-conditioner
@@ -442,9 +786,18 @@ views:
         secondary: "{% set m = {'off': '关', 'cool': '冷', 'heat': '热', 'dry': '除湿', 'fan_only': '送风', 'auto': '自动', 'unavailable': '离线'} %}{{ m.get(states('climate.210006724901502_climate'), states('climate.210006724901502_climate')) }}"
         multiline_secondary: true
         color: "{{ 'light-blue' if not is_state('climate.210006724901502_climate','off') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: more-info
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -457,6 +810,16 @@ views:
       color: "{{ 'amber' if is_state('light.yang_tai_deng_guang','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 2
       square: false
@@ -468,9 +831,18 @@ views:
         secondary: "{% set n = (state_attr('light.yang_tai_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.yang_tai_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.yang_tai_deng_guang','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
       - type: custom:mushroom-template-card
         entity: cover.yang_tai_chuang_lian
         icon: mdi:curtains
@@ -478,9 +850,18 @@ views:
         secondary: "{{ '关' if is_state('cover.yang_tai_chuang_lian','closed') else '开' }}"
         multiline_secondary: true
         color: "{{ 'amber' if not is_state('cover.yang_tai_chuang_lian','closed') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -493,6 +874,16 @@ views:
       color: "{{ 'amber' if is_state('light.zhu_wei_deng_guang','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 1
       square: false
@@ -504,9 +895,18 @@ views:
         secondary: "{% set n = (state_attr('light.zhu_wei_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.zhu_wei_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.zhu_wei_deng_guang','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -519,6 +919,16 @@ views:
       color: "{{ 'amber' if is_state('light.gong_wei_deng_guang','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 1
       square: false
@@ -530,9 +940,18 @@ views:
         secondary: "{% set n = (state_attr('light.gong_wei_deng_guang','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.gong_wei_deng_guang','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.gong_wei_deng_guang','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -545,6 +964,16 @@ views:
       color: "{{ 'amber' if is_state('light.shui_fang_deng_switch','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 1
       square: false
@@ -556,9 +985,18 @@ views:
         secondary: "{% set n = (state_attr('light.shui_fang_deng_switch','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.shui_fang_deng_switch','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.shui_fang_deng_switch','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
   - type: custom:stack-in-card
     mode: vertical
     cards:
@@ -571,6 +1009,16 @@ views:
       color: "{{ 'amber' if is_state('light.ji_gui_qian_deng_switch','on') else 'grey' }}"
       icon_tap_action:
         action: toggle
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: grid
       columns: 1
       square: false
@@ -582,9 +1030,18 @@ views:
         secondary: "{% set n = (state_attr('light.ji_gui_qian_deng_switch','entity_id') or []) | count %}{{ (n ~ ' 路 · ') if n else '' }}{{ '开' if is_state('light.ji_gui_qian_deng_switch','on') else '关' }}"
         multiline_secondary: true
         color: "{{ 'amber' if is_state('light.ji_gui_qian_deng_switch','on') else 'grey' }}"
-        vertical: true
         icon_tap_action:
           action: toggle
+        card_mod:
+          style: |-
+            ha-card {
+              --mush-card-primary-font-size: 12.5px;
+              --mush-card-primary-line-height: 16px;
+              --mush-card-secondary-font-size: 11px;
+              --mush-card-secondary-line-height: 13px;
+              --mush-icon-size: 28px;
+              padding: 7px 8px !important;
+            }
 - title: 安防
   path: security
   icon: mdi:shield-home-outline
@@ -606,9 +1063,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec82f917_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec82f917_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaec830af5_contact
       icon: mdi:door-open
@@ -616,9 +1082,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec830af5_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec830af5_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaecaacf62_contact
       icon: mdi:door-open
@@ -626,9 +1101,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaecaacf62_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaecaacf62_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaecab36c0_contact
       icon: mdi:door-open
@@ -636,9 +1120,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaecab36c0_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaecab36c0_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaec8a8821_contact
       icon: mdi:door-open
@@ -646,9 +1139,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec8a8821_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec8a8821_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaec8d0598_contact
       icon: mdi:door-open
@@ -656,9 +1158,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec8d0598_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec8d0598_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaec8a3d86_contact
       icon: mdi:door-open
@@ -666,9 +1177,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec8a3d86_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec8a3d86_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaec8d2481_contact
       icon: mdi:door-open
@@ -676,9 +1196,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec8d2481_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec8d2481_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaec8d1bf9_contact
       icon: mdi:door-open
@@ -686,9 +1215,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec8d1bf9_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec8d1bf9_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaec8a568f_contact
       icon: mdi:door-open
@@ -696,9 +1234,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec8a568f_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec8a568f_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaecabbe5f_contact
       icon: mdi:door-open
@@ -706,9 +1253,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaecabbe5f_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaecabbe5f_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: custom:html-template-card
     content: |-
       <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:4px 6px 0">窗 · 帘 · 4</div></div>
@@ -723,9 +1279,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec8a2f3e_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec8a2f3e_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaecd80bcc_contact
       icon: mdi:window-open-variant
@@ -733,9 +1298,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaecd80bcc_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaecd80bcc_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaec92af35_contact
       icon: mdi:window-open-variant
@@ -743,9 +1317,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec92af35_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec92af35_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.e4aaec92af38_contact
       icon: mdi:window-open-variant
@@ -753,9 +1336,18 @@ views:
       secondary: "{{ '开' if is_state('binary_sensor.e4aaec92af38_contact','on') else '关' }}"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.e4aaec92af38_contact','on') else 'grey' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: custom:html-template-card
     content: |-
       <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:4px 6px 0">环境告警</div></div>
@@ -770,9 +1362,18 @@ views:
       secondary: "{{ '告警' if is_state('binary_sensor.18c23c2c8f38_smoke','on') else '正常' }} · 厨房"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.18c23c2c8f38_smoke','on') else 'green' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.gas_alarm_sensor_gas_alarm
       icon: mdi:fire-alert
@@ -780,9 +1381,18 @@ views:
       secondary: "{{ '告警' if is_state('binary_sensor.gas_alarm_sensor_gas_alarm','on') else '正常' }} · 水房"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.gas_alarm_sensor_gas_alarm','on') else 'green' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.18c23c2f9184_water_leak
       icon: mdi:water-alert
@@ -790,9 +1400,18 @@ views:
       secondary: "{{ '告警' if is_state('binary_sensor.18c23c2f9184_water_leak','on') else '正常' }} · 水房"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.18c23c2f9184_water_leak','on') else 'green' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: binary_sensor.maze_wateronev3_tp_f8e644_water
       icon: mdi:pipe-leak
@@ -800,16 +1419,31 @@ views:
       secondary: "{{ '告警' if is_state('binary_sensor.maze_wateronev3_tp_f8e644_water','on') else '正常' }} · 阳台"
       multiline_secondary: true
       color: "{{ 'red' if is_state('binary_sensor.maze_wateronev3_tp_f8e644_water','on') else 'green' }}"
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: custom:html-template-card
     content: |-
       <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:4px 6px 0">监控</div></div>
-  - type: custom:webrtc-camera
-    entity: camera.da_men_jian_kong
-  - type: custom:webrtc-camera
-    entity: camera.hou_men_jian_kong
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:12px;background:var(--ha-card-background,#1c1c1e);border:1px solid var(--divider-color,#2a2a2a)"><span style="font-size:13.5px">大门监控</span><span style="font-size:12.5px;color:{% set s = states('camera.da_men_jian_kong') %}{{ '#FF5252' if s in ['unavailable','unknown',''] else '#59D98B' }}">{% set s = states('camera.da_men_jian_kong') %}{% set off = s in ['unavailable','unknown',''] %}{{ '离线' if off else '在线' }}</span></div></div>
+    - type: custom:html-template-card
+      content: |-
+        <div style="padding:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:12px;background:var(--ha-card-background,#1c1c1e);border:1px solid var(--divider-color,#2a2a2a)"><span style="font-size:13.5px">后门监控</span><span style="font-size:12.5px;color:{% set s = states('camera.hou_men_jian_kong') %}{{ '#FF5252' if s in ['unavailable','unknown',''] else '#59D98B' }}">{% set s = states('camera.hou_men_jian_kong') %}{% set off = s in ['unavailable','unknown',''] %}{{ '离线' if off else '在线' }}</span></div></div>
 - title: 能源
   path: energy
   icon: mdi:lightning-bolt-outline
@@ -825,9 +1459,18 @@ views:
       secondary: "¥ {{ states('sensor.jin_ri_dian_fei') }}"
       multiline_secondary: true
       color: amber
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.tasmota_energy_today
       icon: mdi:flash
@@ -835,9 +1478,18 @@ views:
       secondary: "{{ states('sensor.tasmota_energy_today') | round(2) }} 度"
       multiline_secondary: true
       color: light-blue
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.maze_wateronev3_tp_f8e644_daily_water_usage
       icon: mdi:water
@@ -845,9 +1497,18 @@ views:
       secondary: "{{ states('sensor.maze_wateronev3_tp_f8e644_daily_water_usage') | round(1) }} L"
       multiline_secondary: true
       color: cyan
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.ri_yong_qi_liang
       icon: mdi:fire
@@ -855,9 +1516,18 @@ views:
       secondary: "{{ states('sensor.ri_yong_qi_liang') }} m³"
       multiline_secondary: true
       color: deep-orange
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: grid
     columns: 2
     square: false
@@ -869,9 +1539,18 @@ views:
       secondary: "¥ {{ states('sensor.ben_yue_dian_fei') }}"
       multiline_secondary: true
       color: amber
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.yue_yong_dian_liang
       icon: mdi:meter-electric
@@ -879,9 +1558,18 @@ views:
       secondary: "{{ states('sensor.yue_yong_dian_liang') | round(1) }} 度"
       multiline_secondary: true
       color: light-blue
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.zuo_ri_dian_fei
       icon: mdi:history
@@ -889,9 +1577,18 @@ views:
       secondary: "¥ {{ states('sensor.zuo_ri_dian_fei') }}"
       multiline_secondary: true
       color: grey
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.shi_shi_dian_jie
       icon: mdi:tag
@@ -899,9 +1596,18 @@ views:
       secondary: "¥ {{ states('sensor.shi_shi_dian_jie') }} /度"
       multiline_secondary: true
       color: grey
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: custom:mini-graph-card
     name: 功率趋势 24h
     hours_to_show: 24
@@ -926,9 +1632,18 @@ views:
       secondary: "{{ states('sensor.tasmota_energy_voltage') }} V"
       multiline_secondary: true
       color: light-blue
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.tasmota_energy_current
       icon: mdi:current-ac
@@ -936,9 +1651,18 @@ views:
       secondary: "{{ states('sensor.tasmota_energy_current') | round(1) }} A"
       multiline_secondary: true
       color: light-blue
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: custom:html-template-card
     content: |-
       <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:2px 6px 0">净水</div></div>
@@ -953,9 +1677,18 @@ views:
       secondary: "{{ states('sensor.maze_wateronev3_tp_f8e644') | round(2) }} bar"
       multiline_secondary: true
       color: cyan
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.maze_wateronev3_tp_f8e644_tds
       icon: mdi:thermometer-water
@@ -963,9 +1696,18 @@ views:
       secondary: "{{ states('sensor.maze_wateronev3_tp_f8e644_tds') }}°C"
       multiline_secondary: true
       color: cyan
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.maze_wateronev3_tp_f8e644_tdsin
       icon: mdi:water-opacity
@@ -973,9 +1715,18 @@ views:
       secondary: "{{ states('sensor.maze_wateronev3_tp_f8e644_tdsin') }} ppm"
       multiline_secondary: true
       color: grey
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.maze_wateronev3_tp_f8e644_tdsout
       icon: mdi:water-check
@@ -983,9 +1734,18 @@ views:
       secondary: "{{ states('sensor.maze_wateronev3_tp_f8e644_tdsout') }} ppm"
       multiline_secondary: true
       color: green
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: custom:html-template-card
     content: |-
       <div style="padding:0"><div style="font-size:12px;opacity:.55;padding:2px 6px 0">空调能耗</div></div>
@@ -1000,9 +1760,18 @@ views:
       secondary: "{{ states('sensor.208907215082288_realtime_power') }} W"
       multiline_secondary: true
       color: light-blue
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.208907213270301_realtime_power
       icon: mdi:air-conditioner
@@ -1010,9 +1779,18 @@ views:
       secondary: "{{ states('sensor.208907213270301_realtime_power') }} W"
       multiline_secondary: true
       color: light-blue
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.210006724901473_realtime_power
       icon: mdi:air-conditioner
@@ -1020,9 +1798,18 @@ views:
       secondary: "{{ states('sensor.210006724901473_realtime_power') }} W"
       multiline_secondary: true
       color: light-blue
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
     - type: custom:mushroom-template-card
       entity: sensor.210006724901502_realtime_power
       icon: mdi:air-conditioner
@@ -1030,188 +1817,18 @@ views:
       secondary: "{{ states('sensor.210006724901502_realtime_power') }} W"
       multiline_secondary: true
       color: light-blue
-      vertical: true
       icon_tap_action:
         action: more-info
+      card_mod:
+        style: |-
+          ha-card {
+            --mush-card-primary-font-size: 13.5px;
+            --mush-card-primary-line-height: 17px;
+            --mush-card-secondary-font-size: 11.5px;
+            --mush-card-secondary-line-height: 14px;
+            --mush-icon-size: 34px;
+            padding: 8px 10px !important;
+          }
   - type: custom:html-template-card
     content: |-
       <div style="padding:4px 6px"><div style="font-size:12.5px;line-height:1.7;opacity:.8">{{ state_attr('sensor.fei_yong_gai_kuang','message1') }}<br><span style="opacity:.7">{{ state_attr('sensor.fei_yong_gai_kuang','data_time') }}</span></div></div>
-- title: 车
-  path: cars
-  icon: mdi:car-multiple
-  cards:
-  - type: custom:stack-in-card
-    mode: vertical
-    cards:
-    - type: custom:mushroom-template-card
-      entity: sensor.wo_de_jia_bi_ya_di_distance
-      icon: mdi:car-electric
-      primary: "比亚迪 · {{ states('sensor.wo_de_jia_bi_ya_di_distance') | round(2) }} km"
-      secondary: "剩 {{ states('sensor.byd_yuan_sheng_yu_dian_liang') }}% · 续航 {{ states('sensor.byd_yuan_sheng_yu_xu_hang') }}km · {{ states('sensor.byd_yuan_sheng_yu_neng_liang') | round(1) }}kWh"
-      multiline_secondary: true
-      color: "{{ 'cyan' if states('sensor.wo_de_jia_bi_ya_di_distance')|float(9) > 0.3 else 'grey' }}"
-      icon_tap_action:
-        action: navigate
-        navigation_path: /gaode_maps
-    - type: grid
-      columns: 2
-      square: false
-      cards:
-      - type: custom:mushroom-template-card
-        entity: sensor.byd_yuan_men_suo_zhuang_tai
-        icon: mdi:car-door-lock
-        primary: 门锁
-        secondary: "{{ states('sensor.byd_yuan_men_suo_zhuang_tai') }}"
-        multiline_secondary: true
-        color: "{{ 'green' if is_state('sensor.byd_yuan_men_suo_zhuang_tai','已锁') else 'red' }}"
-        vertical: true
-        icon_tap_action:
-          action: more-info
-      - type: custom:mushroom-template-card
-        entity: binary_sensor.byd_yuan_che_chuang_zhuang_tai
-        icon: mdi:car-window-closed
-        primary: 车窗
-        secondary: "{{ '关好' if is_state('binary_sensor.byd_yuan_che_chuang_zhuang_tai','off') else '未关' }}"
-        multiline_secondary: true
-        color: "{{ 'green' if is_state('binary_sensor.byd_yuan_che_chuang_zhuang_tai','off') else 'red' }}"
-        vertical: true
-        icon_tap_action:
-          action: more-info
-      - type: custom:mushroom-template-card
-        entity: sensor.byd_yuan_lun_tai_qi_ya
-        icon: mdi:car-tire-alert
-        primary: 胎压
-        secondary: "{{ states('sensor.byd_yuan_lun_tai_qi_ya') }}"
-        multiline_secondary: true
-        color: "{{ 'red' if is_state('sensor.byd_yuan_lun_tai_qi_ya','异常') else 'green' }}"
-        vertical: true
-        icon_tap_action:
-          action: more-info
-      - type: custom:mushroom-template-card
-        entity: sensor.byd_yuan_che_nei_wen_du
-        icon: mdi:thermometer
-        primary: 车内
-        secondary: "{{ states('sensor.byd_yuan_che_nei_wen_du') }}°C"
-        multiline_secondary: true
-        color: grey
-        vertical: true
-        icon_tap_action:
-          action: more-info
-  - type: custom:stack-in-card
-    mode: vertical
-    cards:
-    - type: custom:mushroom-template-card
-      entity: sensor.wo_de_jia_xuan_yi_distance
-      icon: mdi:car
-      primary: "轩逸 · {{ states('sensor.wo_de_jia_xuan_yi_distance') | round(2) }} km"
-      secondary: "{{ states('sensor.xuan_yi_che_liang_zhuang_tai') }} · {{ states('sensor.xuan_yi_ting_che_shi_chang') }} · 电瓶 {{ states('sensor.xuan_yi_dian_chi_dian_ya') }}V"
-      multiline_secondary: true
-      color: "{{ 'amber' if states('sensor.wo_de_jia_xuan_yi_distance')|float(9) > 0.3 else 'grey' }}"
-      icon_tap_action:
-        action: navigate
-        navigation_path: /gaode_maps
-    - type: grid
-      columns: 2
-      square: false
-      cards:
-      - type: custom:mushroom-template-card
-        entity: sensor.xuan_yi_zong_li_cheng
-        icon: mdi:counter
-        primary: 总里程
-        secondary: "{{ states('sensor.xuan_yi_zong_li_cheng') | round(0) }} km"
-        multiline_secondary: true
-        color: grey
-        vertical: true
-        icon_tap_action:
-          action: more-info
-      - type: custom:mushroom-template-card
-        entity: sensor.xuan_yi_acczhuang_tai
-        icon: mdi:key-variant
-        primary: ACC
-        secondary: "{{ states('sensor.xuan_yi_acczhuang_tai') }}"
-        multiline_secondary: true
-        color: grey
-        vertical: true
-        icon_tap_action:
-          action: more-info
-      - type: custom:mushroom-template-card
-        entity: sensor.xuan_yi_dang_qian_che_su
-        icon: mdi:speedometer
-        primary: 车速
-        secondary: "{{ states('sensor.xuan_yi_dang_qian_che_su') }} km/h"
-        multiline_secondary: true
-        color: grey
-        vertical: true
-        icon_tap_action:
-          action: more-info
-      - type: custom:mushroom-template-card
-        entity: sensor.xuan_yi_ting_che_shi_chang
-        icon: mdi:timer-sand
-        primary: 停车时长
-        secondary: "{{ states('sensor.xuan_yi_ting_che_shi_chang') }}"
-        multiline_secondary: true
-        color: grey
-        vertical: true
-        icon_tap_action:
-          action: more-info
-    - type: custom:html-template-card
-      content: |-
-        <div style="padding:0"><div style="font-size:12.5px;opacity:.7;padding:0 6px 4px">{{ states('sensor.xuan_yi_dang_qian_di_zhi') }}</div></div>
-  - type: grid
-    columns: 1
-    square: false
-    cards:
-    - type: custom:mushroom-template-card
-      entity: sensor.wo_de_jia_dian_dong_che_distance
-      icon: mdi:bicycle
-      primary: "电动车 · {{ states('sensor.wo_de_jia_dian_dong_che_distance') | round(2) }} km"
-      secondary: "{% set dm = {'arrived':'已到达','stationary':'静止','towards':'正在接近','away_from':'正在远离'} %}{{ dm.get(states('sensor.wo_de_jia_dian_dong_che_direction_of_travel'), states('sensor.wo_de_jia_dian_dong_che_direction_of_travel')) }}"
-      multiline_secondary: true
-      color: grey
-      icon_tap_action:
-        action: navigate
-        navigation_path: /gaode_maps
-  - type: grid
-    columns: 2
-    square: false
-    cards:
-    - type: custom:mushroom-template-card
-      entity: sensor.zhi_hui_ting_che_che_liang_xin_xi
-      icon: mdi:card-text
-      primary: 车牌
-      secondary: "{{ states('sensor.zhi_hui_ting_che_che_liang_xin_xi') }}"
-      multiline_secondary: true
-      color: grey
-      vertical: true
-      icon_tap_action:
-        action: more-info
-    - type: custom:mushroom-template-card
-      entity: sensor.zhi_hui_ting_che_qian_bao_yu_e
-      icon: mdi:wallet
-      primary: 钱包
-      secondary: "¥ {{ states('sensor.zhi_hui_ting_che_qian_bao_yu_e') }}"
-      multiline_secondary: true
-      color: amber
-      vertical: true
-      icon_tap_action:
-        action: more-info
-    - type: custom:mushroom-template-card
-      entity: sensor.zhi_hui_ting_che_dai_jiao_ding_dan
-      icon: mdi:receipt
-      primary: 待缴
-      secondary: "{{ states('sensor.zhi_hui_ting_che_dai_jiao_ding_dan') }}"
-      multiline_secondary: true
-      color: grey
-      vertical: true
-      icon_tap_action:
-        action: more-info
-    - type: custom:mushroom-template-card
-      entity: sensor.zhi_hui_ting_che_nian_ka_xin_xi
-      icon: mdi:calendar-check
-      primary: 年卡
-      secondary: "{{ states('sensor.zhi_hui_ting_che_nian_ka_xin_xi') }}"
-      multiline_secondary: true
-      color: green
-      vertical: true
-      icon_tap_action:
-        action: more-info
