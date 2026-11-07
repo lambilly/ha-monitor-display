@@ -1,9 +1,11 @@
 # ==========================================================
-# 版本：v2.0 NOTIFY（2026-11-01，开发中）
-#   新增第四页「通知」：MQTT 单条全屏 + 上下切换 + 正文滚动
-#     · 字库 ui_font_notify：GB2312 一级 3755 字全量（≈310KB flash）
-#     · 数据：home/ha-monitor-display/notify → 8 槽环形缓冲（include/notify_store.h）
-#     · 导航改四键 TAB，抽成 ui/tab_bar.yaml 四页共用
+# 版本：v2.2.0 AUDIO（2026-11-07）
+#   新增声音输出：MAX98357A I2S 数字功放 + 4Ω 3W 喇叭
+#     · speaker(i2s_audio) → mixer → media_player(speaker)
+#     · 双 pipeline（media + announcement），FLAC 由 HA 转码
+#     · 内置音效 sounds/ding|notify|alarm.wav（48k/mono/16bit）
+#     · SD 脚 GPIO21 空闲 3s 自动关功放（待机 <1µA）
+#   上一版：v2.1 远程控制通道（HA 侧 monitor_display_control.yaml）
 #   上一定版：v1.1.1（2026-11-01，续航优化，已出包）
 # ==========================================================
 # 主配置：设备 / 网络 / 硬件 / HA 实体
@@ -512,6 +514,105 @@ touchscreen:
     on_release:
       - lambda: id(ui_touch_active) = false;
 
+# ==========================================================
+# 声音输出：MAX98357A（I2S 数字功放）  v2.2.0 新增 2026-11-07
+#   接线：VIN→5V(J1-1) / GND→GND(J1-2)
+#         BCLK→GPIO47 / LRC→GPIO48 / DIN→GPIO38 / SD→GPIO21
+#         喇叭 ± 接 BTL 输出——**两端都不可接地**，否则烧功放
+#   省电：SD 由 GPIO21 控制，不播放时拉低 → 功放待机 <1µA
+#         （悬空或接 VDD 会常耗 2.4mA，对 20mA 待机是 +12%）
+#   引脚全部选在模块**右侧**，与左侧的 SPI(11/12/13) 和 I2C(6/7) 分开，
+#     避免 BCLK 与 SCK(40MHz) 长距离并行串扰，走线也顺。
+#     避开的：35/36/37(octal PSRAM)、19/20(USB)、0/3/45/46(strapping)、
+#             43/44(UART0)、4(TF 卡预留，且已加 10k 上拉)
+# ==========================================================
+i2s_audio:
+  # 注意：i2s_audio 是单实例组件（不是列表，写成 `- id:` 会校验失败）
+  id: i2s_out
+  i2s_lrclk_pin: GPIO48
+  i2s_bclk_pin: GPIO47
+
+speaker:
+  - platform: i2s_audio
+    id: spk_out
+    i2s_audio_id: i2s_out
+    i2s_dout_pin: GPIO38
+    dac_type: external            # MAX98357A = 外部 DAC + D 类功放
+    sample_rate: 48000
+    bits_per_sample: 16bit
+    channel: mono                 # 单喇叭，单声道省一半带宽与解码开销
+    buffer_duration: 300ms
+    timeout: 500ms
+
+  # mixer：把「媒体」与「播报」两条流水线合成一路送给同一个喇叭。
+  # 必须用 mixer —— ESPHome 不允许两条 pipeline 指向同一个 speaker 实例。
+  # 两条都是 48kHz / mono，采样率一致，所以不需要 resampler。
+  - platform: mixer
+    id: spk_mix
+    output_speaker: spk_out
+    task_stack_in_psram: true
+    source_speakers:
+      - id: spk_media_in            # TTS / 音乐 / play_media 走这条
+      - id: spk_announce_in         # 紧急播报走这条（可 ducking 压低媒体音量）
+
+media_player:
+  - platform: speaker
+    id: mp_screen
+    name: "Screen Speaker"
+    icon: mdi:speaker
+    # announcement_pipeline 在 schema 里是 Required，media 才是 Optional；
+    # 两条都配上，TTS(走 media) 与紧急播报(走 announcement) 才能分别工作。
+    media_pipeline:
+      speaker: spk_media_in
+      format: FLAC                # HA(≥2024.10) 负责转码，设备端只解码，省 CPU
+      sample_rate: 48000
+      num_channels: 1
+    announcement_pipeline:
+      speaker: spk_announce_in
+      format: FLAC
+      sample_rate: 48000
+      num_channels: 1
+    buffer_size: 120000           # 每条流水线 120KB（大块 malloc 落 PSRAM）
+    task_stack_in_psram: true     # 8MB octal PSRAM，任务栈不占内部 RAM
+    volume_initial: 60%
+    # ⚠️ 上限压到 70%，不是 90%：
+    #   4Ω/3W 喇叭在 5V 下满量程 3.2W，峰值电流 ≈1.26A@4Ω，
+    #   电池 3.99V 要输出 1.7A 输入，会直接踩 IP5407 的过流/欠压打嗝。
+    #   70% 音量 ≈ 1.5W 峰值，电池撑得住，响度对室内信息屏已经够。
+    volume_max: 70%
+    files:                        # 内置音效：断网 / HA 宕机也能响
+      - id: snd_ding
+        file: sounds/ding.wav
+      - id: snd_notify
+        file: sounds/notify.wav
+      - id: snd_alarm
+        file: sounds/alarm.wav
+
+# 三个播放触发按钮（HA 里可被自动化直接调用，也可手动点来试音）
+#   走内置文件，不经过网络推流，按下即响；不需要时整段删掉即可。
+button:
+  - platform: template
+    name: "Play Ding"
+    icon: mdi:bell-outline
+    on_press:
+      - media_player.speaker.play_on_device_media_file:
+          id: mp_screen
+          media_file: snd_ding
+  - platform: template
+    name: "Play Notify"
+    icon: mdi:message-badge-outline
+    on_press:
+      - media_player.speaker.play_on_device_media_file:
+          id: mp_screen
+          media_file: snd_notify
+  - platform: template
+    name: "Play Alarm"
+    icon: mdi:alert
+    on_press:
+      - media_player.speaker.play_on_device_media_file:
+          id: mp_screen
+          media_file: snd_alarm
+
 # --- 时间 ---
 # ==========================================================
 # 时间：只用 SNTP，不依赖 HA
@@ -621,6 +722,36 @@ interval:
           if (u > 0) lv_obj_clear_flag(id(notify_badge), LV_OBJ_FLAG_HIDDEN);
           else       lv_obj_add_flag(id(notify_badge), LV_OBJ_FLAG_HIDDEN);
 
+  # ----------------------------------------------------------
+  # 功放使能跟随播放状态
+  #   拉高 SD → 功放上电；停止播放 3 秒后拉低 → 待机 <1µA
+  #   注意：不能用 media_player 的 on_turn_on/on_turn_off，
+  #         那两个只在收到 power 命令时触发，play_media 不会触发。
+  #         speaker.is_running() 才反映"真的在出声"。
+  # ----------------------------------------------------------
+  - interval: 1s
+    then:
+      - lambda: |-
+          // 用软件标志记录 SD 状态：GPIO switch 的 state 字段在不同版本里
+          // 可见性不一致，直接读会在编译期报错，这里自己记一份最稳。
+          static bool amp_on = false;
+          const bool busy = id(spk_out).is_running();
+          if (busy) {
+            id(amp_idle_ms) = 0;
+            if (!amp_on) {
+              id(amp_sd).turn_on();
+              amp_on = true;
+            }
+          } else if (amp_on) {
+            if (id(amp_idle_ms) == 0) {
+              id(amp_idle_ms) = millis();
+            } else if (millis() - id(amp_idle_ms) > 3000) {
+              id(amp_sd).turn_off();
+              amp_on = false;
+              id(amp_idle_ms) = 0;
+            }
+          }
+
 debug:
   id: dbg_comp
   update_interval: 10s      # 数据刷新周期（loop_time / free 共用）
@@ -644,6 +775,12 @@ debug:
 # 约定：id 命名 = ha_ + JSON 字段名，一一对应，
 #      改字段时同步改 ha/monitor_display_push.yaml。
 globals:
+  # 功放静默计时（ms）：0 = 未开始计时。
+  #   播放结束后等 3 秒再关 SD，避免连续两条播报之间反复开关功放（会有咔哒声）
+  - id: amp_idle_ms
+    type: uint32_t
+    restore_value: false
+    initial_value: '0'
   - id: hd_ts
     type: uint32_t
     restore_value: false
@@ -1373,6 +1510,14 @@ select:
           page: 2
 
 switch:
+  # 功放使能（MAX98357A SD 脚）——内部实体，不暴露给 HA
+  #   拉低 = 功放彻底关断（待机 <1µA）；由下面 interval 的音频监控自动管理
+  - platform: gpio
+    id: amp_sd
+    internal: true
+    pin: GPIO21
+    restore_mode: ALWAYS_OFF
+
   # 自动休眠总开关（关掉后常亮，适合调试/演示）
   - platform: template
     id: auto_sleep_switch
