@@ -517,26 +517,32 @@ touchscreen:
 # ==========================================================
 # 声音输出：MAX98357A（I2S 数字功放）  v2.2.0 新增 2026-11-07
 #   接线：VIN→5V(J1-1) / GND→GND(J1-2)
-#         BCLK→GPIO47 / LRC→GPIO48 / DIN→GPIO38 / SD→GPIO21
+#         BCLK→GPIO39 / LRC→GPIO40 / DIN→GPIO41 / SD→GPIO21
 #         喇叭 ± 接 BTL 输出——**两端都不可接地**，否则烧功放
 #   省电：SD 由 GPIO21 控制，不播放时拉低 → 功放待机 <1µA
 #         （悬空或接 VDD 会常耗 2.4mA，对 20mA 待机是 +12%）
 #   引脚全部选在模块**右侧**，与左侧的 SPI(11/12/13) 和 I2C(6/7) 分开，
 #     避免 BCLK 与 SCK(40MHz) 长距离并行串扰，走线也顺。
+#     ⚠️ 原选 47/48/38 已废弃（v2.2.1 换掉），两个原因：
+#        ① 47/48/38 正是 DevKitC-1 板载 WS2812 彩灯的脚（v1.0=48 / v1.1=38），
+#          I2S 位流被 WS2812 误解析 → 灯变纯白常亮，且给数据线挂负载；
+#        ② 若是 WROOM-2（N16R8V），GPIO47/48 在 VDD_SPI 1.8V 域，输出仅 1.8V，
+#          驱动 MAX98357A(VIH=1.3V) 余量太小。
+#     39/40/41 是 JTAG 复用脚，ESPHome 不用 JTAG（UART/OTA 烧录），可安全占用。
 #     避开的：35/36/37(octal PSRAM)、19/20(USB)、0/3/45/46(strapping)、
 #             43/44(UART0)、4(TF 卡预留，且已加 10k 上拉)
 # ==========================================================
 i2s_audio:
   # 注意：i2s_audio 是单实例组件（不是列表，写成 `- id:` 会校验失败）
   id: i2s_out
-  i2s_lrclk_pin: GPIO48
-  i2s_bclk_pin: GPIO47
+  i2s_lrclk_pin: GPIO40
+  i2s_bclk_pin: GPIO39
 
 speaker:
   - platform: i2s_audio
     id: spk_out
     i2s_audio_id: i2s_out
-    i2s_dout_pin: GPIO38
+    i2s_dout_pin: GPIO41
     dac_type: external            # MAX98357A = 外部 DAC + D 类功放
     sample_rate: 48000
     bits_per_sample: 16bit
@@ -588,30 +594,12 @@ media_player:
       - id: snd_alarm
         file: sounds/alarm.wav
 
-# 三个播放触发按钮（HA 里可被自动化直接调用，也可手动点来试音）
-#   走内置文件，不经过网络推流，按下即响；不需要时整段删掉即可。
-button:
-  - platform: template
-    name: "Play Ding"
-    icon: mdi:bell-outline
-    on_press:
-      - media_player.speaker.play_on_device_media_file:
-          id: mp_screen
-          media_file: snd_ding
-  - platform: template
-    name: "Play Notify"
-    icon: mdi:message-badge-outline
-    on_press:
-      - media_player.speaker.play_on_device_media_file:
-          id: mp_screen
-          media_file: snd_notify
-  - platform: template
-    name: "Play Alarm"
-    icon: mdi:alert
-    on_press:
-      - media_player.speaker.play_on_device_media_file:
-          id: mp_screen
-          media_file: snd_alarm
+# 内置音效的调用方式（v2.2.1 删掉了 3 个 template button —— 它们只是手动试音键，
+# 与 media_player 实体功能重复；自动化直接调下面的动作即可，能力一点没少）
+# HA 自动化里要响，直接调动作：
+#   action: media_player.speaker.play_on_device_media_file
+#   data: { entity_id: media_player.ha_monitor_display_screen_speaker, media_file: snd_ding }
+# TTS 播报：action: tts.speak（target: media_player.ha_monitor_display_screen_speaker）
 
 # --- 时间 ---
 # ==========================================================
