@@ -21,6 +21,7 @@ mqtt:
   sensor:
     - name: "HMD Last Notify"
       unique_id: hmd_last_notify
+      object_id: hmd_last_notify
       icon: mdi:bell-ring-outline
       state_topic: "home/ha-monitor-display/notify"
       value_template: >-
@@ -34,7 +35,7 @@ mqtt:
       qos: 1
       device:
         identifiers: [ha_monitor_display_remote]
-        name: "HMD Remote"
+        name: "HA Monitor Remote"
 
 input_text:
   hmd_notify_text:
