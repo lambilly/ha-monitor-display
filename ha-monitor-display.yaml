@@ -9,11 +9,14 @@
 #   上一定版：v1.1.1（2026-11-01，续航优化，已出包）
 # ==========================================================
 # 主配置：设备 / 网络 / 硬件 / HA 实体
-# 页面布局拆分到 ui/ 目录，改界面只需改对应文件：
-#   ui/ui_common.yaml     公共资源（字体、全局变量、时钟刷新）
-#   ui/page_dashboard.yaml       页面1 家居
-#   ui/page_network.yaml         页面2 网络
-#   ui/page_system.yaml          页面3 系统
+# 页面布局拆分到 ui_ha_monitor/ 目录，改界面只需改对应文件：
+#   ui_ha_monitor/ui_common.yaml     公共资源（字体、全局变量、时钟刷新）
+#   ui_ha_monitor/page_dashboard.yaml       页面1 家居
+#   ui_ha_monitor/page_network.yaml         页面2 网络
+#   ui_ha_monitor/page_system.yaml          页面3 系统
+#
+# ⚠️ 本项目 UI 独占 ui_ha_monitor/；口袋版 pocket-homeassistant 用 ui_pocket/，
+#    两者不可混用（2026-11-12 拆分，此前共用 ui/ 导致互相覆盖）。
 #
 # 接入方式（方案C，双通道并存）：
 #   api  : 本地局域网走 ESPHome Native API（连 Home Assistant，低延迟）
@@ -22,11 +25,11 @@
 
 packages:
   # 页面顺序 = LVGL 页面列表顺序，第一个为开机默认页（家居）
-  page_dashboard: !include ui/page_dashboard.yaml
-  page_network: !include ui/page_network.yaml
-  page_system: !include ui/page_system.yaml
-  page_notify: !include ui/page_notify.yaml      # v2.0 NOTIFY：第四页，不参与开机默认
-  ui_common: !include ui/ui_common.yaml
+  page_dashboard: !include ui_ha_monitor/page_dashboard.yaml
+  page_network: !include ui_ha_monitor/page_network.yaml
+  page_system: !include ui_ha_monitor/page_system.yaml
+  page_notify: !include ui_ha_monitor/page_notify.yaml      # v2.0 NOTIFY：第四页，不参与开机默认
+  ui_common: !include ui_ha_monitor/ui_common.yaml
 esphome:
   name: ha-monitor-display
   friendly_name: HA Monitor Display
@@ -152,6 +155,15 @@ mqtt:
           else id(hd_climate_on) = NAN;
           if (x["equipment_on"].is<float>()) id(hd_equipment_on) = x["equipment_on"].as<float>();
           else id(hd_equipment_on) = NAN;
+          // 设备总数（HA 统计传感器属性：xxx_all_count），屏幕显示 "开/总数"
+          if (x["light_all"].is<float>()) id(hd_light_all) = x["light_all"].as<float>();
+          else id(hd_light_all) = NAN;
+          if (x["curtain_all"].is<float>()) id(hd_curtain_all) = x["curtain_all"].as<float>();
+          else id(hd_curtain_all) = NAN;
+          if (x["climate_all"].is<float>()) id(hd_climate_all) = x["climate_all"].as<float>();
+          else id(hd_climate_all) = NAN;
+          if (x["equipment_all"].is<float>()) id(hd_equipment_all) = x["equipment_all"].as<float>();
+          else id(hd_equipment_all) = NAN;
           if (x["weather_temp"].is<float>()) id(hd_weather_temp) = x["weather_temp"].as<float>();
           else id(hd_weather_temp) = NAN;
           if (x["outdoor_temp"].is<float>()) id(hd_outdoor_temp) = x["outdoor_temp"].as<float>();
@@ -846,6 +858,22 @@ globals:
     restore_value: false
     initial_value: 'NAN'
   - id: hd_equipment_on
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_light_all
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_curtain_all
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_climate_all
+    type: float
+    restore_value: false
+    initial_value: 'NAN'
+  - id: hd_equipment_all
     type: float
     restore_value: false
     initial_value: 'NAN'

@@ -79,7 +79,7 @@ web_password: your-web-password
 ```
 /config/esphome/
 ├── ha-monitor-display.yaml      主配置
-├── ui/                          page_dashboard / page_network / page_system / page_notify
+├── ui_ha_monitor/               page_dashboard / page_network / page_system / page_notify
 │                                tab_bar / ui_common
 ├── include/                     notify_store.h / notify_charset.h
 └── fonts/                       NotoSansSC-SemiBold.ttf + materialdesignicons-webfont.ttf
@@ -96,7 +96,7 @@ ESPHome 里 Install（USB 首次，之后可 OTA）；在 HA 里重载自动化�
 
 适合完全跑在局域网内、不想配 broker 的场景：数据由 ESPHome 通过 Native API 从 HA **主动拉取**（`platform: homeassistant` 传感器，51 处 entity_id），MQTT/TLS 8883 仅作远程备用通道。
 
-1. 发布包解压后，`ha-monitor-display.yaml` 放 `/config/esphome/`，4 个 `page_*/ui_*` 放 `ui/`，`fonts/` 同级
+1. 发布包解压后，`ha-monitor-display.yaml` 放 `/config/esphome/`，4 个 `page_*/ui_*` 放 `ui_ha_monitor/`，`fonts/` 同级
 2. `secrets.yaml` 模板同上（`mqtt_host` / `mqtt_password` 不用 broker 时可留占位）
 3. **把主配置里的 `entity_id` 改成你家 HA 的实际实体**——这 51 处是按我家设备命名的（如 `sensor.lamnas_ws_cpu_utilization_total`）
 4. 编译烧录后数据即拉即显（刷新率由各 sensor 的 `update_interval` 决定）
@@ -105,7 +105,8 @@ ESPHome 里 Install（USB 首次，之后可 OTA）；在 HA 里重载自动化�
 
 ```
 ha-monitor-display.yaml     主配置（板型 / WiFi / MQTT / API / 屏 / 触摸 / 休眠 / LVGL 全局）
-ui/                         四个页面 + ui_common（字体/globals/公共件）+ tab_bar 底部导航
+ui_ha_monitor/              四个页面 + ui_common（字体/globals/公共件）+ tab_bar 底部导航
+                              （墙屏专用；口袋版 pocket-homeassistant 用 ui_pocket/，两者不共用）
 include/                    notify_store.h 通知环形缓冲/折行/清洗 + notify_charset.h 通知字库表（v2.0）
 ha/                         HA 侧资源（→ /config/packages/ 部署）：
                               monitor_display_push.yaml     5 秒推送自动化（MQTT 版专用）
@@ -124,7 +125,7 @@ releases/                   历史发布包（GitHub Release 已挂对应 zip）
 CHANGELOG.md                更新日志
 ```
 
-> 仓库内 YAML 平铺在根目录；发布包（zip）里已按 `ui/` 子目录组织，解压即用。
+> 仓库内 YAML 平铺在根目录；发布包（zip）里按 `ui_ha_monitor/` 子目录组织，解压即用（2026-11-12 目录拆分起；更早的包仍是 `ui/`）。
 
 ## 数据流（MQTT 版）
 
