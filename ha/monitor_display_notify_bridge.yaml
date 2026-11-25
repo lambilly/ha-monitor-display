@@ -1,16 +1,21 @@
 # ==========================================================
-# HA Monitor Display —— 通知桥接（HA 页 ↔ 屏幕通知页）
+# HA Monitor Display —— 通知桥接（屏幕通知 → HA 展示）
 # ----------------------------------------------------------
 # 安装位置：/config/packages/monitor_display_notify_bridge.yaml
 #   （configuration.yaml 已有 packages: !include_dir_named packages）
-# 生效：开发者工具 → YAML → 「重新加载 所有 YAML 配置」
-#   （新增实体需要一次 HA 重启才会出现；此包不改动原首页）
 #
 # 作用：
-#   1. 订阅屏幕通知主题 home/ha-monitor-display/notify，
-#      把「屏幕上正显示的那一条」暴露成 sensor.hmd_last_notify，
-#      供 HA「屏幕镜像 → 通知」页显示。
-#   2. 反向：在 HA 里输入一段文字 → 推进屏幕通知页。
+#   订阅屏幕通知主题 home/ha-monitor-display/notify，
+#   把「屏幕上正显示的那一条」暴露成 sensor.hmd_last_notify，
+#   供 HA「屏幕镜像」看板的通知卡显示（镜像看板引用本传感器）。
+#
+#   ⚠️ 2026-11-25 移除原「手动发送」三件套：
+#      automation "HMD: 发送通知到屏幕" + input_text.hmd_notify_text
+#      + input_boolean.hmd_notify_send。
+#      原因：全 HA 无任何看板/自动化/脚本/NR 引用这两个 input 实体，
+#      且自动化"条件不满足不复位开关"有缺陷（开关卡 on 后永不触发，
+#      最后触发停在 11-04）。实际通知入口 = NR 子流程「屏幕推送」
+#      直接 publish 到 notify 主题，本包只做展示回读。
 #
 # payload 格式（与固件 on_message 解析一致）：
 #   {"title": "门锁", "message": "前门已开启", "ts": 1793804000}
@@ -39,54 +44,3 @@ mqtt:
       device:
         identifiers: [ha_monitor_display_remote]
         name: "HA Monitor Remote"
-
-input_text:
-  hmd_notify_text:
-    name: HMD 通知内容
-    max: 255
-    icon: mdi:message-text
-
-input_boolean:
-  hmd_notify_send:
-    name: HMD 立即发送通知
-    icon: mdi:send
-
-automation:
-  - id: hmd_notify_send
-    alias: "HMD: 发送通知到屏幕"
-    description: >-
-      input_boolean 置 on → 把 input_text 的内容按屏幕格式 publish 到
-      home/ha-monitor-display/notify，然后清空输入并复位开关
-    mode: single
-    max_exceeded: silent
-    triggers:
-      - trigger: state
-        entity_id: input_boolean.hmd_notify_send
-        from: "off"
-        to: "on"
-    conditions:
-      # 空值 / unknown / unavailable 一律不发（否则会把 "unknown" 当正文推上屏）
-      - condition: template
-        value_template: >-
-          {{ states('input_text.hmd_notify_text') | trim not in ['', 'unknown', 'unavailable']
-             and (states('input_text.hmd_notify_text') | trim | length) > 0 }}
-    actions:
-      - action: mqtt.publish
-        data:
-          topic: home/ha-monitor-display/notify
-          retain: false
-          qos: 1
-          payload: >-
-            {{ {'title': 'HA 通知',
-                'message': states('input_text.hmd_notify_text'),
-                'ts': now().timestamp() | int} | tojson }}
-      - delay:
-          milliseconds: 300
-      - action: input_text.set_value
-        target:
-          entity_id: input_text.hmd_notify_text
-        data:
-          value: ""
-      - action: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.hmd_notify_send
