@@ -52,7 +52,7 @@ automation:
         temp_out:       sensor.miaomiaoc_cn_blt_3_1fpsendsc4g01_t2_temperature_p_2_1   # 室外温度
         # ---- 人数统计 ----
         family_home:    sensor.family_home_count                       # 在家人数
-        guest_visit:    sensor.guest_visit_count                       # 来访人数
+        guest_visit:    sensor.tplink_guard_guest_visit_count          # 来访人数
         phone_online:   sensor.phone_online_count                      # 手机在线数
         # ---- 网络设备统计 ----
         server_count:   sensor.server_online_count                     # 服务器在线
